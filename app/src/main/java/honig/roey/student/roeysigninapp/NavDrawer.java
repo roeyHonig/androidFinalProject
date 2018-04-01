@@ -1,6 +1,9 @@
 package honig.roey.student.roeysigninapp;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.view.View;
@@ -13,8 +16,18 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.firebase.auth.FirebaseAuth;
+
 public class NavDrawer extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
+    private GoogleSignInClient mGoogleSignInClient;
+    private MenuItem nav_Log_Off;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +53,28 @@ public class NavDrawer extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        nav_Log_Off = findViewById(R.id.nav_Log_Off);
+        // Set the mAuth Object & a listener to check for state change (there is \ isn't a USER?)
+        mAuth = FirebaseAuth.getInstance();
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                if (firebaseAuth.getCurrentUser() == null){
+                    // No User signed In -> redirect to login
+                    startActivity(new Intent(NavDrawer.this, MainActivity.class));
+                } else {
+                    // Set customized Log Off option
+                   // nav_Log_Off.setTitle(/*getString(R.string.logOff)+mAuth.getCurrentUser().getDisplayName()*/"logoff");
+                }
+            }
+        };
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(mAuthListener);
     }
 
     @Override
@@ -74,6 +109,7 @@ public class NavDrawer extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+    @SuppressLint("RestrictedApi")
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -90,7 +126,16 @@ public class NavDrawer extends AppCompatActivity
 
         } else if (id == R.id.nav_share) {
 
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.nav_Log_Off) {
+
+            GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                    .requestIdToken(getString(R.string.default_web_client_id))
+                    .requestEmail()
+                    .build();
+
+            mGoogleSignInClient = GoogleSignIn.getClient(NavDrawer.this, gso);
+            mGoogleSignInClient.signOut();
+            mAuth.signOut();
 
         }
 
