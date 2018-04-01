@@ -27,12 +27,19 @@ public class NavDrawer extends AppCompatActivity
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private GoogleSignInClient mGoogleSignInClient;
+    private NavigationView navigationView;
+    private Menu menu;
     private MenuItem nav_Log_Off;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nav_drawer);
+
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        menu = navigationView.getMenu();
+        nav_Log_Off = menu.findItem(R.id.nav_Log_Off);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -54,7 +61,7 @@ public class NavDrawer extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        nav_Log_Off = findViewById(R.id.nav_Log_Off);
+        //nav_Log_Off = findViewById(R.id.nav_Log_Off);
         // Set the mAuth Object & a listener to check for state change (there is \ isn't a USER?)
         mAuth = FirebaseAuth.getInstance();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -65,7 +72,7 @@ public class NavDrawer extends AppCompatActivity
                     startActivity(new Intent(NavDrawer.this, MainActivity.class));
                 } else {
                     // Set customized Log Off option
-                   // nav_Log_Off.setTitle(/*getString(R.string.logOff)+mAuth.getCurrentUser().getDisplayName()*/"logoff");
+                   nav_Log_Off.setTitle(/*getString(R.string.logOff)+mAuth.getCurrentUser().getDisplayName()*/"logoff now");
                 }
             }
         };
