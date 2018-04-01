@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "683427125923",
+    "firebase_url": "https://myfirstandroidproj.firebaseio.com",
+    "project_id": "myfirstandroidproj",
+    "storage_bucket": "myfirstandroidproj.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:683427125923:android:e7fb4c59547a6396",
+        "android_client_info": {
+          "package_name": "honig.roey.student.roeysigninapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "683427125923-mp5mgqb46e5ar2apsbss00sseue1e5lp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "honig.roey.student.roeysigninapp",
+            "certificate_hash": "101926588671ad139ed37a1d5749a04c5d89cdef"
+          }
+        },
+        {
+          "client_id": "683427125923-vjt11nr7s353ievcpq4quk7bp9s1189k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCGm_0rzRVbUhvtKmkQR8px4eeCrptZKGw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "683427125923-vjt11nr7s353ievcpq4quk7bp9s1189k.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
