@@ -2,28 +2,18 @@ package honig.roey.student.roeysigninapp;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
-
-import com.google.android.gms.auth.api.Auth;
-
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInApi;
-
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.auth.api.signin.GoogleSignInResult;
-import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
-
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
@@ -76,30 +66,16 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-        mAuth.addAuthStateListener(mAuthListener);
     }
 
     @SuppressLint("RestrictedApi")
     @Override
     protected void onStart() {
         super.onStart();
-
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                if (firebaseAuth.getCurrentUser() != null){
-                    startActivity(new Intent(MainActivity.this, AccountActivity.class));
-                }
-            }
-        };
-
         mAuth.addAuthStateListener(mAuthListener);
-
-
     }
 
     private void signIn() {
-      // worked  Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         @SuppressLint("RestrictedApi") Intent signInIntent =mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
@@ -136,20 +112,17 @@ public class MainActivity extends AppCompatActivity {
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             Toast.makeText(MainActivity.this,"hi "+user.getDisplayName(), Toast.LENGTH_LONG).show();
-                            //updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
 
-                            //updateUI(null);
                         }
 
-                        // ...
                     }
                 });
 
     }
 
-    //This is an update test for GitHub
+
 }
 
