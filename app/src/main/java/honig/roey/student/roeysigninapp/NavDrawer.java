@@ -15,11 +15,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.firebase.auth.FirebaseAuth;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.PicassoProvider;
 
 public class NavDrawer extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -30,6 +33,9 @@ public class NavDrawer extends AppCompatActivity
     private NavigationView navigationView;
     private Menu menu;
     private MenuItem nav_Log_Off;
+    private ImageView imageViewUserProfile;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +45,7 @@ public class NavDrawer extends AppCompatActivity
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         menu = navigationView.getMenu();
         nav_Log_Off = menu.findItem(R.id.nav_Log_Off);
+        imageViewUserProfile = navigationView.getHeaderView(0).findViewById(R.id.ImageViewUserProfile);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -76,6 +83,8 @@ public class NavDrawer extends AppCompatActivity
                 }
             }
         };
+
+        loadProfileImage(imageViewUserProfile);
     }
 
     @Override
@@ -149,5 +158,10 @@ public class NavDrawer extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void loadProfileImage(ImageView imageView){
+        String internetURL = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQRX1wg1zq4jaRMajgQHIoZko1fX1bHY_HF-0f_LFz5uiAEM8JFSw";
+        Picasso.get().load(internetURL).into(imageView);
     }
 }
