@@ -2,6 +2,7 @@ package honig.roey.student.roeysigninapp;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -23,6 +24,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.PicassoProvider;
+
+import java.net.URI;
 
 public class NavDrawer extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -78,13 +81,14 @@ public class NavDrawer extends AppCompatActivity
                     // No User signed In -> redirect to login
                     startActivity(new Intent(NavDrawer.this, MainActivity.class));
                 } else {
-                    // Set customized Log Off option
-                   nav_Log_Off.setTitle(/*getString(R.string.logOff)+mAuth.getCurrentUser().getDisplayName()*/"logoff now");
+                    // Set customized Nav Menu
+                    loadProfileImage(mAuth.getCurrentUser().getPhotoUrl(),imageViewUserProfile);
+                    nav_Log_Off.setTitle(/*getString(R.string.logOff)+mAuth.getCurrentUser().getDisplayName()*/"logoff now");
                 }
             }
         };
 
-        loadProfileImage(imageViewUserProfile);
+
     }
 
     @Override
@@ -160,8 +164,7 @@ public class NavDrawer extends AppCompatActivity
         return true;
     }
 
-    private void loadProfileImage(ImageView imageView){
-        String internetURL = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQRX1wg1zq4jaRMajgQHIoZko1fX1bHY_HF-0f_LFz5uiAEM8JFSw";
-        Picasso.get().load(internetURL).into(imageView);
+    private void loadProfileImage(Uri uri, ImageView imageView){
+        Picasso.get().load(String.valueOf(uri)).into(imageView);
     }
 }
