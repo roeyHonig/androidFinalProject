@@ -17,6 +17,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -37,6 +38,7 @@ public class NavDrawer extends AppCompatActivity
     private Menu menu;
     private MenuItem nav_Log_Off;
     private ImageView imageViewUserProfile;
+    private TextView navHeaderTitle;
 
 
 
@@ -49,6 +51,7 @@ public class NavDrawer extends AppCompatActivity
         menu = navigationView.getMenu();
         nav_Log_Off = menu.findItem(R.id.nav_Log_Off);
         imageViewUserProfile = navigationView.getHeaderView(0).findViewById(R.id.ImageViewUserProfile);
+        navHeaderTitle = navigationView.getHeaderView(0).findViewById(R.id.navHeaderTitle);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -83,7 +86,7 @@ public class NavDrawer extends AppCompatActivity
                 } else {
                     // Set customized Nav Menu
                     loadProfileImage(mAuth.getCurrentUser().getPhotoUrl(),imageViewUserProfile);
-                    nav_Log_Off.setTitle(/*getString(R.string.logOff)+mAuth.getCurrentUser().getDisplayName()*/"logoff now");
+                    loadUserFullName(mAuth.getCurrentUser().getDisplayName().toString(),navHeaderTitle);
                 }
             }
         };
@@ -165,6 +168,12 @@ public class NavDrawer extends AppCompatActivity
     }
 
     private void loadProfileImage(Uri uri, ImageView imageView){
+        //ToDo make beutifull
         Picasso.get().load(String.valueOf(uri)).into(imageView);
+    }
+
+    private void loadUserFullName (String name,TextView textView){
+        textView.setText(name);
+
     }
 }
