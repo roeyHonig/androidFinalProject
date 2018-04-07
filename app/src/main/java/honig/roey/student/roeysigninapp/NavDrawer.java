@@ -20,6 +20,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -42,7 +43,6 @@ public class NavDrawer extends AppCompatActivity
     private ImageView imageViewUserProfile;
     private TextView navHeaderTitle;
     private RingFragment ringFragment = new RingFragment();
-
 
 
 
@@ -190,6 +190,6 @@ public class NavDrawer extends AppCompatActivity
 
     @Override
     public void onListFragmentInteraction(String item) {
-
+        Toast.makeText(this,item,Toast.LENGTH_LONG).show();
     }
 }

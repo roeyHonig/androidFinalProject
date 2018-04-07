@@ -3,12 +3,14 @@ package honig.roey.student.roeysigninapp;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.ListFragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
 import honig.roey.student.roeysigninapp.dummy.DummyContent;
 import honig.roey.student.roeysigninapp.dummy.DummyContent.DummyItem;
@@ -32,7 +34,7 @@ public class RingFragment extends Fragment {
 
     private RecyclerView ringRecyclerView;
     private MyRingRecyclerViewAdapter mAdapter;
-    private int numOfRings = 6; // todo needs to be taken from the DataBase
+    private int numOfRings = 16; // todo needs to be taken from the DataBase
     private String[] mDataset;
 
     /**
@@ -114,7 +116,10 @@ public class RingFragment extends Fragment {
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
         void onListFragmentInteraction(String item);
+
     }
+
+
 
     // todo: should initalize from the DataBase
     private void initDataset() {
