@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -39,6 +41,8 @@ public class NavDrawer extends AppCompatActivity
     private MenuItem nav_Log_Off;
     private ImageView imageViewUserProfile;
     private TextView navHeaderTitle;
+    private RingFragment ringFragment = new RingFragment();
+
 
 
 
@@ -139,8 +143,9 @@ public class NavDrawer extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
+        if (id == R.id.nav_rings) {
+            // Handle the recycler view of the user's rings
+            switchToFragment(R.id.appFragContainer, ringFragment);
         } else if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_slideshow) {
@@ -175,5 +180,11 @@ public class NavDrawer extends AppCompatActivity
     private void loadUserFullName (String name,TextView textView){
         textView.setText(name);
 
+    }
+
+    private void switchToFragment(int id,android.support.v4.app.Fragment fragment){
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(id,fragment).commit();
     }
 }

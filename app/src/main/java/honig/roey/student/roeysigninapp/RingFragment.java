@@ -29,6 +29,10 @@ public class RingFragment extends Fragment {
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
 
+    private RecyclerView ringRecyclerView;
+    private MyRingRecyclerViewAdapter mAdapter;
+    private String[] mDataset;
+
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
