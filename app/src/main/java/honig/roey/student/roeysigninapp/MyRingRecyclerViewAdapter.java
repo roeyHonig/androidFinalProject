@@ -18,10 +18,10 @@ import java.util.List;
  */
 public class MyRingRecyclerViewAdapter extends RecyclerView.Adapter<MyRingRecyclerViewAdapter.ViewHolder> {
 
-    private final List<DummyItem> mValues;
+    private final String[] mValues;
     private final OnListFragmentInteractionListener mListener;
 
-    public MyRingRecyclerViewAdapter(List<DummyItem> items, OnListFragmentInteractionListener listener) {
+    public MyRingRecyclerViewAdapter(String[] items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
@@ -35,9 +35,9 @@ public class MyRingRecyclerViewAdapter extends RecyclerView.Adapter<MyRingRecycl
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText(mValues.get(position).content);
+        //holder.mItem = mValues.get(position);
+        //holder.mIdView.setText(mValues.get(position).id);
+        holder.mContentView.setText(mValues[position]);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,20 +53,18 @@ public class MyRingRecyclerViewAdapter extends RecyclerView.Adapter<MyRingRecycl
 
     @Override
     public int getItemCount() {
-        return mValues.size();
+        return mValues.length;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        public final TextView mIdView;
         public final TextView mContentView;
-        public DummyItem mItem;
+        public String mItem;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mIdView = (TextView) view.findViewById(R.id.item_number);
-            mContentView = (TextView) view.findViewById(R.id.content);
+            mContentView = (TextView) view.findViewById(R.id.ringName);
         }
 
         @Override

@@ -25,12 +25,14 @@ public class RingFragment extends Fragment {
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
-    // TODO: Customize parameters
+    // Linear Layout
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
 
+
     private RecyclerView ringRecyclerView;
     private MyRingRecyclerViewAdapter mAdapter;
+    private int numOfRings = 6; // todo needs to be taken from the DataBase
     private String[] mDataset;
 
     /**
@@ -53,6 +55,8 @@ public class RingFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Initaliaze the list of rings
+        initDataset();
 
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
@@ -63,18 +67,19 @@ public class RingFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_ring_list, container, false);
-
+        ringRecyclerView = view.findViewById(R.id.ringsList);
         // Set the adapter
-        if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
+        //if (view instanceof RecyclerView) {
+            Context context = ringRecyclerView.getContext();
+            //RecyclerView recyclerView = (RecyclerView) view;
             if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
+                ringRecyclerView.setLayoutManager(new LinearLayoutManager(context));
             } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
+                ringRecyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new MyRingRecyclerViewAdapter(DummyContent.ITEMS, mListener));
-        }
+            mAdapter = new MyRingRecyclerViewAdapter(mDataset, mListener);
+            ringRecyclerView.setAdapter(mAdapter);
+        //}
         return view;
     }
 
@@ -108,6 +113,14 @@ public class RingFragment extends Fragment {
      */
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onListFragmentInteraction(DummyItem item);
+        void onListFragmentInteraction(String item);
+    }
+
+    // todo: should initalize from the DataBase
+    private void initDataset() {
+        mDataset = new String[numOfRings];
+        for (int i = 0; i < mDataset.length; i++) {
+            mDataset[i] = "This is ring #" + i;
+        }
     }
 }

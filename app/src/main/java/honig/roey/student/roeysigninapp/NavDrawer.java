@@ -31,7 +31,7 @@ import com.squareup.picasso.PicassoProvider;
 import java.net.URI;
 
 public class NavDrawer extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, RingFragment.OnListFragmentInteractionListener{
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
@@ -186,5 +186,10 @@ public class NavDrawer extends AppCompatActivity
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(id,fragment).commit();
+    }
+
+    @Override
+    public void onListFragmentInteraction(String item) {
+
     }
 }
