@@ -71,7 +71,6 @@ public class RingFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_ring_list, container, false);
         ringRecyclerView = view.findViewById(R.id.ringsList);
         // Set the adapter
-        //if (view instanceof RecyclerView) {
             Context context = ringRecyclerView.getContext();
             //RecyclerView recyclerView = (RecyclerView) view;
             if (mColumnCount <= 1) {
@@ -81,7 +80,6 @@ public class RingFragment extends Fragment {
             }
             mAdapter = new MyRingRecyclerViewAdapter(mDataset, mListener);
             ringRecyclerView.setAdapter(mAdapter);
-        //}
         return view;
     }
 
@@ -125,7 +123,7 @@ public class RingFragment extends Fragment {
     private void initDataset() {
         mDataset = new String[numOfRings];
         for (int i = 0; i < mDataset.length; i++) {
-            mDataset[i] = "This is ring #" + i;
+            mDataset[i] = "Ring #" + i;
         }
     }
 }
