@@ -36,30 +36,35 @@ public class MainActivity extends AppCompatActivity {
     private WelcomeFragment welcomeFragment = new WelcomeFragment(); // Fragment
     private LoginFragment loginFragment = new LoginFragment();       // Fragment
 
+    Handler handler = new Handler();
+    Runnable switchToLogin = new Runnable() {
+        @Override
+        public void run() {
+            switchToFragment(loginFragment);
+        }
+    };
+
     @SuppressLint("RestrictedApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         switchToFragment(welcomeFragment);
-
-
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                // TODO: 4/3/18
-
-
-                switchToFragment(loginFragment);
-
-            }
-        }, 3000);
-
-        
-
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        handler.postDelayed(switchToLogin, 3000);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        // if unremoved while activity onPause (like when the user is scrolling all open Apps)
+        // a featel exception occuers when trying to switch to the login Fragment
+        handler.removeCallbacks(switchToLogin);
+    }
 
     private void switchToFragment(android.support.v4.app.Fragment fragment){
         FragmentManager fragmentManager = getSupportFragmentManager();
