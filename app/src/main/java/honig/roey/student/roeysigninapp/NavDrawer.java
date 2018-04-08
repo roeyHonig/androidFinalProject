@@ -26,10 +26,14 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.PicassoProvider;
 
 import java.net.URI;
+
+import honig.roey.student.roeysigninapp.tables.RingGlobal;
 
 public class NavDrawer extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, RingFragment.OnListFragmentInteractionListener{
@@ -64,8 +68,9 @@ public class NavDrawer extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                  //      .setAction("Action", null).show();
+                exampleWriteToFireBaseRealTimeDataBase();
             }
         });
 
@@ -191,5 +196,17 @@ public class NavDrawer extends AppCompatActivity
     @Override
     public void onListFragmentInteraction(String item) {
         Toast.makeText(this,item,Toast.LENGTH_LONG).show();
+    }
+
+    private void exampleWriteToFireBaseRealTimeDataBase(){
+        // write the JSON to the FireBase DataBase
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("tableOfRings");
+        String tempKey = myRef.push().getKey();
+        // create a JSON
+        RingGlobal tryme = new RingGlobal(tempKey,"fifa with friends",3, "dalia", "roey", "ido", "", "", "");
+        // set the JSON
+        myRef.child(tempKey).setValue(tryme);
+
     }
 }

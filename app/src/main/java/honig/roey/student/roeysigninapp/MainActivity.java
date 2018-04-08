@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         switchToFragment(welcomeFragment);
 
+
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
@@ -55,10 +56,9 @@ public class MainActivity extends AppCompatActivity {
             }
         }, 3000);
 
-
+        
 
     }
-
 
 
     private void switchToFragment(android.support.v4.app.Fragment fragment){
