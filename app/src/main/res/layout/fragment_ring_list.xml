@@ -9,6 +9,7 @@
         android:layout_height="wrap_content"
         android:text="MyRings"
         android:textSize="40dp"
+        android:background="#71f10909"
         />
 
     <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -22,6 +23,8 @@
         android:layout_marginRight="16dp"
         app:layoutManager="android.support.v7.widget.LinearLayoutManager"
         tools:context=".RingFragment"
-        tools:listitem="@layout/fragment_ring" />
+        tools:listitem="@layout/fragment_ring"
+        android:background="#6a1fea08"
+        />
 
 </LinearLayout>

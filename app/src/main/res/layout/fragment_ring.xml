@@ -10,5 +10,7 @@
         android:id="@+id/ringName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Example Ring Name"/>
+        android:text="Example Ring Name"
+        
+        />
 </FrameLayout>
