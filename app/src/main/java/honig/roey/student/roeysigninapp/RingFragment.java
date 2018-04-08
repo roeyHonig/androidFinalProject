@@ -28,7 +28,7 @@ public class RingFragment extends Fragment {
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
     // if mColumnCount =1 -> Linear Layout otherwise Grid Layout
-    private int mColumnCount = 2;
+    private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
 
 
