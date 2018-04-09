@@ -86,7 +86,7 @@ public class NavDrawer extends AppCompatActivity
                 //exampleWriteToFireBaseRealTimeDataBase();
                // exampleWriteToFireBaseRealTimeDataBase2();
                // exampleWriteToFireBaseRealTimeDataBase3();
-                readFromFireBaseRealTimeDataBase2("tableOfRingsPerUser", "RRe3GGpTI6SeMb82413bJ4NPoA52");
+               // readFromFireBaseRealTimeDataBase2("tableOfRingsPerUser", "RRe3GGpTI6SeMb82413bJ4NPoA52");
             }
         });
 
@@ -98,6 +98,9 @@ public class NavDrawer extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        navigationView.setCheckedItem(R.id.nav_rings); // higlight the Rings Item in the Menu on StartUp
+        navigationView.getMenu().performIdentifierAction(R.id.nav_rings, 0); // Perform the Action Associated with the Rings Menu Item
+
 
         //nav_Log_Off = findViewById(R.id.nav_Log_Off);
         // Set the mAuth Object & a listener to check for state change (there is \ isn't a USER?)
@@ -250,7 +253,7 @@ public class NavDrawer extends AppCompatActivity
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("tableOfRingsPerUser");
         for (int i = 0; i < tempRingsPerUser.getUserRings().size() ; i++) {
-            myRef.child("12345678").child("r"+i).setValue(tempRingsPerUser.getUserRings().get(i));
+            myRef.child("UV2tVsaP8GVhB4YU2o2iHCAfOum2").child("r"+i).setValue(tempRingsPerUser.getUserRings().get(i));
         }
     }
 
