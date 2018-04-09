@@ -55,7 +55,12 @@ public class NavDrawer extends AppCompatActivity
     private TextView navHeaderTitle;
     private RingFragment ringFragment = new RingFragment();
 
-
+    // todo i was expermienting in this activity with reqadin and writing to the firebase realtime databas
+    // todo these 2 fields or variabls should be here, there here because i need them for retriving data from the firebase DB
+    // todo the counter for example is a very important for making sure we've finished reading the releavent DB data
+    // todo and it is safe to update the UI or do other stuff
+    private long counter=0; // a counter to makes sure all the rings are retrived from the DB. only then we can update the UI
+    ArrayList<String> tmp = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -280,15 +285,11 @@ public class NavDrawer extends AppCompatActivity
         // reads from the FireBase DataBase
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference().child(tableName).child(UID);
-        //Query atempToQuery = myRef.orderByKey().equalTo(UID);
-        //DatabaseReference userSpecificRef = atempToQuery.getRef();
 
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
 
-            // long c;
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                //c = dataSnapshot.getChildrenCount();
                 onDataListenerSuccess(dataSnapshot);
 
             }
@@ -299,23 +300,53 @@ public class NavDrawer extends AppCompatActivity
             }
         });
 
-        //  Toast.makeText(this,r0,Toast.LENGTH_LONG).show();
 
     }
 
 
-    @Override
-    public void onDataListenerStart() {
 
+    // todo these are methods which allow sharing information outside the eventlistenr of reading the DB - addListenerForSingleValueEvent
+    // ****************************************************************************************
+    @Override
+    public void onDataListenerStart(long numOfRings) {
+        counter = counter +1;
+        if (counter == numOfRings ){
+            Toast.makeText(this,tmp.get(3),Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
     public void onDataListenerSuccess(DataSnapshot data) {
-        Toast.makeText(this,"there are "+data.getChildrenCount()+" rings",Toast.LENGTH_LONG).show();
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef;
+
+        for (int i = 0; i < data.getChildrenCount() ; i++) {
+            myRef = database.getReference().child("tableOfRings").child((String) data.child("r"+i).getValue());
+            myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    tmp.add((String)dataSnapshot.child("name").getValue());
+                    onDataListenerStart(data.getChildrenCount());
+                }
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                }
+            });
+        }
+
+        RingsPerUser ringsPerThisSignedUser = new RingsPerUser(tmp);
+       // Toast.makeText(this,"there are "+data.getChildrenCount()+" rings",Toast.LENGTH_LONG).show();
+       // Toast.makeText(this,ringID,Toast.LENGTH_LONG).show();
+        //Toast.makeText(this,tmp.get(0),Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void onDataListenerFailed(DatabaseError databaseError) {
         Toast.makeText(this,"Wrong",Toast.LENGTH_LONG).show();
     }
+
+    //*************************************************************************************************************
+
+
 }
