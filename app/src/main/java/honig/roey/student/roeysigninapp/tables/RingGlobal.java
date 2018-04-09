@@ -1,16 +1,16 @@
 package honig.roey.student.roeysigninapp.tables;
 
 public class RingGlobal {
-    String key;
-    String name;
-    int numPlayers;
+    private String key;
+    private String name;
+    private int numPlayers;
     // FireBase Users UID
-    String p0;
-    String p1;
-    String p2;
-    String p3;
-    String p4;
-    String p5;
+    private String p0;
+    private String p1;
+    private String p2;
+    private String p3;
+    private String p4;
+    private String p5;
 
 
     //Ctors

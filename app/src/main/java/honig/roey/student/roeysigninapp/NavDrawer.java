@@ -70,7 +70,9 @@ public class NavDrawer extends AppCompatActivity
             public void onClick(View view) {
                 //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                   //      .setAction("Action", null).show();
-                exampleWriteToFireBaseRealTimeDataBase();
+
+                //exampleWriteToFireBaseRealTimeDataBase();
+               // exampleWriteToFireBaseRealTimeDataBase2();
             }
         });
 
@@ -204,9 +206,23 @@ public class NavDrawer extends AppCompatActivity
         DatabaseReference myRef = database.getReference("tableOfRings");
         String tempKey = myRef.push().getKey();
         // create a JSON
-        RingGlobal tryme = new RingGlobal(tempKey,"fifa with friends",3, "dalia", "roey", "ido", "", "", "");
+        RingGlobal tryme = new RingGlobal(tempKey,"fifa for ever",2, "dalia", "roey", "ido", "", "", "");
         // set the JSON
         myRef.child(tempKey).setValue(tryme);
+
+    }
+
+    private void exampleWriteToFireBaseRealTimeDataBase2(){
+        // write the JSON to the FireBase DataBase
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("tableOfRingsPerUser");
+
+        myRef.child("RRe3GGpTI6SeMb82413bJ4NPoA52").child("numOfRings").setValue(2);
+        myRef.child("RRe3GGpTI6SeMb82413bJ4NPoA52").child("r0").setValue("blabla");
+        myRef.child("RRe3GGpTI6SeMb82413bJ4NPoA52").child("r1").setValue("blablagain");
+        myRef.child("RRe3GGpTI6SeMb82413bJ4NPoA52").child("r2").setValue("blablagainAndAgain");
+
+
 
     }
 }
