@@ -1,6 +1,7 @@
 package honig.roey.student.roeysigninapp;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -26,17 +27,23 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.PicassoProvider;
 
 import java.net.URI;
+import java.util.ArrayList;
 
 import honig.roey.student.roeysigninapp.tables.RingGlobal;
+import honig.roey.student.roeysigninapp.tables.RingsPerUser;
 
 public class NavDrawer extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, RingFragment.OnListFragmentInteractionListener{
+        implements NavigationView.OnNavigationItemSelectedListener, RingFragment.OnListFragmentInteractionListener, OnGetDataListener{
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
@@ -73,6 +80,8 @@ public class NavDrawer extends AppCompatActivity
 
                 //exampleWriteToFireBaseRealTimeDataBase();
                // exampleWriteToFireBaseRealTimeDataBase2();
+               // exampleWriteToFireBaseRealTimeDataBase3();
+                readFromFireBaseRealTimeDataBase2("tableOfRingsPerUser", "RRe3GGpTI6SeMb82413bJ4NPoA52");
             }
         });
 
@@ -222,7 +231,91 @@ public class NavDrawer extends AppCompatActivity
         myRef.child("RRe3GGpTI6SeMb82413bJ4NPoA52").child("r1").setValue("blablagain");
         myRef.child("RRe3GGpTI6SeMb82413bJ4NPoA52").child("r2").setValue("blablagainAndAgain");
 
+    }
+
+    private void exampleWriteToFireBaseRealTimeDataBase3(){
+        // write the JSON to the FireBase DataBase
+        ArrayList<String> temp = new ArrayList<>();
+        temp.add("-L9_sU7hfPxP5QuFSzS_");
+        temp.add("-L9aZMxhoEZZ0_O7-YI0");
+        temp.add("-L9aZQ8E9PxT1fiFQ3dk");
+
+        RingsPerUser tempRingsPerUser = new RingsPerUser(temp);
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("tableOfRingsPerUser");
+        for (int i = 0; i < tempRingsPerUser.getUserRings().size() ; i++) {
+            myRef.child("12345678").child("r"+i).setValue(tempRingsPerUser.getUserRings().get(i));
+        }
+    }
+
+    private void readFromFireBaseRealTimeDataBase(String tableName, String UID){
+        // reads from the FireBase DataBase
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference(tableName);
+        Query atempToQuery = myRef.orderByKey().equalTo(UID);
+        DatabaseReference userSpecificRef = atempToQuery.getRef();
+
+        userSpecificRef.addListenerForSingleValueEvent(new ValueEventListener() {
+
+           // long c;
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+              //c = dataSnapshot.getChildrenCount();
+                onDataListenerSuccess(dataSnapshot);
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                onDataListenerFailed(databaseError);
+            }
+        });
+
+      //  Toast.makeText(this,r0,Toast.LENGTH_LONG).show();
+
+    }
+
+    private void readFromFireBaseRealTimeDataBase2(String tableName, String UID){
+        // reads from the FireBase DataBase
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference().child(tableName).child(UID);
+        //Query atempToQuery = myRef.orderByKey().equalTo(UID);
+        //DatabaseReference userSpecificRef = atempToQuery.getRef();
+
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+
+            // long c;
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                //c = dataSnapshot.getChildrenCount();
+                onDataListenerSuccess(dataSnapshot);
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                onDataListenerFailed(databaseError);
+            }
+        });
+
+        //  Toast.makeText(this,r0,Toast.LENGTH_LONG).show();
+
+    }
 
 
+    @Override
+    public void onDataListenerStart() {
+
+    }
+
+    @Override
+    public void onDataListenerSuccess(DataSnapshot data) {
+        Toast.makeText(this,"there are "+data.getChildrenCount()+" rings",Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onDataListenerFailed(DatabaseError databaseError) {
+        Toast.makeText(this,"Wrong",Toast.LENGTH_LONG).show();
     }
 }
