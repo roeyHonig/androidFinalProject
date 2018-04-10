@@ -43,7 +43,7 @@ import honig.roey.student.roeysigninapp.tables.RingGlobal;
 import honig.roey.student.roeysigninapp.tables.RingsPerUser;
 
 public class NavDrawer extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, RingFragment.OnListFragmentInteractionListener, OnGetDataListener{
+        implements NavigationView.OnNavigationItemSelectedListener, RingFragment.OnListFragmentInteractionListener{
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
@@ -59,8 +59,72 @@ public class NavDrawer extends AppCompatActivity
     // todo these 2 fields or variabls should be here, there here because i need them for retriving data from the firebase DB
     // todo the counter for example is a very important for making sure we've finished reading the releavent DB data
     // todo and it is safe to update the UI or do other stuff
+    //todo tmp for example is the ArrayList used to collect the data from the firebase DB and constrct the correspanding class
+    //todo which will then be send to the fragment as an argument
     private long counter=0; // a counter to makes sure all the rings are retrived from the DB. only then we can update the UI
     ArrayList<String> tmp = new ArrayList<String>();
+
+    OnGetDataFromFirebaseDbListener tableOfRingsPerUser = new OnGetDataFromFirebaseDbListener() {
+        @Override
+        public void onDataListenerStart() {
+
+        }
+
+        @Override
+        public void onDataListenerSuccess(DataSnapshot data,long num) {
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference myRef;
+
+            for (int i = 0; i < data.getChildrenCount() ; i++) {
+                myRef = database.getReference().child("tableOfRings").child((String) data.child("r"+i).getValue());
+                myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        tmp.add((String)dataSnapshot.child("name").getValue());
+                        //onDataListenerStart(data.getChildrenCount());
+                        tableOfRings.onDataListenerSuccess(dataSnapshot,(long) data.getChildrenCount());
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
+            }
+
+
+
+        }
+
+        @Override
+        public void onDataListenerFailed(DatabaseError databaseError) {
+
+        }
+    };
+    OnGetDataFromFirebaseDbListener tableOfRings = new OnGetDataFromFirebaseDbListener() {
+        @Override
+        public void onDataListenerStart() {
+
+        }
+
+        @Override
+        public void onDataListenerSuccess(DataSnapshot data, long num) {
+            counter = counter +1;
+            if (counter == num ){
+                doSomethingNowItIsSafe();
+            }
+
+        }
+
+        @Override
+        public void onDataListenerFailed(DatabaseError databaseError) {
+
+        }
+    };
+    //TODO: change the title of this function, this is only an entering point for letting you know
+    //That now, the DB has been retrived and we can do something, like update the UI
+    public void doSomethingNowItIsSafe(){
+        Toast.makeText(this,tmp.get(2),Toast.LENGTH_LONG).show();
+        RingsPerUser ringsPerThisSignedUser = new RingsPerUser(tmp);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -169,6 +233,11 @@ public class NavDrawer extends AppCompatActivity
 
         if (id == R.id.nav_rings) {
             // Handle the recycler view of the user's rings
+            // TODO: Buffering Animation
+            // TODO: handle a Null pointer exception, that is - "No Rings"
+
+            readFromFireBaseRealTimeDataBase2("tableOfRingsPerUser", "RRe3GGpTI6SeMb82413bJ4NPoA52");
+
             switchToFragment(R.id.appFragContainer, ringFragment);
         } else if (id == R.id.nav_gallery) {
 
@@ -270,13 +339,13 @@ public class NavDrawer extends AppCompatActivity
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
               //c = dataSnapshot.getChildrenCount();
-                onDataListenerSuccess(dataSnapshot);
+                //onDataListenerSuccess(dataSnapshot);
 
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                onDataListenerFailed(databaseError);
+                //onDataListenerFailed(databaseError);
             }
         });
 
@@ -293,13 +362,13 @@ public class NavDrawer extends AppCompatActivity
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                onDataListenerSuccess(dataSnapshot);
-
+                //onDataListenerSuccess(dataSnapshot);
+                    tableOfRingsPerUser.onDataListenerSuccess(dataSnapshot,0);
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                onDataListenerFailed(databaseError);
+                //onDataListenerFailed(databaseError);
             }
         });
 
@@ -307,7 +376,7 @@ public class NavDrawer extends AppCompatActivity
     }
 
 
-
+    /*
     // todo these are methods which allow sharing information outside the eventlistenr of reading the DB - addListenerForSingleValueEvent
     // ****************************************************************************************
     @Override
@@ -350,6 +419,6 @@ public class NavDrawer extends AppCompatActivity
     }
 
     //*************************************************************************************************************
-
+    */
 
 }

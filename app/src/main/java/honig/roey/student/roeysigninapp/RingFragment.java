@@ -12,6 +12,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import honig.roey.student.roeysigninapp.dummy.DummyContent;
 import honig.roey.student.roeysigninapp.dummy.DummyContent.DummyItem;
 
@@ -80,7 +86,11 @@ public class RingFragment extends Fragment {
             }
             mAdapter = new MyRingRecyclerViewAdapter(mDataset, mListener);
             ringRecyclerView.setAdapter(mAdapter);
+
+
         return view;
+
+
     }
 
 
