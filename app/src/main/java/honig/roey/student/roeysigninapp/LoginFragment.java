@@ -73,7 +73,10 @@ public class LoginFragment extends Fragment{
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 if (firebaseAuth.getCurrentUser() != null){
-                    startActivity(new Intent(getContext(), NavDrawer.class));
+                    Intent intent = new Intent(getContext(), NavDrawer.class);
+                    // this extra is for letting the NavDrawer activity know it was redirected from a LoginActivity, meaning there is a user
+                    intent.putExtra("arg1",true);
+                    startActivity(intent);
                 }
             }
         };

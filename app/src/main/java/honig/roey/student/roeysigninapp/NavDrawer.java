@@ -47,6 +47,8 @@ public class NavDrawer extends AppCompatActivity
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
+    private String uid = "RRe3GGpTI6SeMb82413bJ4NPoA52";
+
     private GoogleSignInClient mGoogleSignInClient;
     private NavigationView navigationView;
     private Menu menu;
@@ -54,6 +56,8 @@ public class NavDrawer extends AppCompatActivity
     private ImageView imageViewUserProfile;
     private TextView navHeaderTitle;
     private RingFragment ringFragment = new RingFragment();
+
+
 
     // todo i was expermienting in this activity with reqadin and writing to the firebase realtime databas
     // todo these 2 fields or variabls should be here, there here because i need them for retriving data from the firebase DB
@@ -140,6 +144,29 @@ public class NavDrawer extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nav_drawer);
 
+        mAuth = FirebaseAuth.getInstance();
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                if (firebaseAuth.getCurrentUser() == null){
+                    // No User signed In -> redirect to login
+                    startActivity(new Intent(NavDrawer.this, MainActivity.class));
+                } else {
+                    // Set customized Nav Menu
+                    loadProfileImage(mAuth.getCurrentUser().getPhotoUrl(),imageViewUserProfile);
+                    loadUserFullName(mAuth.getCurrentUser().getDisplayName().toString(),navHeaderTitle);
+                    // get the token
+                    //uid = mAuth.getCurrentUser().getUid();
+                }
+            }
+        };
+
+        boolean isRedirectedFromLoginActivity = getIntent().getBooleanExtra("arg1",false);
+        if (isRedirectedFromLoginActivity){
+            uid = mAuth.getCurrentUser().getUid();
+        }
+
+
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         menu = navigationView.getMenu();
         nav_Log_Off = menu.findItem(R.id.nav_Log_Off);
@@ -177,20 +204,7 @@ public class NavDrawer extends AppCompatActivity
 
         //nav_Log_Off = findViewById(R.id.nav_Log_Off);
         // Set the mAuth Object & a listener to check for state change (there is \ isn't a USER?)
-        mAuth = FirebaseAuth.getInstance();
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                if (firebaseAuth.getCurrentUser() == null){
-                    // No User signed In -> redirect to login
-                    startActivity(new Intent(NavDrawer.this, MainActivity.class));
-                } else {
-                    // Set customized Nav Menu
-                    loadProfileImage(mAuth.getCurrentUser().getPhotoUrl(),imageViewUserProfile);
-                    loadUserFullName(mAuth.getCurrentUser().getDisplayName().toString(),navHeaderTitle);
-                }
-            }
-        };
+
 
 
     }
@@ -245,7 +259,7 @@ public class NavDrawer extends AppCompatActivity
             // TODO: Buffering Animation
             // TODO: handle a Null pointer exception, that is - "No Rings"
 
-            readFromFireBaseRealTimeDataBase2("tableOfRingsPerUser", "RRe3GGpTI6SeMb82413bJ4NPoA52");
+            readFromFireBaseRealTimeDataBase2("tableOfRingsPerUser", uid);
 
 
         } else if (id == R.id.nav_gallery) {
