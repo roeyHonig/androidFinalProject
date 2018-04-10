@@ -64,10 +64,13 @@ public class RingFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // Initaliaze the list of rings
-        initDataset();
+        //initDataset();
+
+        mDataset = getArguments().getStringArray("arg1");
 
         if (getArguments() != null) {
-            mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
+            //mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
+
         }
     }
 

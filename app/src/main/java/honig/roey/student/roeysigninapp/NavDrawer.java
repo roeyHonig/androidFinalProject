@@ -81,7 +81,8 @@ public class NavDrawer extends AppCompatActivity
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         tmp.add((String)dataSnapshot.child("name").getValue());
-                        //onDataListenerStart(data.getChildrenCount());
+                        //2nd Par "data.getChildrenCount()": how many rings does the user have
+                        // we need this number to itearete over all of them before updating the UI
                         tableOfRings.onDataListenerSuccess(dataSnapshot,(long) data.getChildrenCount());
                     }
                     @Override
@@ -109,7 +110,20 @@ public class NavDrawer extends AppCompatActivity
         public void onDataListenerSuccess(DataSnapshot data, long num) {
             counter = counter +1;
             if (counter == num ){
-                doSomethingNowItIsSafe();
+                RingsPerUser currentUserRings = new RingsPerUser(tmp);
+                Bundle ringFragmentArgsBundle = new Bundle();
+                //ringFragmentArgsBundle.putStringArrayList("arg1",currentUserRings.getUserRings());
+
+                String[] trytoput = new String[(int)num];
+                for (int i = 0; i < (int)num; i++) {
+                    trytoput[i] = currentUserRings.getUserRings().get(i);
+                }
+                ringFragmentArgsBundle.putStringArray("arg1",trytoput);
+
+
+                ringFragment.setArguments(ringFragmentArgsBundle);
+                // DB data has been retrived -> safe tu update the UI
+                switchToFragment(R.id.appFragContainer, ringFragment);
             }
 
         }
@@ -119,12 +133,7 @@ public class NavDrawer extends AppCompatActivity
 
         }
     };
-    //TODO: change the title of this function, this is only an entering point for letting you know
-    //That now, the DB has been retrived and we can do something, like update the UI
-    public void doSomethingNowItIsSafe(){
-        Toast.makeText(this,tmp.get(2),Toast.LENGTH_LONG).show();
-        RingsPerUser ringsPerThisSignedUser = new RingsPerUser(tmp);
-    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -238,7 +247,7 @@ public class NavDrawer extends AppCompatActivity
 
             readFromFireBaseRealTimeDataBase2("tableOfRingsPerUser", "RRe3GGpTI6SeMb82413bJ4NPoA52");
 
-            switchToFragment(R.id.appFragContainer, ringFragment);
+
         } else if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_slideshow) {
@@ -362,7 +371,8 @@ public class NavDrawer extends AppCompatActivity
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                //onDataListenerSuccess(dataSnapshot);
+                    //2nd Par "num" == 0, why?
+                    // doesn't matter for now. could be any long type number
                     tableOfRingsPerUser.onDataListenerSuccess(dataSnapshot,0);
             }
 
