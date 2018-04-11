@@ -46,8 +46,8 @@ public class MyRingRecyclerViewAdapter extends RecyclerView.Adapter<MyRingRecycl
         // set the content
         holder.mContentView.setText(mValues[position]);
         // scale the animation
-        holder.animationView.setScaleX(2);
-        holder.animationView.setScaleY(2);
+        //holder.animationView.setScaleX(2);
+        //holder.animationView.setScaleY(2);
 
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
@@ -79,14 +79,14 @@ public class MyRingRecyclerViewAdapter extends RecyclerView.Adapter<MyRingRecycl
         public final View mView;
         public final TextView mContentView;
         public String mItem;
-        public LottieAnimationView animationView;
+        //public LottieAnimationView animationView;
         // Constractor - this takes the View which is the layout of a single Ring Item in the list
         // This View can have multiple TextView , buttons and what ever we want
         public ViewHolder(View view) {
             super(view);
             mView = view;
             mContentView = (TextView) view.findViewById(R.id.ringName);
-            animationView = (LottieAnimationView)view.findViewById(R.id.animation_view);
+            //animationView = (LottieAnimationView)view.findViewById(R.id.animation_view);
 
         }
 
