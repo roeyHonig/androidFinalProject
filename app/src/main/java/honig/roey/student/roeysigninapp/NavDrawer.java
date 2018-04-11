@@ -127,6 +127,8 @@ public class NavDrawer extends AppCompatActivity
             //TODO this is stuipid thers's no need to cheack the DB every time we press Rings in the NAV menu
             //TODO: switch to spliting the orignal function to getting this information and
             //TODO: switching to the Rings Frag
+            //TODO: now, i'm not so sure, i mean what happend when the user adds a new Ring, would we want a navigation back to Rings?,
+            // TODO: and off course to read the DB again
             if (counter == num || counter > num){
                 RingsPerUser currentUserRings = new RingsPerUser(tmp);
                 Bundle ringFragmentArgsBundle = new Bundle();
