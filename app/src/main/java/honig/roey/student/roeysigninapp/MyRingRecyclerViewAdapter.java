@@ -1,10 +1,13 @@
 package honig.roey.student.roeysigninapp;
 
+import android.animation.Animator;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.airbnb.lottie.LottieAnimationView;
 
 import honig.roey.student.roeysigninapp.RingFragment.OnListFragmentInteractionListener;
 import honig.roey.student.roeysigninapp.dummy.DummyContent.DummyItem;
@@ -42,6 +45,10 @@ public class MyRingRecyclerViewAdapter extends RecyclerView.Adapter<MyRingRecycl
     public void onBindViewHolder(final ViewHolder holder, int position) {
         // set the content
         holder.mContentView.setText(mValues[position]);
+        // scale the animation
+        holder.animationView.setScaleX(2);
+        holder.animationView.setScaleY(2);
+
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,12 +79,15 @@ public class MyRingRecyclerViewAdapter extends RecyclerView.Adapter<MyRingRecycl
         public final View mView;
         public final TextView mContentView;
         public String mItem;
+        public LottieAnimationView animationView;
         // Constractor - this takes the View which is the layout of a single Ring Item in the list
         // This View can have multiple TextView , buttons and what ever we want
         public ViewHolder(View view) {
             super(view);
             mView = view;
             mContentView = (TextView) view.findViewById(R.id.ringName);
+            animationView = (LottieAnimationView)view.findViewById(R.id.animation_view);
+
         }
 
         @Override
