@@ -124,7 +124,7 @@ public class LoginFragment extends Fragment{
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
 
-                            Toast.makeText(getContext(),"hi "+user.getDisplayName(), Toast.LENGTH_LONG).show();
+                            //Toast.makeText(getContext(),"hi "+user.getDisplayName(), Toast.LENGTH_LONG).show();
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());

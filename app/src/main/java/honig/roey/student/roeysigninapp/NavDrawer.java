@@ -276,7 +276,7 @@ public class NavDrawer extends AppCompatActivity
             // present loading animation
             switchToFragment(R.id.appFragContainer,loadingAnimationFragment);
             if (isRedirectedFromLoginActivity || mAuth.getCurrentUser() != null){
-                handler.postDelayed(switchToRings,5000);
+                handler.postDelayed(switchToRings,2000);
             }
 
 
