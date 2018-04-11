@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -56,7 +57,17 @@ public class NavDrawer extends AppCompatActivity
     private ImageView imageViewUserProfile;
     private TextView navHeaderTitle;
     private RingFragment ringFragment = new RingFragment();
+    private LoadingAnimationFragment loadingAnimationFragment = new LoadingAnimationFragment();
+    boolean isRedirectedFromLoginActivity = false;
 
+    Handler handler = new Handler();
+    Runnable switchToRings = new Runnable() {
+        @Override
+        public void run() {
+            readFromFireBaseRealTimeDataBase2("tableOfRingsPerUser", uid);
+
+        }
+    };
 
 
     // todo i was expermienting in this activity with reqadin and writing to the firebase realtime databas
@@ -113,7 +124,10 @@ public class NavDrawer extends AppCompatActivity
         @Override
         public void onDataListenerSuccess(DataSnapshot data, long num) {
             counter = counter +1;
-            if (counter == num ){
+            //TODO this is stuipid thers's no need to cheack the DB every time we press Rings in the NAV menu
+            //TODO: switch to spliting the orignal function to getting this information and
+            //TODO: switching to the Rings Frag
+            if (counter == num || counter > num){
                 RingsPerUser currentUserRings = new RingsPerUser(tmp);
                 Bundle ringFragmentArgsBundle = new Bundle();
                 //ringFragmentArgsBundle.putStringArrayList("arg1",currentUserRings.getUserRings());
@@ -161,7 +175,7 @@ public class NavDrawer extends AppCompatActivity
             }
         };
 
-        boolean isRedirectedFromLoginActivity = getIntent().getBooleanExtra("arg1",false);
+        isRedirectedFromLoginActivity = getIntent().getBooleanExtra("arg1",false);
         if (isRedirectedFromLoginActivity){
             uid = mAuth.getCurrentUser().getUid();
         }
@@ -259,7 +273,14 @@ public class NavDrawer extends AppCompatActivity
             // TODO: Buffering Animation
             // TODO: handle a Null pointer exception, that is - "No Rings"
 
-            readFromFireBaseRealTimeDataBase2("tableOfRingsPerUser", uid);
+            // present loading animation
+            switchToFragment(R.id.appFragContainer,loadingAnimationFragment);
+            if (isRedirectedFromLoginActivity || mAuth.getCurrentUser() != null){
+                handler.postDelayed(switchToRings,5000);
+            }
+
+
+
 
 
         } else if (id == R.id.nav_gallery) {
