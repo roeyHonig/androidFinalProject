@@ -1,16 +1,22 @@
 package honig.roey.student.roeysigninapp;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -78,6 +84,15 @@ public class RingFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_ring_list, container, false);
+        // Set FAB
+        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.addNewArena);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openDialogBox();
+            }
+        });
+
         ringRecyclerView = view.findViewById(R.id.ringsList);
         // Set the adapter
             Context context = ringRecyclerView.getContext();
@@ -138,5 +153,44 @@ public class RingFragment extends Fragment {
         for (int i = 0; i < mDataset.length; i++) {
             mDataset[i] = "Ring #" + i;
         }
+    }
+
+    public void openDialogBox(){
+        //AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        View dialogView = getLayoutInflater().inflate(R.layout.add_arena_dialog,null);
+        final EditText newRingName = dialogView.findViewById(R.id.newRingName);
+        builder.setPositiveButton("OK", null)
+                .setNegativeButton("Abourt", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Toast.makeText(getActivity(),"Later then...",Toast.LENGTH_LONG).show();
+                    }
+                });
+
+        builder.setView(dialogView);
+        final AlertDialog myDialog = builder.create();
+
+        myDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialogInterface) {
+                Button button = ((AlertDialog) myDialog).getButton(AlertDialog.BUTTON_POSITIVE);
+                button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        String inputText = newRingName.getText().toString();
+                        if (inputText.equals("")) {
+
+                        } else{
+                            Toast.makeText(getActivity(), "Your New Arena: " +inputText, Toast.LENGTH_LONG).show();
+                            //Dismiss once everything is OK.
+                            myDialog.dismiss();
+                        }
+                    }
+                });
+            }
+        });
+        myDialog.show();
+
+
     }
 }

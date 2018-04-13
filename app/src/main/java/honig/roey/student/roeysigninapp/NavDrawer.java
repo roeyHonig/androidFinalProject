@@ -129,7 +129,7 @@ public class NavDrawer extends AppCompatActivity
             //TODO: switching to the Rings Frag
             //TODO: now, i'm not so sure, i mean what happend when the user adds a new Ring, would we want a navigation back to Rings?,
             // TODO: and off course to read the DB again
-            if (counter == num || counter > num){
+            if (counter == num){
                 RingsPerUser currentUserRings = new RingsPerUser(tmp);
                 Bundle ringFragmentArgsBundle = new Bundle();
                 //ringFragmentArgsBundle.putStringArrayList("arg1",currentUserRings.getUserRings());
@@ -142,6 +142,7 @@ public class NavDrawer extends AppCompatActivity
 
 
                 ringFragment.setArguments(ringFragmentArgsBundle);
+                counter = 0;
                 // DB data has been retrived -> safe tu update the UI
                 switchToFragment(R.id.appFragContainer, ringFragment);
             }
@@ -272,12 +273,12 @@ public class NavDrawer extends AppCompatActivity
 
         if (id == R.id.nav_rings) {
             // Handle the recycler view of the user's rings
-            // TODO: Buffering Animation
             // TODO: handle a Null pointer exception, that is - "No Rings"
 
             // present loading animation
             switchToFragment(R.id.appFragContainer,loadingAnimationFragment);
-            if (isRedirectedFromLoginActivity || mAuth.getCurrentUser() != null){
+            // Scan DB and present Rings
+            if (isRedirectedFromLoginActivity){
                 handler.postDelayed(switchToRings,2000);
             }
 
@@ -331,6 +332,8 @@ public class NavDrawer extends AppCompatActivity
     public void onListFragmentInteraction(String item) {
         Toast.makeText(this,item,Toast.LENGTH_LONG).show();
     }
+
+
 
     private void exampleWriteToFireBaseRealTimeDataBase(){
         // write the JSON to the FireBase DataBase
