@@ -255,6 +255,7 @@ public class NavDrawer extends AppCompatActivity
     protected void onStart() {
         super.onStart();
         mAuth.addAuthStateListener(mAuthListener);
+
     }
 
     @Override
