@@ -82,6 +82,7 @@ public class NavDrawer extends AppCompatActivity
     //todo which will then be send to the fragment as an argument
     private long counter=0; // a counter to makes sure all the rings are retrived from the DB. only then we can update the UI
     ArrayList<String> tmp = new ArrayList<String>();
+    private ArrayList<Integer> tmpNumOfPlayersInSpecificRing= new ArrayList<Integer>();
     private long currentUserNumOfArenas;
 
     OnGetDataFromFirebaseDbListener tableOfRingsPerUser = new OnGetDataFromFirebaseDbListener() {
@@ -96,14 +97,29 @@ public class NavDrawer extends AppCompatActivity
             DatabaseReference myRef;
             currentUserNumOfArenas = data.getChildrenCount();
             tmp.clear();
+            tmpNumOfPlayersInSpecificRing.clear();
             for (int i = 0; i < currentUserNumOfArenas ; i++) {
+
                 myRef = database.getReference().child("tableOfRings").child((String) data.child("r"+i).getValue());
                 myRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
+
+                        int tmpCount =0;
+                        for (int j = 0; j < 5; j++) {
+                            if (dataSnapshot.child("p"+j).getValue().equals("")) {
+
+                            } else {
+                                tmpCount++;
+                            }
+                        }
+
+                        // collect how many players in each Arena
+                        tmpNumOfPlayersInSpecificRing.add((Integer) tmpCount);
+                        // collect what's the name of each Arena
                         tmp.add((String)dataSnapshot.child("name").getValue());
                         //2nd Par "data.getChildrenCount()": how many rings does the user have
-                        // we need this number to itearete over all of them before updating the UI
+                        // we need this number to make sure we've iteareted over all of them before updating the UI
                         tableOfRings.onDataListenerSuccess(dataSnapshot,(long) data.getChildrenCount());
                     }
                     @Override
@@ -141,14 +157,17 @@ public class NavDrawer extends AppCompatActivity
                 //ringFragmentArgsBundle.putStringArrayList("arg1",currentUserRings.getUserRings());
 
                 String[] trytoput = new String[(int)num];
+                int[] trytoputNumOfPLayers = new int[(int)num];
                 for (int i = 0; i < (int)num; i++) {
                     trytoput[i] = currentUserRings.getUserRings().get(i);
+                    trytoputNumOfPLayers[i] = tmpNumOfPlayersInSpecificRing.get(i);
                 }
                 ringFragmentArgsBundle.putStringArray("arg1",trytoput);
+                ringFragmentArgsBundle.putIntArray("arg2",trytoputNumOfPLayers);
 
 
                 ringFragment.setArguments(ringFragmentArgsBundle);
-                counter = 0;
+                counter = 0; // reset the counter back to 0 so we can this process will hapend ever time we hit Rings in Nav Menu
                 // DB data has been retrived -> safe tu update the UI
                 switchToFragment(R.id.appFragContainer, ringFragment);
             }
