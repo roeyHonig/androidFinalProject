@@ -195,6 +195,8 @@ public class RingFragment extends Fragment {
                             indexForCountingArenas = indexForCountingArenas+ 1;
                             String tmpArenaId = parentActivity.pushAndSetNewChildAtRingsTable(inputText, true);
                             parentActivity.pushAndSetNewChildAtRingsPerUserTable((indexForCountingArenas-1),tmpArenaId);
+                            parentActivity.getNavigationView().setCheckedItem(R.id.nav_rings); // higlight the Rings Item in the Menu on StartUp
+                            parentActivity.getNavigationView().getMenu().performIdentifierAction(R.id.nav_rings,0); // Perform Action Associated with Rings Menu Item
 
                         }
                     }
@@ -206,3 +208,10 @@ public class RingFragment extends Fragment {
 
     }
 }
+
+/*
+
+navigationView.setCheckedItem(R.id.nav_rings); // higlight the Rings Item in the Menu on StartUp
+        navigationView.getMenu().performIdentifierAction(R.id.nav_rings, 0); // Perform the Action Associated with the Rings Menu Item
+
+ */

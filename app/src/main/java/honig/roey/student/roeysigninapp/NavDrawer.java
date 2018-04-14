@@ -70,6 +70,9 @@ public class NavDrawer extends AppCompatActivity
         }
     };
 
+    public NavigationView getNavigationView() {
+        return navigationView;
+    }
 
     // todo i was expermienting in this activity with reqadin and writing to the firebase realtime databas
     // todo these 2 fields or variabls should be here, there here because i need them for retriving data from the firebase DB
@@ -282,7 +285,7 @@ public class NavDrawer extends AppCompatActivity
             switchToFragment(R.id.appFragContainer,loadingAnimationFragment);
             // Scan DB and present Rings
             if (isRedirectedFromLoginActivity){
-                handler.postDelayed(switchToRings,2000);
+                handler.postDelayed(switchToRings,1000);
             }
 
 
