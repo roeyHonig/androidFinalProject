@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
@@ -78,6 +79,7 @@ public class NavDrawer extends AppCompatActivity
     //todo which will then be send to the fragment as an argument
     private long counter=0; // a counter to makes sure all the rings are retrived from the DB. only then we can update the UI
     ArrayList<String> tmp = new ArrayList<String>();
+    private long currentUserNumOfArenas;
 
     OnGetDataFromFirebaseDbListener tableOfRingsPerUser = new OnGetDataFromFirebaseDbListener() {
         @Override
@@ -89,8 +91,9 @@ public class NavDrawer extends AppCompatActivity
         public void onDataListenerSuccess(DataSnapshot data,long num) {
             FirebaseDatabase database = FirebaseDatabase.getInstance();
             DatabaseReference myRef;
-
-            for (int i = 0; i < data.getChildrenCount() ; i++) {
+            currentUserNumOfArenas = data.getChildrenCount();
+            tmp.clear();
+            for (int i = 0; i < currentUserNumOfArenas ; i++) {
                 myRef = database.getReference().child("tableOfRings").child((String) data.child("r"+i).getValue());
                 myRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -335,28 +338,31 @@ public class NavDrawer extends AppCompatActivity
 
 
 
-    private void exampleWriteToFireBaseRealTimeDataBase(){
+    public String pushAndSetNewChildAtRingsTable(String name, boolean isPublic){
         // write the JSON to the FireBase DataBase
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("tableOfRings");
         String tempKey = myRef.push().getKey();
         // create a JSON
-        RingGlobal tryme = new RingGlobal(tempKey,"fifa for ever",2, "dalia", "roey", "ido", "", "", "");
+        RingGlobal tempArena = new RingGlobal(tempKey,name,2,isPublic, mAuth.getCurrentUser().getUid(), "", "", "", "", "");
         // set the JSON
-        myRef.child(tempKey).setValue(tryme);
+        myRef.child(tempKey).setValue(tempArena);
+
+        return tempKey;
 
     }
 
-    private void exampleWriteToFireBaseRealTimeDataBase2(){
+    public void pushAndSetNewChildAtRingsPerUserTable(int index, String newArenaId){
         // write the JSON to the FireBase DataBase
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("tableOfRingsPerUser");
-
+        myRef.child(mAuth.getCurrentUser().getUid()).child("r"+index).setValue(newArenaId);
+        /*
         myRef.child("RRe3GGpTI6SeMb82413bJ4NPoA52").child("numOfRings").setValue(2);
         myRef.child("RRe3GGpTI6SeMb82413bJ4NPoA52").child("r0").setValue("blabla");
         myRef.child("RRe3GGpTI6SeMb82413bJ4NPoA52").child("r1").setValue("blablagain");
         myRef.child("RRe3GGpTI6SeMb82413bJ4NPoA52").child("r2").setValue("blablagainAndAgain");
-
+        */
     }
 
     private void exampleWriteToFireBaseRealTimeDataBase3(){
@@ -470,5 +476,10 @@ public class NavDrawer extends AppCompatActivity
 
     //*************************************************************************************************************
     */
+
+    //TODO: delete this
+    public void fromFragment(String mas){
+        Toast.makeText(NavDrawer.this,mas,Toast.LENGTH_LONG).show();
+    }
 
 }

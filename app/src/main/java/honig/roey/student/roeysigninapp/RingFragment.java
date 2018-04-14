@@ -26,6 +26,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import honig.roey.student.roeysigninapp.dummy.DummyContent;
 import honig.roey.student.roeysigninapp.dummy.DummyContent.DummyItem;
+import honig.roey.student.roeysigninapp.tables.RingGlobal;
 
 import java.util.List;
 
@@ -48,6 +49,9 @@ public class RingFragment extends Fragment {
     private MyRingRecyclerViewAdapter mAdapter;
     private int numOfRings = 16; // todo needs to be taken from the DataBase
     private String[] mDataset;
+    private NavDrawer parentActivity;
+    private int indexForCountingArenas = 0;
+
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -102,6 +106,7 @@ public class RingFragment extends Fragment {
             } else {
                 ringRecyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
+            indexForCountingArenas = mDataset.length;
             mAdapter = new MyRingRecyclerViewAdapter(mDataset, mListener);
             ringRecyclerView.setAdapter(mAdapter);
 
@@ -115,6 +120,7 @@ public class RingFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        parentActivity = (NavDrawer) getActivity();
         if (context instanceof OnListFragmentInteractionListener) {
             mListener = (OnListFragmentInteractionListener) context;
         } else {
@@ -156,7 +162,7 @@ public class RingFragment extends Fragment {
     }
 
     public void openDialogBox(){
-        //AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        //TODO: add a radio button public \ private Arena
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         View dialogView = getLayoutInflater().inflate(R.layout.add_arena_dialog,null);
         final EditText newRingName = dialogView.findViewById(R.id.newRingName);
@@ -181,9 +187,15 @@ public class RingFragment extends Fragment {
                         if (inputText.equals("")) {
 
                         } else{
-                            Toast.makeText(getActivity(), "Your New Arena: " +inputText, Toast.LENGTH_LONG).show();
+                            //Toast.makeText(getActivity(), "Your New Arena: " +inputText, Toast.LENGTH_LONG).show();
+                            //parentActivity.fromFragment("fragment new Arena is: "+ inputText);
                             //Dismiss once everything is OK.
                             myDialog.dismiss();
+                            // Append new Arena to the Firebase DB
+                            indexForCountingArenas = indexForCountingArenas+ 1;
+                            String tmpArenaId = parentActivity.pushAndSetNewChildAtRingsTable(inputText, true);
+                            parentActivity.pushAndSetNewChildAtRingsPerUserTable((indexForCountingArenas-1),tmpArenaId);
+
                         }
                     }
                 });
