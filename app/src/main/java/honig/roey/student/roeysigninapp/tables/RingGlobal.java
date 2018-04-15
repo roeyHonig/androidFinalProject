@@ -10,7 +10,7 @@ public class RingGlobal implements Parcelable {
     private String name;
     private int numPlayers;
     private boolean isPublicViewd;
-    ArrayList<UserStat> userStats;
+    private ArrayList<UserStat> userStats;
 
 
     //Ctors
@@ -23,6 +23,7 @@ public class RingGlobal implements Parcelable {
         this.name = name;
         this.numPlayers = userStats.size();
         this.isPublicViewd = isPublicViewd;
+        this.userStats = userStats;
 
     }
 

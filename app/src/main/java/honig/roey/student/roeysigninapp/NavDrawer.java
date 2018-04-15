@@ -76,8 +76,9 @@ public class NavDrawer extends AppCompatActivity
     public NavigationView getNavigationView() {
         return navigationView;
     }
-
+    public int trymetryme = 0;
     public long counter =0;
+    public double fuckit;
     public ArrayList<RingGlobal> userDataBaseData = new ArrayList<RingGlobal>();
 
     OnGetDataFromFirebaseDbListener tableOfRingsPerUser = new OnGetDataFromFirebaseDbListener() {
@@ -126,13 +127,22 @@ public class NavDrawer extends AppCompatActivity
             boolean tmpIsPublicViewd = true;
             String tmpKey="";
             String tmpName="";
-            UserStat tmpUserStat = new UserStat();
+
+            String tmpUid="";
+            String tmpFullName="";
+            long tmpLos = 1 ;
+            long tmpDrw = 1  ;
+            long tmpWin = 1 ;
+            //long tmpNumGames = 1;
+            //double tmpPct = 1;
+            //UserStat tmpUserStat = new UserStat();
             ArrayList<UserStat> tmpArrayListUserStat = new ArrayList<UserStat>();
 
             for (DataSnapshot recordInArenasTable: data.getChildren()
                  ) {
                 switch (recordInArenasTable.getKey()){
                     case "isPublicViewd":
+
                         tmpIsPublicViewd = recordInArenasTable.getValue(Boolean.class).booleanValue();
                         break;
                     case "key":
@@ -142,27 +152,57 @@ public class NavDrawer extends AppCompatActivity
                         tmpName = recordInArenasTable.getValue(String.class);
                         break;
                     // defult case means the record is a UserStat Object (not neccecery ower own current user)
-                    default:
-                        tmpUserStat = recordInArenasTable.child(recordInArenasTable.getKey()).getValue(UserStat.class);
+                    case "FAKE_RRe3GGpTI6SeMb82413bJ4NPoA52":
+
+                        //tmpUserStat = recordInArenasTable.child(recordInArenasTable.getKey()).getValue(UserStat.class);
+                        //tmpUid = recordInArenasTable.child(recordInArenasTable.getKey()).child("uid").getValue(String.class);
+                        //tmpFullName = recordInArenasTable.child(recordInArenasTable.getKey()).child("fullName").getValue(String.class);
+                        //tmpLos = recordInArenasTable.child(recordInArenasTable.getKey()).child("los").getValue(Long.class);
+                        //tmpDrw = recordInArenasTable.child(recordInArenasTable.getKey()).child("drw").getValue(Long.class);
+                        //tmpWin = recordInArenasTable.child(recordInArenasTable.getKey()).child("win").getValue(Long.class);
+                        //tmpNumGames = recordInArenasTable.child(recordInArenasTable.getKey()).child("numGames").getValue(Long.class);
+                        //tmpPct = recordInArenasTable.child(recordInArenasTable.getKey()).child("pct").getValue(Double.class);
+                       // tmpArrayListUserStat.add(new UserStat(tmpUid,tmpFullName,tmpLos,tmpDrw,tmpWin));
                         break;
 
                 }
+
+                if (recordInArenasTable.hasChildren()){
+                    //tmpArrayListUserStat.add(recordInArenasTable.getValue(UserStat.class));
+                    //fuckit = recordInArenasTable.child("pct").getValue(Double.class);
+
+                    tmpUid = recordInArenasTable.child("uid").getValue(String.class);
+                    tmpFullName = recordInArenasTable.child("fullName").getValue(String.class);
+                    tmpLos = recordInArenasTable.child("los").getValue(Long.class);
+                    tmpDrw = recordInArenasTable.child("drw").getValue(Long.class);
+                    tmpWin = recordInArenasTable.child("win").getValue(Long.class);
+                    tmpArrayListUserStat.add(new UserStat(tmpUid,tmpFullName,tmpLos,tmpDrw,tmpWin));
+                    //tmpArrayListUserStat.add(new UserStat("dsfg","roey",1,2,4));
+                    trymetryme = trymetryme +1;
+                }
             }
-            tmpArrayListUserStat.add(tmpUserStat);
+            //tmpArrayListUserStat.add(new UserStat(tmpUid,tmpFullName,tmpLos,tmpDrw,tmpWin));
             userDataBaseData.add(new RingGlobal(tmpKey,tmpName, tmpIsPublicViewd,tmpArrayListUserStat));
 
+
             if (counter == num){
+                //userDataBaseData.add(new RingGlobal(tmpKey,tmpName, tmpIsPublicViewd,tmpArrayListUserStat));
                 Bundle ringFragmentArgsBundle = new Bundle();
                 ringFragmentArgsBundle.putParcelableArrayList("arg",userDataBaseData);
                 ringFragment.setArguments(ringFragmentArgsBundle);
                 counter = 0; // reset the counter back to 0 so we can this process will hapend ever time we hit Rings in Nav Menu
+
                 // DB data has been retrived -> safe tu update the UI
                 //switchToFragment(R.id.appFragContainer, ringFragment);
 
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(NavDrawer.this,userDataBaseData.get(1).getUserStats().get(1).getFullName(),Toast.LENGTH_LONG).show();
+                        Toast.makeText(NavDrawer.this,userDataBaseData.get(2).getUserStats().get(1).getPct()+"",Toast.LENGTH_LONG).show();
+                        //Toast.makeText(NavDrawer.this,"loop"+trymetryme,Toast.LENGTH_LONG).show();
+                        //Toast.makeText(NavDrawer.this,""+tmpDrw,Toast.LENGTH_LONG).show();
+                        //Toast.makeText(NavDrawer.this,userDataBaseData.get(0).getName(),Toast.LENGTH_LONG).show();
+                        userDataBaseData.clear();
                         // userDataBaseData.get(0).getName()
                     }
                 });
@@ -368,9 +408,9 @@ public class NavDrawer extends AppCompatActivity
         String tempKey = myRef.push().getKey();
         // create a JSON
         ArrayList<UserStat> userStats = new ArrayList<UserStat>();
-        userStats.add(new UserStat(uid1,fullName1,5,2,6));
-        userStats.add(new UserStat(uid2,fullName2,1,7,3));
-        userStats.add(new UserStat(uid3,fullName3,4,3,7));
+        //userStats.add(new UserStat(uid1,fullName1,5,2,6));
+        //userStats.add(new UserStat(uid2,fullName2,1,7,3));
+        //userStats.add(new UserStat(uid3,fullName3,4,3,7));
         RingGlobal tempArena = new RingGlobal(tempKey,nameOfAreana, true,userStats);
         // set the JSON
         myRef.child(tempKey).child("key").setValue(tempArena.getKey());
