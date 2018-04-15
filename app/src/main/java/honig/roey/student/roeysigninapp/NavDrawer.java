@@ -43,6 +43,7 @@ import java.util.ArrayList;
 
 import honig.roey.student.roeysigninapp.tables.RingGlobal;
 import honig.roey.student.roeysigninapp.tables.RingsPerUser;
+import honig.roey.student.roeysigninapp.tables.UserStat;
 
 public class NavDrawer extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, RingFragment.OnListFragmentInteractionListener{
@@ -65,25 +66,19 @@ public class NavDrawer extends AppCompatActivity
     Runnable switchToRings = new Runnable() {
         @Override
         public void run() {
-            readFromFireBaseRealTimeDataBase2("tableOfRingsPerUser", uid);
+            readFromFireBaseRealTimeDataBase2("ArenasPerUser", uid);
 
         }
     };
+
+
 
     public NavigationView getNavigationView() {
         return navigationView;
     }
 
-    // todo i was expermienting in this activity with reqadin and writing to the firebase realtime databas
-    // todo these 2 fields or variabls should be here, there here because i need them for retriving data from the firebase DB
-    // todo the counter for example is a very important for making sure we've finished reading the releavent DB data
-    // todo and it is safe to update the UI or do other stuff
-    //todo tmp for example is the ArrayList used to collect the data from the firebase DB and constrct the correspanding class
-    //todo which will then be send to the fragment as an argument
-    private long counter=0; // a counter to makes sure all the rings are retrived from the DB. only then we can update the UI
-    ArrayList<String> tmp = new ArrayList<String>();
-    private ArrayList<Integer> tmpNumOfPlayersInSpecificRing= new ArrayList<Integer>();
-    private long currentUserNumOfArenas;
+    public long counter =0;
+    public ArrayList<RingGlobal> userDataBaseData = new ArrayList<RingGlobal>();
 
     OnGetDataFromFirebaseDbListener tableOfRingsPerUser = new OnGetDataFromFirebaseDbListener() {
         @Override
@@ -95,40 +90,22 @@ public class NavDrawer extends AppCompatActivity
         public void onDataListenerSuccess(DataSnapshot data,long num) {
             FirebaseDatabase database = FirebaseDatabase.getInstance();
             DatabaseReference myRef;
-            currentUserNumOfArenas = data.getChildrenCount();
-            tmp.clear();
-            tmpNumOfPlayersInSpecificRing.clear();
-            for (int i = 0; i < currentUserNumOfArenas ; i++) {
-
-                myRef = database.getReference().child("tableOfRings").child((String) data.child("r"+i).getValue());
-                myRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-
-                        int tmpCount =0;
-                        for (int j = 0; j < 5; j++) {
-                            if (dataSnapshot.child("p"+j).getValue().equals("")) {
-
-                            } else {
-                                tmpCount++;
+            for (DataSnapshot record:data.getChildren()
+                 ) {
+                        String ringID = record.getKey();
+                        myRef = database.getReference().child("Arenas").child(ringID);
+                        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                //2nd Par "data.getChildrenCount()": how many rings does the user have
+                                // we need this number to make sure we've iteareted over all of them before updating the UI
+                                tableOfRings.onDataListenerSuccess(dataSnapshot,(long) data.getChildrenCount());
                             }
-                        }
-
-                        // collect how many players in each Arena
-                        tmpNumOfPlayersInSpecificRing.add((Integer) tmpCount);
-                        // collect what's the name of each Arena
-                        tmp.add((String)dataSnapshot.child("name").getValue());
-                        //2nd Par "data.getChildrenCount()": how many rings does the user have
-                        // we need this number to make sure we've iteareted over all of them before updating the UI
-                        tableOfRings.onDataListenerSuccess(dataSnapshot,(long) data.getChildrenCount());
-                    }
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                    }
-                });
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                            }
+                        });
             }
-
-
 
         }
 
@@ -146,30 +123,50 @@ public class NavDrawer extends AppCompatActivity
         @Override
         public void onDataListenerSuccess(DataSnapshot data, long num) {
             counter = counter +1;
-            //TODO this is stuipid thers's no need to cheack the DB every time we press Rings in the NAV menu
-            //TODO: switch to spliting the orignal function to getting this information and
-            //TODO: switching to the Rings Frag
-            //TODO: now, i'm not so sure, i mean what happend when the user adds a new Ring, would we want a navigation back to Rings?,
-            // TODO: and off course to read the DB again
-            if (counter == num){
-                RingsPerUser currentUserRings = new RingsPerUser(tmp);
-                Bundle ringFragmentArgsBundle = new Bundle();
-                //ringFragmentArgsBundle.putStringArrayList("arg1",currentUserRings.getUserRings());
+            boolean tmpIsPublicViewd = true;
+            String tmpKey="";
+            String tmpName="";
+            UserStat tmpUserStat = new UserStat();
+            ArrayList<UserStat> tmpArrayListUserStat = new ArrayList<UserStat>();
 
-                String[] trytoput = new String[(int)num];
-                int[] trytoputNumOfPLayers = new int[(int)num];
-                for (int i = 0; i < (int)num; i++) {
-                    trytoput[i] = currentUserRings.getUserRings().get(i);
-                    trytoputNumOfPLayers[i] = tmpNumOfPlayersInSpecificRing.get(i);
+            for (DataSnapshot recordInArenasTable: data.getChildren()
+                 ) {
+                switch (recordInArenasTable.getKey()){
+                    case "isPublicViewd":
+                        tmpIsPublicViewd = recordInArenasTable.getValue(Boolean.class).booleanValue();
+                        break;
+                    case "key":
+                        tmpKey = recordInArenasTable.getValue(String.class);
+                        break;
+                    case "name":
+                        tmpName = recordInArenasTable.getValue(String.class);
+                        break;
+                    // defult case means the record is a UserStat Object (not neccecery ower own current user)
+                    default:
+                        tmpUserStat = recordInArenasTable.child(recordInArenasTable.getKey()).getValue(UserStat.class);
+                        break;
+
                 }
-                ringFragmentArgsBundle.putStringArray("arg1",trytoput);
-                ringFragmentArgsBundle.putIntArray("arg2",trytoputNumOfPLayers);
+            }
+            tmpArrayListUserStat.add(tmpUserStat);
+            userDataBaseData.add(new RingGlobal(tmpKey,tmpName, tmpIsPublicViewd,tmpArrayListUserStat));
 
-
+            if (counter == num){
+                Bundle ringFragmentArgsBundle = new Bundle();
+                ringFragmentArgsBundle.putParcelableArrayList("arg",userDataBaseData);
                 ringFragment.setArguments(ringFragmentArgsBundle);
                 counter = 0; // reset the counter back to 0 so we can this process will hapend ever time we hit Rings in Nav Menu
                 // DB data has been retrived -> safe tu update the UI
-                switchToFragment(R.id.appFragContainer, ringFragment);
+                //switchToFragment(R.id.appFragContainer, ringFragment);
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(NavDrawer.this,userDataBaseData.get(1).getUserStats().get(1).getFullName(),Toast.LENGTH_LONG).show();
+                        // userDataBaseData.get(0).getName()
+                    }
+                });
+
             }
 
         }
@@ -229,8 +226,11 @@ public class NavDrawer extends AppCompatActivity
                // exampleWriteToFireBaseRealTimeDataBase2();
                // exampleWriteToFireBaseRealTimeDataBase3();
                // readFromFireBaseRealTimeDataBase2("tableOfRingsPerUser", "RRe3GGpTI6SeMb82413bJ4NPoA52");
+                //pushAndSetNewChildAtArenasTable("fifa-2080","ZPoCCcIyTQReA5J03EnYiYZbhM32", "Rotem Walzer", "UV2tVsaP8GVhB4YU2o2iHCAfOum2", "Tal Efroni", "RRe3GGpTI6SeMb82413bJ4NPoA52", "Roey Honig");
+
             }
         });
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -361,15 +361,41 @@ public class NavDrawer extends AppCompatActivity
 
 
 
+    public void pushAndSetNewChildAtArenasTable(String nameOfAreana, String uid1 , String fullName1, String uid2 , String fullName2, String uid3, String fullName3){
+        // write the JSON to the FireBase DataBase
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("Arenas");
+        String tempKey = myRef.push().getKey();
+        // create a JSON
+        ArrayList<UserStat> userStats = new ArrayList<UserStat>();
+        userStats.add(new UserStat(uid1,fullName1,5,2,6));
+        userStats.add(new UserStat(uid2,fullName2,1,7,3));
+        userStats.add(new UserStat(uid3,fullName3,4,3,7));
+        RingGlobal tempArena = new RingGlobal(tempKey,nameOfAreana, true,userStats);
+        // set the JSON
+        myRef.child(tempKey).child("key").setValue(tempArena.getKey());
+        myRef.child(tempKey).child("name").setValue(tempArena.getName());
+        myRef.child(tempKey).child("numPlayers").setValue(tempArena.getNumPlayers());
+        myRef.child(tempKey).child("isPublicViewd").setValue(tempArena.isPublicViewd());
+        myRef.child(tempKey).child(uid1).setValue(userStats.get(0));
+        myRef.child(tempKey).child(uid2).setValue(userStats.get(1));
+        myRef.child(tempKey).child(uid3).setValue(userStats.get(2));
+
+
+
+        return;
+
+    }
+
     public String pushAndSetNewChildAtRingsTable(String name, boolean isPublic){
         // write the JSON to the FireBase DataBase
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("tableOfRings");
         String tempKey = myRef.push().getKey();
         // create a JSON
-        RingGlobal tempArena = new RingGlobal(tempKey,name,2,isPublic, mAuth.getCurrentUser().getUid(), "", "", "", "", "");
+        //RingGlobal tempArena = new RingGlobal(tempKey,name,2,isPublic, mAuth.getCurrentUser().getUid(), "", "", "", "", "");
         // set the JSON
-        myRef.child(tempKey).setValue(tempArena);
+        //myRef.child(tempKey).setValue(tempArena);
 
         return tempKey;
 

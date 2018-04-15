@@ -1,20 +1,26 @@
 package honig.roey.student.roeysigninapp.tables;
 
-public class userStat {
+public class UserStat {
+    String uid;
     private String fullName;
     long los;
     long drw;
     long win;
     long numGames;
-    float pct;
+    double pct;
 
-    public userStat(String fullName, long los, long drw, long win) {
+    public UserStat (){
+
+    }
+
+    public UserStat(String uid ,String fullName, long los, long drw, long win) {
+        this.uid = uid;
         this.fullName = fullName;
         this.los = los;
         this.drw = drw;
         this.win = win;
         this.numGames = los + drw + win;
-        this.pct = (drw+3*win)/(3*numGames);
+        this.pct = (double) (drw+3*win)/(double)(3*numGames);
     }
 
     public String getFullName() {
@@ -25,11 +31,19 @@ public class userStat {
         this.fullName = fullName;
     }
 
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
     public long getNumGames() {
         return numGames;
     }
 
-    
+
     public long getLos() {
         return los;
     }
@@ -54,7 +68,7 @@ public class userStat {
         this.win = win;
     }
 
-    public float getPct() {
+    public double getPct() {
         return pct;
     }
 }

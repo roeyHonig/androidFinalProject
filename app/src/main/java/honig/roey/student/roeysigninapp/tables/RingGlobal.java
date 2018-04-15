@@ -1,17 +1,16 @@
 package honig.roey.student.roeysigninapp.tables;
 
-public class RingGlobal {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.util.ArrayList;
+
+public class RingGlobal implements Parcelable {
     private String key;
     private String name;
     private int numPlayers;
     private boolean isPublicViewd;
-    // FireBase Users UID
-    private String p0;
-    private String p1;
-    private String p2;
-    private String p3;
-    private String p4;
-    private String p5;
+    ArrayList<UserStat> userStats;
 
 
     //Ctors
@@ -19,20 +18,34 @@ public class RingGlobal {
         // Default constructor required for calls to DataSnapshot.getValue(RingGlobal.class)
     }
 
-    public RingGlobal(String key, String name, int numPlayers, boolean isPublicViewd, String p0, String p1, String p2, String p3, String p4, String p5) {
+    public RingGlobal(String key, String name, boolean isPublicViewd, ArrayList<UserStat> userStats) {
         this.key = key;
         this.name = name;
-        this.numPlayers = numPlayers;
+        this.numPlayers = userStats.size();
         this.isPublicViewd = isPublicViewd;
-        this.p0 = p0;
-        this.p1 = p1;
-        this.p2 = p2;
-        this.p3 = p3;
-        this.p4 = p4;
-        this.p5 = p5;
+
     }
 
     // public getters
+
+    protected RingGlobal(Parcel in) {
+        key = in.readString();
+        name = in.readString();
+        numPlayers = in.readInt();
+        isPublicViewd = in.readByte() != 0;
+    }
+
+    public static final Creator<RingGlobal> CREATOR = new Creator<RingGlobal>() {
+        @Override
+        public RingGlobal createFromParcel(Parcel in) {
+            return new RingGlobal(in);
+        }
+
+        @Override
+        public RingGlobal[] newArray(int size) {
+            return new RingGlobal[size];
+        }
+    };
 
     public String getKey() {
         return key;
@@ -50,27 +63,20 @@ public class RingGlobal {
         return isPublicViewd;
     }
 
-    public String getP0() {
-        return p0;
+    public ArrayList<UserStat> getUserStats() {
+        return userStats;
     }
 
-    public String getP1() {
-        return p1;
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
-    public String getP2() {
-        return p2;
-    }
-
-    public String getP3() {
-        return p3;
-    }
-
-    public String getP4() {
-        return p4;
-    }
-
-    public String getP5() {
-        return p5;
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(key);
+        parcel.writeString(name);
+        parcel.writeInt(numPlayers);
+        parcel.writeByte((byte) (isPublicViewd ? 1 : 0));
     }
 }
