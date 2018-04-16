@@ -1,6 +1,9 @@
 package honig.roey.student.roeysigninapp.tables;
 
-public class UserStat {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class UserStat implements Parcelable {
     String uid;
     private String fullName;
     long los;
@@ -9,6 +12,7 @@ public class UserStat {
     long numGames;
     double pct;
 
+    // Constractors
     public UserStat (){
 
     }
@@ -27,6 +31,7 @@ public class UserStat {
         }
     }
 
+    // Getters & Setters
     public String getFullName() {
         return fullName;
     }
@@ -74,5 +79,46 @@ public class UserStat {
 
     public double getPct() {
         return pct;
+    }
+
+    // Constractor
+    protected UserStat(Parcel in) {
+        uid = in.readString();
+        fullName = in.readString();
+        los = in.readLong();
+        drw = in.readLong();
+        win = in.readLong();
+        numGames = in.readLong();
+        pct = in.readDouble();
+    }
+
+    // final field (it's type is an interface - Creator<>) - requiered to implement Parcebale
+    public static final Creator<UserStat> CREATOR = new Creator<UserStat>() {
+        @Override
+        public UserStat createFromParcel(Parcel in) {
+            return new UserStat(in);
+        }
+
+        @Override
+        public UserStat[] newArray(int size) {
+            return new UserStat[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    // Parameter "int i" ? ---> Additional flags about how the object should be written. May be 0
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(uid);
+        parcel.writeString(fullName);
+        parcel.writeLong(los);
+        parcel.writeLong(drw);
+        parcel.writeLong(win);
+        parcel.writeLong(numGames);
+        parcel.writeDouble(pct);
     }
 }

@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -41,12 +42,13 @@ import com.squareup.picasso.PicassoProvider;
 import java.net.URI;
 import java.util.ArrayList;
 
+import honig.roey.student.roeysigninapp.dummy.DummyContent;
 import honig.roey.student.roeysigninapp.tables.RingGlobal;
 import honig.roey.student.roeysigninapp.tables.RingsPerUser;
 import honig.roey.student.roeysigninapp.tables.UserStat;
 
 public class NavDrawer extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, RingFragment.OnListFragmentInteractionListener{
+        implements NavigationView.OnNavigationItemSelectedListener, RingFragment.OnListFragmentInteractionListener , PlayerStatFragment.OnListFragmentInteractionListener{
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
@@ -59,6 +61,7 @@ public class NavDrawer extends AppCompatActivity
     private ImageView imageViewUserProfile;
     private TextView navHeaderTitle;
     private RingFragment ringFragment = new RingFragment();
+    private PlayerStatFragment playerStatFragment = new PlayerStatFragment();
     private LoadingAnimationFragment loadingAnimationFragment = new LoadingAnimationFragment();
     boolean isRedirectedFromLoginActivity = false;
     private long counter =0;
@@ -377,7 +380,31 @@ public class NavDrawer extends AppCompatActivity
     public void onListFragmentInteraction(String item) {
         //TODO: item is the ID of the Arena the user clicked on, in the RingFragment
         //TODO: insted of Toast, switch to the PlayerStatFragment VIEW
-        Toast.makeText(this,"you've selected Arena with id: "+item,Toast.LENGTH_LONG).show();
+        //Toast.makeText(this,"you've selected Arena with id: "+item,Toast.LENGTH_LONG).show();
+        Bundle playerStatFragmentArgsBundle = new Bundle();
+
+        int clickedArenaIndex=0;
+        for (RingGlobal arena: userDataBaseData
+             ) {
+            if (arena.getKey().equals(item)){
+                clickedArenaIndex = userDataBaseData.indexOf(arena);
+            }
+        }
+        /*
+        ArrayList<UserStat> tryme = new ArrayList<UserStat>();
+        for (int i = 0; i < userDataBaseData.get(clickedArenaIndex).getNumPlayers()  ; i++) {
+            tryme.add(userDataBaseData.get(clickedArenaIndex).getUserStats())
+        }
+        */
+        playerStatFragmentArgsBundle.putString("argKey",userDataBaseData.get(clickedArenaIndex).getKey());
+        playerStatFragmentArgsBundle.putString("argName",userDataBaseData.get(clickedArenaIndex).getName());
+        playerStatFragmentArgsBundle.putInt("argNumPlayers",userDataBaseData.get(clickedArenaIndex).getNumPlayers());
+        playerStatFragmentArgsBundle.putBoolean("argIsPublicViewd",userDataBaseData.get(clickedArenaIndex).isPublicViewd());
+        playerStatFragmentArgsBundle.putParcelableArrayList("argUserStatArrayList",userDataBaseData.get(clickedArenaIndex).getUserStats());
+
+
+        playerStatFragment.setArguments(playerStatFragmentArgsBundle);
+       switchToFragment(R.id.appFragContainer, playerStatFragment);
     }
 
 
@@ -528,4 +555,8 @@ public class NavDrawer extends AppCompatActivity
     }
 
 
+    @Override
+    public void onListFragmentInteraction(DummyContent.DummyItem item) {
+        // this is clickable from the Arena fragment (PlayerStatFragment)
+    }
 }

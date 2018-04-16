@@ -83,7 +83,7 @@ public class RingFragment extends Fragment {
         numOfPlayersPerArenaDataset = getArguments().getStringArrayList("arg2");
         idOfTheUserArenas = getArguments().getStringArrayList("arg3");
         if (getArguments() != null) {
-            //mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
+            mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
 
         }
     }

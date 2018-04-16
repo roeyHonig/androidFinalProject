@@ -9,6 +9,7 @@ import android.widget.TextView;
 import honig.roey.student.roeysigninapp.PlayerStatFragment.OnListFragmentInteractionListener;
 import honig.roey.student.roeysigninapp.dummy.DummyContent.DummyItem;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,10 +19,10 @@ import java.util.List;
  */
 public class MyPlayerStatRecyclerViewAdapter extends RecyclerView.Adapter<MyPlayerStatRecyclerViewAdapter.ViewHolder> {
 
-    private final List<DummyItem> mValues;
+    private final ArrayList<String> mValues;
     private final OnListFragmentInteractionListener mListener;
 
-    public MyPlayerStatRecyclerViewAdapter(List<DummyItem> items, OnListFragmentInteractionListener listener) {
+    public MyPlayerStatRecyclerViewAdapter(ArrayList<String> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
@@ -36,8 +37,8 @@ public class MyPlayerStatRecyclerViewAdapter extends RecyclerView.Adapter<MyPlay
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText(mValues.get(position).content);
+        holder.mIdView.setText(mValues.get(position));
+        holder.mContentView.setText("This Will Have to be the PCT from DB");
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -45,7 +46,10 @@ public class MyPlayerStatRecyclerViewAdapter extends RecyclerView.Adapter<MyPlay
                 if (null != mListener) {
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
+
+                    /* I think that for now i don't need an option for click
                     mListener.onListFragmentInteraction(holder.mItem);
+                    */
                 }
             }
         });
@@ -60,13 +64,13 @@ public class MyPlayerStatRecyclerViewAdapter extends RecyclerView.Adapter<MyPlay
         public final View mView;
         public final TextView mIdView;
         public final TextView mContentView;
-        public DummyItem mItem;
+        public String mItem;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mIdView = (TextView) view.findViewById(R.id.item_number);
-            mContentView = (TextView) view.findViewById(R.id.content);
+            mIdView = (TextView) view.findViewById(R.id.userFullName);
+            mContentView = (TextView) view.findViewById(R.id.userPCT);
         }
 
         @Override
