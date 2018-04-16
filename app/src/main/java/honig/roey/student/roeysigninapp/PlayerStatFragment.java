@@ -67,6 +67,7 @@ public class PlayerStatFragment extends Fragment {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
             // TODO: this is junk just to try and pass data to the adapter
             // *******
+            trymeout.clear();
             trymeout.add("user1");
             trymeout.add("user2");
             trymeout.add("user3");
@@ -91,10 +92,9 @@ public class PlayerStatFragment extends Fragment {
         roey.setText(key);
         // *******
 
+        RecyclerView recyclerView = view.findViewById(R.id.usersList);
         // Set the adapter
-        if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
+            Context context = recyclerView.getContext();
             if (mColumnCount <= 1) {
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
             } else {
@@ -102,7 +102,7 @@ public class PlayerStatFragment extends Fragment {
             }
 
             recyclerView.setAdapter(new MyPlayerStatRecyclerViewAdapter(trymeout, mListener));
-        }
+
         return view;
     }
 

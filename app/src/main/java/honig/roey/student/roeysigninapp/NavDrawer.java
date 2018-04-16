@@ -283,13 +283,14 @@ public class NavDrawer extends AppCompatActivity
 
     }
 
+    //TODO: maybe delete this all togeter - I don't want ant backPressed Navigation
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            //super.onBackPressed(); // I don't want any backPressed Navigation
         }
     }
 
