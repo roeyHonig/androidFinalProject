@@ -20,7 +20,11 @@ public class UserStat {
         this.drw = drw;
         this.win = win;
         this.numGames = los + drw + win;
-        this.pct = (double) (drw+3*win)/(double)(3*numGames);
+        if (this.numGames == 0) {
+            this.pct = 0;
+        } else {
+            this.pct = (double) (drw+3*win)/(double)(3*numGames);
+        }
     }
 
     public String getFullName() {

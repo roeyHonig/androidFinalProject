@@ -410,7 +410,7 @@ public class NavDrawer extends AppCompatActivity
         String tempKey = myRef.push().getKey();
         // create a JSON
         ArrayList<UserStat> userStats = new ArrayList<UserStat>();
-        userStats.add(new UserStat(uid,fullName,1,1,1));
+        userStats.add(new UserStat(uid,fullName,0,0,0));
         RingGlobal tempArena = new RingGlobal(tempKey,nameOfAreana, true,userStats);
         // set the JSON
         myRef.child(tempKey).child("key").setValue(tempArena.getKey());
