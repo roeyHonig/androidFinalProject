@@ -28,6 +28,7 @@ import honig.roey.student.roeysigninapp.dummy.DummyContent;
 import honig.roey.student.roeysigninapp.dummy.DummyContent.DummyItem;
 import honig.roey.student.roeysigninapp.tables.RingGlobal;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -48,8 +49,8 @@ public class RingFragment extends Fragment {
     private RecyclerView ringRecyclerView;
     private MyRingRecyclerViewAdapter mAdapter;
     private int numOfRings = 16; // todo needs to be taken from the DataBase
-    private String[] mDataset;
-    private int[] numOfPlayersPerArenaDataset;
+    private ArrayList<String> mDataset;
+    private ArrayList<String> numOfPlayersPerArenaDataset;
     private NavDrawer parentActivity;
     private int indexForCountingArenas = 0;
 
@@ -77,8 +78,8 @@ public class RingFragment extends Fragment {
         // Initaliaze the list of rings
         //initDataset();
 
-        mDataset = getArguments().getStringArray("arg1");
-        numOfPlayersPerArenaDataset = getArguments().getIntArray("arg2");
+        mDataset = getArguments().getStringArrayList("arg1");
+        numOfPlayersPerArenaDataset = getArguments().getStringArrayList("arg2");
 
         if (getArguments() != null) {
             //mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
@@ -108,7 +109,7 @@ public class RingFragment extends Fragment {
             } else {
                 ringRecyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            indexForCountingArenas = mDataset.length;
+            indexForCountingArenas = mDataset.size();
             mAdapter = new MyRingRecyclerViewAdapter(mDataset, numOfPlayersPerArenaDataset , mListener);
             ringRecyclerView.setAdapter(mAdapter);
 
@@ -155,13 +156,6 @@ public class RingFragment extends Fragment {
 
 
 
-    // todo: should initalize from the DataBase
-    private void initDataset() {
-        mDataset = new String[numOfRings];
-        for (int i = 0; i < mDataset.length; i++) {
-            mDataset[i] = "Ring #" + i;
-        }
-    }
 
     public void openDialogBox(){
         //TODO: add a radio button public \ private Arena
@@ -189,17 +183,19 @@ public class RingFragment extends Fragment {
                         if (inputText.equals("")) {
 
                         } else{
-                            //Toast.makeText(getActivity(), "Your New Arena: " +inputText, Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), "Your New Arena: " +inputText, Toast.LENGTH_LONG).show();
                             //parentActivity.fromFragment("fragment new Arena is: "+ inputText);
                             //Dismiss once everything is OK.
                             myDialog.dismiss();
-                            // Append new Arena to the Firebase DB
+                            // TODO: Append new Arena to the Firebase DB
+
+                            /*
                             indexForCountingArenas = indexForCountingArenas+ 1;
                             String tmpArenaId = parentActivity.pushAndSetNewChildAtRingsTable(inputText, true);
                             parentActivity.pushAndSetNewChildAtRingsPerUserTable((indexForCountingArenas-1),tmpArenaId);
                             parentActivity.getNavigationView().setCheckedItem(R.id.nav_rings); // higlight the Rings Item in the Menu on StartUp
                             parentActivity.getNavigationView().getMenu().performIdentifierAction(R.id.nav_rings,0); // Perform Action Associated with Rings Menu Item
-
+                            */
                         }
                     }
                 });

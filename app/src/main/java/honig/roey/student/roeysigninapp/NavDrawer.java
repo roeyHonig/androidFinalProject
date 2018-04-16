@@ -61,26 +61,23 @@ public class NavDrawer extends AppCompatActivity
     private RingFragment ringFragment = new RingFragment();
     private LoadingAnimationFragment loadingAnimationFragment = new LoadingAnimationFragment();
     boolean isRedirectedFromLoginActivity = false;
-
-    Handler handler = new Handler();
-    Runnable switchToRings = new Runnable() {
-        @Override
-        public void run() {
-            readFromFireBaseRealTimeDataBase2("ArenasPerUser", uid);
-
-        }
-    };
-
-
-
     public NavigationView getNavigationView() {
         return navigationView;
     }
-    public int trymetryme = 0;
-    public long counter =0;
-    public double fuckit;
-    public ArrayList<RingGlobal> userDataBaseData = new ArrayList<RingGlobal>();
+    private long counter =0;
+    private ArrayList<RingGlobal> userDataBaseData = new ArrayList<RingGlobal>();
+    private Handler handler = new Handler();
+    private Runnable switchToRings = new Runnable() {
+        @Override
+        public void run() {
+            userDataBaseData.clear();
+            readFromFireBaseRealTimeDataBase2("ArenasPerUser", uid);
+        }
+    };
 
+    // Interface to call methods after reading the FireBase Realtime DB
+    // ****************************************************************
+    // Do This after reading the ArenasPerUser table in the DB
     OnGetDataFromFirebaseDbListener tableOfRingsPerUser = new OnGetDataFromFirebaseDbListener() {
         @Override
         public void onDataListenerStart() {
@@ -115,6 +112,7 @@ public class NavDrawer extends AppCompatActivity
 
         }
     };
+    // Do This after reading the Arenas table in the DB
     OnGetDataFromFirebaseDbListener tableOfRings = new OnGetDataFromFirebaseDbListener() {
         @Override
         public void onDataListenerStart() {
@@ -127,86 +125,56 @@ public class NavDrawer extends AppCompatActivity
             boolean tmpIsPublicViewd = true;
             String tmpKey="";
             String tmpName="";
-
-            String tmpUid="";
-            String tmpFullName="";
-            long tmpLos = 1 ;
-            long tmpDrw = 1  ;
-            long tmpWin = 1 ;
-            //long tmpNumGames = 1;
-            //double tmpPct = 1;
-            //UserStat tmpUserStat = new UserStat();
+            String tmpUid;
+            String tmpFullName;
+            long tmpLos;
+            long tmpDrw;
+            long tmpWin;
             ArrayList<UserStat> tmpArrayListUserStat = new ArrayList<UserStat>();
 
             for (DataSnapshot recordInArenasTable: data.getChildren()
                  ) {
-                switch (recordInArenasTable.getKey()){
-                    case "isPublicViewd":
-
-                        tmpIsPublicViewd = recordInArenasTable.getValue(Boolean.class).booleanValue();
-                        break;
-                    case "key":
-                        tmpKey = recordInArenasTable.getValue(String.class);
-                        break;
-                    case "name":
-                        tmpName = recordInArenasTable.getValue(String.class);
-                        break;
-                    // defult case means the record is a UserStat Object (not neccecery ower own current user)
-                    case "FAKE_RRe3GGpTI6SeMb82413bJ4NPoA52":
-
-                        //tmpUserStat = recordInArenasTable.child(recordInArenasTable.getKey()).getValue(UserStat.class);
-                        //tmpUid = recordInArenasTable.child(recordInArenasTable.getKey()).child("uid").getValue(String.class);
-                        //tmpFullName = recordInArenasTable.child(recordInArenasTable.getKey()).child("fullName").getValue(String.class);
-                        //tmpLos = recordInArenasTable.child(recordInArenasTable.getKey()).child("los").getValue(Long.class);
-                        //tmpDrw = recordInArenasTable.child(recordInArenasTable.getKey()).child("drw").getValue(Long.class);
-                        //tmpWin = recordInArenasTable.child(recordInArenasTable.getKey()).child("win").getValue(Long.class);
-                        //tmpNumGames = recordInArenasTable.child(recordInArenasTable.getKey()).child("numGames").getValue(Long.class);
-                        //tmpPct = recordInArenasTable.child(recordInArenasTable.getKey()).child("pct").getValue(Double.class);
-                       // tmpArrayListUserStat.add(new UserStat(tmpUid,tmpFullName,tmpLos,tmpDrw,tmpWin));
-                        break;
-
-                }
-
-                if (recordInArenasTable.hasChildren()){
-                    //tmpArrayListUserStat.add(recordInArenasTable.getValue(UserStat.class));
-                    //fuckit = recordInArenasTable.child("pct").getValue(Double.class);
-
-                    tmpUid = recordInArenasTable.child("uid").getValue(String.class);
-                    tmpFullName = recordInArenasTable.child("fullName").getValue(String.class);
-                    tmpLos = recordInArenasTable.child("los").getValue(Long.class);
-                    tmpDrw = recordInArenasTable.child("drw").getValue(Long.class);
-                    tmpWin = recordInArenasTable.child("win").getValue(Long.class);
-                    tmpArrayListUserStat.add(new UserStat(tmpUid,tmpFullName,tmpLos,tmpDrw,tmpWin));
-                    //tmpArrayListUserStat.add(new UserStat("dsfg","roey",1,2,4));
-                    trymetryme = trymetryme +1;
-                }
+                        // simple fields in the DB
+                        switch (recordInArenasTable.getKey()){
+                            case "isPublicViewd":
+                                tmpIsPublicViewd = recordInArenasTable.getValue(Boolean.class).booleanValue();
+                                break;
+                            case "key":
+                                tmpKey = recordInArenasTable.getValue(String.class);
+                                break;
+                            case "name":
+                                tmpName = recordInArenasTable.getValue(String.class);
+                                break;
+                            default:
+                                break;
+                        }
+                        // complex fields in the DB - these fields are JSON Object withinthemself
+                        if (recordInArenasTable.hasChildren()){
+                            tmpUid = recordInArenasTable.child("uid").getValue(String.class);
+                            tmpFullName = recordInArenasTable.child("fullName").getValue(String.class);
+                            tmpLos = recordInArenasTable.child("los").getValue(Long.class);
+                            tmpDrw = recordInArenasTable.child("drw").getValue(Long.class);
+                            tmpWin = recordInArenasTable.child("win").getValue(Long.class);
+                            tmpArrayListUserStat.add(new UserStat(tmpUid,tmpFullName,tmpLos,tmpDrw,tmpWin));
+                        }
             }
-            //tmpArrayListUserStat.add(new UserStat(tmpUid,tmpFullName,tmpLos,tmpDrw,tmpWin));
             userDataBaseData.add(new RingGlobal(tmpKey,tmpName, tmpIsPublicViewd,tmpArrayListUserStat));
-
-
+            // we've itereated over every Arena
             if (counter == num){
-                //userDataBaseData.add(new RingGlobal(tmpKey,tmpName, tmpIsPublicViewd,tmpArrayListUserStat));
                 Bundle ringFragmentArgsBundle = new Bundle();
-                ringFragmentArgsBundle.putParcelableArrayList("arg",userDataBaseData);
+                ArrayList<String> namesOfTheUserArenas = new ArrayList<String>();
+                ArrayList<String> numberOfPlayersInEveryUserArenas = new ArrayList<String>();
+                for (RingGlobal arena: userDataBaseData
+                     ) {
+                    namesOfTheUserArenas.add(arena.getName());
+                    numberOfPlayersInEveryUserArenas.add(String.valueOf(arena.getNumPlayers()));
+                }
+                ringFragmentArgsBundle.putStringArrayList("arg1", namesOfTheUserArenas);
+                ringFragmentArgsBundle.putStringArrayList("arg2", numberOfPlayersInEveryUserArenas);
                 ringFragment.setArguments(ringFragmentArgsBundle);
-                counter = 0; // reset the counter back to 0 so we can this process will hapend ever time we hit Rings in Nav Menu
-
-                // DB data has been retrived -> safe tu update the UI
-                //switchToFragment(R.id.appFragContainer, ringFragment);
-
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(NavDrawer.this,userDataBaseData.get(2).getUserStats().get(1).getPct()+"",Toast.LENGTH_LONG).show();
-                        //Toast.makeText(NavDrawer.this,"loop"+trymetryme,Toast.LENGTH_LONG).show();
-                        //Toast.makeText(NavDrawer.this,""+tmpDrw,Toast.LENGTH_LONG).show();
-                        //Toast.makeText(NavDrawer.this,userDataBaseData.get(0).getName(),Toast.LENGTH_LONG).show();
-                        userDataBaseData.clear();
-                        // userDataBaseData.get(0).getName()
-                    }
-                });
-
+                counter = 0; // reset the counter back to 0 to enable this process every time we hit Rings in Nav Menu
+                // :-) :-) :-) DB data has been retrieved -> safe to update the UI
+                switchToFragment(R.id.appFragContainer, ringFragment);
             }
 
         }
@@ -216,7 +184,7 @@ public class NavDrawer extends AppCompatActivity
 
         }
     };
-
+    // ****************************************************************
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -347,9 +315,6 @@ public class NavDrawer extends AppCompatActivity
             if (isRedirectedFromLoginActivity){
                 handler.postDelayed(switchToRings,1000);
             }
-
-
-
 
 
         } else if (id == R.id.nav_gallery) {
@@ -520,55 +485,5 @@ public class NavDrawer extends AppCompatActivity
 
     }
 
-
-    /*
-    // todo these are methods which allow sharing information outside the eventlistenr of reading the DB - addListenerForSingleValueEvent
-    // ****************************************************************************************
-    @Override
-    public void onDataListenerStart(long numOfRings) {
-        counter = counter +1;
-        if (counter == numOfRings ){
-            Toast.makeText(this,tmp.get(3),Toast.LENGTH_LONG).show();
-        }
-    }
-
-    @Override
-    public void onDataListenerSuccess(DataSnapshot data) {
-
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef;
-
-        for (int i = 0; i < data.getChildrenCount() ; i++) {
-            myRef = database.getReference().child("tableOfRings").child((String) data.child("r"+i).getValue());
-            myRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    tmp.add((String)dataSnapshot.child("name").getValue());
-                    onDataListenerStart(data.getChildrenCount());
-                }
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                }
-            });
-        }
-
-        RingsPerUser ringsPerThisSignedUser = new RingsPerUser(tmp);
-       // Toast.makeText(this,"there are "+data.getChildrenCount()+" rings",Toast.LENGTH_LONG).show();
-       // Toast.makeText(this,ringID,Toast.LENGTH_LONG).show();
-        //Toast.makeText(this,tmp.get(0),Toast.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void onDataListenerFailed(DatabaseError databaseError) {
-        Toast.makeText(this,"Wrong",Toast.LENGTH_LONG).show();
-    }
-
-    //*************************************************************************************************************
-    */
-
-    //TODO: delete this
-    public void fromFragment(String mas){
-        Toast.makeText(NavDrawer.this,mas,Toast.LENGTH_LONG).show();
-    }
 
 }

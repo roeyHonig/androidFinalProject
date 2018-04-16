@@ -12,6 +12,7 @@ import com.airbnb.lottie.LottieAnimationView;
 import honig.roey.student.roeysigninapp.RingFragment.OnListFragmentInteractionListener;
 import honig.roey.student.roeysigninapp.dummy.DummyContent.DummyItem;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,15 +22,15 @@ import java.util.List;
  */
 public class MyRingRecyclerViewAdapter extends RecyclerView.Adapter<MyRingRecyclerViewAdapter.ViewHolder> {
 
-    private final String[] mValues; // the Data from a DataBase , like the String[] of the user's rings
+    private final ArrayList<String> mValues; // the Data from a DataBase , like the String[] of the user's rings
     private final OnListFragmentInteractionListener mListener; // a Listener for interaction with the list, specifcully clicking on a list item
                                                                 // as can be seen in the "onBindViewHolder" methood
-    private final int[] mSubValues;
+    private final ArrayList<String> mSubValues;
     // Constractor for the adapter
     // when called to action, in our RingFragment, it will be passed (as an argument) the data which is the String[]
     // of rings names
     // also an instance of the OnListFragmentInteractionListener interface is the 2nd argument
-    public MyRingRecyclerViewAdapter(String[] items, int[] items2 ,  OnListFragmentInteractionListener listener) {
+    public MyRingRecyclerViewAdapter(ArrayList<String> items, ArrayList<String> items2 , OnListFragmentInteractionListener listener) {
         mValues = items;
         mSubValues = items2;
         mListener = listener;
@@ -46,8 +47,8 @@ public class MyRingRecyclerViewAdapter extends RecyclerView.Adapter<MyRingRecycl
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         // set the content
-        holder.mContentView.setText(mValues[position]);
-        holder.mSubContenView.setText(mSubValues[position]+" Players");
+        holder.mContentView.setText(mValues.get(position));
+        holder.mSubContenView.setText(mSubValues.get(position)+" Players");
         // scale the animation
         //holder.animationView.setScaleX(2);
         //holder.animationView.setScaleY(2);
@@ -70,7 +71,7 @@ public class MyRingRecyclerViewAdapter extends RecyclerView.Adapter<MyRingRecycl
 
     @Override
     public int getItemCount() {
-        return mValues.length;
+        return mValues.size();
     }
 
 
