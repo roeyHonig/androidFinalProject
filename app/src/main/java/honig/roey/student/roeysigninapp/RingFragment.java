@@ -188,7 +188,10 @@ public class RingFragment extends Fragment {
                             //Dismiss once everything is OK.
                             myDialog.dismiss();
                             // TODO: Append new Arena to the Firebase DB
-
+                            String tmpArenaID =parentActivity.pushAndSetNewChildAtArenasTable(inputText, parentActivity.getUid(), parentActivity.getFullNameoFTheCurrentSignedInUser());
+                            parentActivity.pushAndSetNewChildAtArenasPerUserTable(parentActivity.getUid(),tmpArenaID);
+                            parentActivity.getNavigationView().setCheckedItem(R.id.nav_rings); // higlight the Rings Item in the Menu on StartUp
+                            parentActivity.getNavigationView().getMenu().performIdentifierAction(R.id.nav_rings,0); // Perform Action Associated with Rings Menu Item
                             /*
                             indexForCountingArenas = indexForCountingArenas+ 1;
                             String tmpArenaId = parentActivity.pushAndSetNewChildAtRingsTable(inputText, true);

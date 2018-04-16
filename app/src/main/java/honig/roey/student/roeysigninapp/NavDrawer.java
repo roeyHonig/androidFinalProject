@@ -51,7 +51,7 @@ public class NavDrawer extends AppCompatActivity
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private String uid = "RRe3GGpTI6SeMb82413bJ4NPoA52";
-
+    private String fullNameoFTheCurrentSignedInUser;
     private GoogleSignInClient mGoogleSignInClient;
     private NavigationView navigationView;
     private Menu menu;
@@ -61,9 +61,6 @@ public class NavDrawer extends AppCompatActivity
     private RingFragment ringFragment = new RingFragment();
     private LoadingAnimationFragment loadingAnimationFragment = new LoadingAnimationFragment();
     boolean isRedirectedFromLoginActivity = false;
-    public NavigationView getNavigationView() {
-        return navigationView;
-    }
     private long counter =0;
     private ArrayList<RingGlobal> userDataBaseData = new ArrayList<RingGlobal>();
     private Handler handler = new Handler();
@@ -74,6 +71,19 @@ public class NavDrawer extends AppCompatActivity
             readFromFireBaseRealTimeDataBase2("ArenasPerUser", uid);
         }
     };
+
+    // Getters
+    public String getUid() {
+        return uid;
+    }
+
+    public NavigationView getNavigationView() {
+        return navigationView;
+    }
+
+    public String getFullNameoFTheCurrentSignedInUser() {
+        return fullNameoFTheCurrentSignedInUser;
+    }
 
     // Interface to call methods after reading the FireBase Realtime DB
     // ****************************************************************
@@ -211,6 +221,7 @@ public class NavDrawer extends AppCompatActivity
         isRedirectedFromLoginActivity = getIntent().getBooleanExtra("arg1",false);
         if (isRedirectedFromLoginActivity){
             uid = mAuth.getCurrentUser().getUid();
+            fullNameoFTheCurrentSignedInUser = mAuth.getCurrentUser().getDisplayName();
         }
 
 
@@ -392,6 +403,25 @@ public class NavDrawer extends AppCompatActivity
 
     }
 
+    public String pushAndSetNewChildAtArenasTable(String nameOfAreana, String uid, String fullName){
+        // write the JSON to the FireBase DataBase
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("Arenas");
+        String tempKey = myRef.push().getKey();
+        // create a JSON
+        ArrayList<UserStat> userStats = new ArrayList<UserStat>();
+        userStats.add(new UserStat(uid,fullName,1,1,1));
+        RingGlobal tempArena = new RingGlobal(tempKey,nameOfAreana, true,userStats);
+        // set the JSON
+        myRef.child(tempKey).child("key").setValue(tempArena.getKey());
+        myRef.child(tempKey).child("name").setValue(tempArena.getName());
+        myRef.child(tempKey).child("numPlayers").setValue(tempArena.getNumPlayers());
+        myRef.child(tempKey).child("isPublicViewd").setValue(tempArena.isPublicViewd());
+        myRef.child(tempKey).child(uid).setValue(userStats.get(0));
+
+        return tempKey;
+    }
+
     public String pushAndSetNewChildAtRingsTable(String name, boolean isPublic){
         // write the JSON to the FireBase DataBase
         FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -417,6 +447,13 @@ public class NavDrawer extends AppCompatActivity
         myRef.child("RRe3GGpTI6SeMb82413bJ4NPoA52").child("r1").setValue("blablagain");
         myRef.child("RRe3GGpTI6SeMb82413bJ4NPoA52").child("r2").setValue("blablagainAndAgain");
         */
+    }
+
+    public void pushAndSetNewChildAtArenasPerUserTable(String uid, String newArenaId){
+        // write the JSON to the FireBase DataBase
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("ArenasPerUser");
+        myRef.child(uid).child(newArenaId).setValue(newArenaId);
     }
 
     private void exampleWriteToFireBaseRealTimeDataBase3(){
