@@ -65,14 +65,7 @@ public class PlayerStatFragment extends Fragment {
 
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
-            // TODO: this is junk just to try and pass data to the adapter
-            // *******
-            trymeout.clear();
-            trymeout.add("user1");
-            trymeout.add("user2");
-            trymeout.add("user3");
-            // *********
-
+            
             key = getArguments().getString("argKey");
             name = getArguments().getString("argName");
             numPlayers =getArguments().getInt("argNumPlayers") ;
@@ -98,7 +91,7 @@ public class PlayerStatFragment extends Fragment {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
 
-            recyclerView.setAdapter(new MyPlayerStatRecyclerViewAdapter(trymeout, mListener));
+            recyclerView.setAdapter(new MyPlayerStatRecyclerViewAdapter(userStats, mListener));
 
         return view;
     }

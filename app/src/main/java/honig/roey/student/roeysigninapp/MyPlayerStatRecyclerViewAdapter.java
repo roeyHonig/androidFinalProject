@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import honig.roey.student.roeysigninapp.PlayerStatFragment.OnListFragmentInteractionListener;
 import honig.roey.student.roeysigninapp.dummy.DummyContent.DummyItem;
+import honig.roey.student.roeysigninapp.tables.UserStat;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,10 +20,10 @@ import java.util.List;
  */
 public class MyPlayerStatRecyclerViewAdapter extends RecyclerView.Adapter<MyPlayerStatRecyclerViewAdapter.ViewHolder> {
 
-    private final ArrayList<String> mValues;
+    private final ArrayList<UserStat> mValues;
     private final OnListFragmentInteractionListener mListener;
 
-    public MyPlayerStatRecyclerViewAdapter(ArrayList<String> items, OnListFragmentInteractionListener listener) {
+    public MyPlayerStatRecyclerViewAdapter(ArrayList<UserStat> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
@@ -36,9 +37,9 @@ public class MyPlayerStatRecyclerViewAdapter extends RecyclerView.Adapter<MyPlay
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position));
-        holder.mContentView.setText("This Will Have to be the PCT from DB");
+        holder.mItem = mValues.get(position).getUid();
+        holder.mIdView.setText(mValues.get(position).getFullName());
+        holder.mContentView.setText(mValues.get(position).getPct()+"");
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
