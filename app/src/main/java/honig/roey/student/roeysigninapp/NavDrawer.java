@@ -174,13 +174,16 @@ public class NavDrawer extends AppCompatActivity
                 Bundle ringFragmentArgsBundle = new Bundle();
                 ArrayList<String> namesOfTheUserArenas = new ArrayList<String>();
                 ArrayList<String> numberOfPlayersInEveryUserArenas = new ArrayList<String>();
+                ArrayList<String> idOfTheUserArenas = new ArrayList<String>();
                 for (RingGlobal arena: userDataBaseData
                      ) {
                     namesOfTheUserArenas.add(arena.getName());
                     numberOfPlayersInEveryUserArenas.add(String.valueOf(arena.getNumPlayers()));
+                    idOfTheUserArenas.add(arena.getKey());
                 }
                 ringFragmentArgsBundle.putStringArrayList("arg1", namesOfTheUserArenas);
                 ringFragmentArgsBundle.putStringArrayList("arg2", numberOfPlayersInEveryUserArenas);
+                ringFragmentArgsBundle.putStringArrayList("arg3", idOfTheUserArenas);
                 ringFragment.setArguments(ringFragmentArgsBundle);
                 counter = 0; // reset the counter back to 0 to enable this process every time we hit Rings in Nav Menu
                 // :-) :-) :-) DB data has been retrieved -> safe to update the UI
@@ -372,7 +375,9 @@ public class NavDrawer extends AppCompatActivity
 
     @Override
     public void onListFragmentInteraction(String item) {
-        Toast.makeText(this,item,Toast.LENGTH_LONG).show();
+        //TODO: item is the ID of the Arena the user clicked on, in the RingFragment
+        //TODO: insted of Toast, switch to the PlayerStatFragment VIEW
+        Toast.makeText(this,"you've selected Arena with id: "+item,Toast.LENGTH_LONG).show();
     }
 
 

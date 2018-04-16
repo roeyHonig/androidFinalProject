@@ -26,13 +26,15 @@ public class MyRingRecyclerViewAdapter extends RecyclerView.Adapter<MyRingRecycl
     private final OnListFragmentInteractionListener mListener; // a Listener for interaction with the list, specifcully clicking on a list item
                                                                 // as can be seen in the "onBindViewHolder" methood
     private final ArrayList<String> mSubValues;
+    private final ArrayList<String> mThirdValues;
     // Constractor for the adapter
     // when called to action, in our RingFragment, it will be passed (as an argument) the data which is the String[]
     // of rings names
     // also an instance of the OnListFragmentInteractionListener interface is the 2nd argument
-    public MyRingRecyclerViewAdapter(ArrayList<String> items, ArrayList<String> items2 , OnListFragmentInteractionListener listener) {
+    public MyRingRecyclerViewAdapter(ArrayList<String> items, ArrayList<String> items2, ArrayList<String> items3 , OnListFragmentInteractionListener listener) {
         mValues = items;
         mSubValues = items2;
+        mThirdValues = items3;
         mListener = listener;
     }
 
@@ -49,6 +51,7 @@ public class MyRingRecyclerViewAdapter extends RecyclerView.Adapter<MyRingRecycl
         // set the content
         holder.mContentView.setText(mValues.get(position));
         holder.mSubContenView.setText(mSubValues.get(position)+" Players");
+        holder.arenaID =mThirdValues.get(position) ;
         // scale the animation
         //holder.animationView.setScaleX(2);
         //holder.animationView.setScaleY(2);
@@ -63,7 +66,8 @@ public class MyRingRecyclerViewAdapter extends RecyclerView.Adapter<MyRingRecycl
                     // look at the NavDraer Activity - which holds the fragment, this adapter class belongs too -
                     // you will see there, that there is a methood called "onListFragmentInteraction"
                     // this is a method waiting to be excuted. it will excute now:
-                    mListener.onListFragmentInteraction(holder.mContentView.getText().toString());
+                    mListener.onListFragmentInteraction(holder.arenaID);
+                    //mListener.onListFragmentInteraction(holder.mContentView.getText().toString());
                 }
             }
         });
@@ -83,7 +87,7 @@ public class MyRingRecyclerViewAdapter extends RecyclerView.Adapter<MyRingRecycl
         public final View mView;
         public final TextView mContentView;
         public  final TextView mSubContenView;
-        public String mItem;
+        public String arenaID;
         //public LottieAnimationView animationView;
         // Constractor - this takes the View which is the layout of a single Ring Item in the list
         // This View can have multiple TextView , buttons and what ever we want
@@ -92,6 +96,7 @@ public class MyRingRecyclerViewAdapter extends RecyclerView.Adapter<MyRingRecycl
             mView = view;
             mContentView = (TextView) view.findViewById(R.id.ringName);
             mSubContenView = (TextView) view.findViewById(R.id.ringNumOfPlayers);
+            arenaID = "";
             //animationView = (LottieAnimationView)view.findViewById(R.id.animation_view);
 
         }

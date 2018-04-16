@@ -51,6 +51,7 @@ public class RingFragment extends Fragment {
     private int numOfRings = 16; // todo needs to be taken from the DataBase
     private ArrayList<String> mDataset;
     private ArrayList<String> numOfPlayersPerArenaDataset;
+    private ArrayList<String> idOfTheUserArenas;
     private NavDrawer parentActivity;
     private int indexForCountingArenas = 0;
 
@@ -80,7 +81,7 @@ public class RingFragment extends Fragment {
 
         mDataset = getArguments().getStringArrayList("arg1");
         numOfPlayersPerArenaDataset = getArguments().getStringArrayList("arg2");
-
+        idOfTheUserArenas = getArguments().getStringArrayList("arg3");
         if (getArguments() != null) {
             //mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
 
@@ -110,7 +111,7 @@ public class RingFragment extends Fragment {
                 ringRecyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
             indexForCountingArenas = mDataset.size();
-            mAdapter = new MyRingRecyclerViewAdapter(mDataset, numOfPlayersPerArenaDataset , mListener);
+            mAdapter = new MyRingRecyclerViewAdapter(mDataset, numOfPlayersPerArenaDataset , idOfTheUserArenas, mListener);
             ringRecyclerView.setAdapter(mAdapter);
 
 
