@@ -79,5 +79,6 @@ public class RingGlobal implements Parcelable {
         parcel.writeString(name);
         parcel.writeInt(numPlayers);
         parcel.writeByte((byte) (isPublicViewd ? 1 : 0));
+
     }
 }
