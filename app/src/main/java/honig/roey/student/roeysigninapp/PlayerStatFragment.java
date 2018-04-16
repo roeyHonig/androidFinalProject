@@ -86,11 +86,8 @@ public class PlayerStatFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_playerstat_list, container, false);
 
-        //TODO: this is an example to see if we got all the data right from the Parent Activity
-        // ******
-        TextView roey = view.findViewById(R.id.arenaNameTitle);
-        roey.setText(key);
-        // *******
+        TextView arenaNameTitle = view.findViewById(R.id.arenaNameTitle);
+        arenaNameTitle.setText(name);
 
         RecyclerView recyclerView = view.findViewById(R.id.usersList);
         // Set the adapter
