@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
     private WelcomeFragment welcomeFragment = new WelcomeFragment(); // Fragment
     private LoginFragment loginFragment = new LoginFragment();       // Fragment
+    private SignUpFragment signUpFragment = new SignUpFragment();       // Fragment
 
     Handler handler = new Handler();
     Runnable switchToLogin = new Runnable() {
@@ -37,6 +38,19 @@ public class MainActivity extends AppCompatActivity {
             switchToFragment(loginFragment);
         }
     };
+
+    // Getters
+    public WelcomeFragment getWelcomeFragment() {
+        return welcomeFragment;
+    }
+
+    public LoginFragment getLoginFragment() {
+        return loginFragment;
+    }
+
+    public SignUpFragment getSignUpFragment() {
+        return signUpFragment;
+    }
 
     @SuppressLint("RestrictedApi")
     @Override
@@ -60,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
         handler.removeCallbacks(switchToLogin);
     }
 
-    private void switchToFragment(android.support.v4.app.Fragment fragment){
+    public void switchToFragment(android.support.v4.app.Fragment fragment){
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.fragContainer,fragment).commit();

@@ -5,11 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="#f59191"
     android:id="@+id/login_screen"
     >
 
     <EditText
-        android:id="@+id/editText"
+        android:id="@+id/etEmailLogin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -17,7 +18,7 @@
         android:inputType="textEmailAddress" />
 
     <EditText
-        android:id="@+id/editText2"
+        android:id="@+id/etPasswoedLogin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -25,9 +26,10 @@
         android:inputType="textPassword" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/btEmailPasswordSignIn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="#17a6e9"
         android:text="Sign In" />
 
 
@@ -47,5 +49,12 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp" />
 
+    <Button
+        android:id="@+id/btGoToSignupScreen"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Not a Member Yet?, go ahead and signup"
+        android:background="#f59191"
+        android:textAllCaps="false" />
 
 </LinearLayout>

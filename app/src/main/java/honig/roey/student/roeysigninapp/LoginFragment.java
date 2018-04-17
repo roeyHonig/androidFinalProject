@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -82,7 +83,16 @@ public class LoginFragment extends Fragment{
         };
         mAuth.addAuthStateListener(mAuthListener);
 
+        MainActivity parentActivity = (MainActivity) getActivity();
 
+        // Setup Button to switch to signup screen
+        Button btGoToSignupScreen = view.findViewById(R.id.btGoToSignupScreen);
+        btGoToSignupScreen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                parentActivity.switchToFragment(parentActivity.getSignUpFragment());
+            }
+        });
 
         return  view;
     }
