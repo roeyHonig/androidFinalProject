@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,12 +33,16 @@ import com.google.firebase.auth.GoogleAuthProvider;
  * A simple {@link Fragment} subclass.
  */
 public class LoginFragment extends Fragment{
+    private MainActivity parentActivity;
     private static final int RC_SIGN_IN = 1; // Arbitary code
     private static final String TAG = "LoginFragment";
     private SignInButton btnGoogleSign; // SignInButton is a type of widget (Class) Google created, it is their Sign In Button
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private GoogleSignInClient mGoogleSignInClient;
+    private EditText etEmailLogin;
+    private EditText etPasswoedLogin;
+    private Button btEmailPasswordSignIn;
 
 
     public LoginFragment() {
@@ -51,6 +56,19 @@ public class LoginFragment extends Fragment{
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.login_screen, container, false);
+        parentActivity = (MainActivity) getActivity();
+        etEmailLogin = view.findViewById(R.id.etEmailLogin);
+        etPasswoedLogin = view.findViewById(R.id.etPasswoedLogin);
+        btEmailPasswordSignIn = view.findViewById(R.id.btEmailPasswordSignIn);
+
+        btEmailPasswordSignIn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                signIntoTheApp(etEmailLogin.getText().toString(),etPasswoedLogin.getText().toString());
+            }
+        });
+
+
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -81,7 +99,7 @@ public class LoginFragment extends Fragment{
                 }
             }
         };
-        mAuth.addAuthStateListener(mAuthListener);
+
 
         MainActivity parentActivity = (MainActivity) getActivity();
 
@@ -96,6 +114,13 @@ public class LoginFragment extends Fragment{
         });
 
         return  view;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(mAuthListener);
+
     }
 
     private void signIn() {
@@ -140,6 +165,26 @@ public class LoginFragment extends Fragment{
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
 
+                        }
+
+                    }
+                });
+
+    }
+
+    private void signIntoTheApp(String eml, String pas) {
+
+        mAuth.signInWithEmailAndPassword(eml, pas)
+                .addOnCompleteListener(parentActivity, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            FirebaseUser user = mAuth.getCurrentUser();
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Toast.makeText(parentActivity, "Authentication failed: "+task.getException().getMessage(),
+                                    Toast.LENGTH_SHORT).show();
                         }
 
                     }
