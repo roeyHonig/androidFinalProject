@@ -27,12 +27,6 @@ import com.google.firebase.auth.GoogleAuthProvider;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final int RC_SIGN_IN = 1; // Arbitary code
-    private static final String TAG = "Main_Activity";
-    private SignInButton btnGoogleSign; // SignInButton is a type of widget (Class) Google created, it is their Sign In Button
-    private FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener mAuthListener;
-    private GoogleSignInClient mGoogleSignInClient;
     private WelcomeFragment welcomeFragment = new WelcomeFragment(); // Fragment
     private LoginFragment loginFragment = new LoginFragment();       // Fragment
 
