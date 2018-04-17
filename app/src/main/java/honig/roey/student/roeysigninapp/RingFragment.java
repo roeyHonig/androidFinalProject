@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
@@ -48,12 +49,12 @@ public class RingFragment extends Fragment {
 
     private RecyclerView ringRecyclerView;
     private MyRingRecyclerViewAdapter mAdapter;
-    private int numOfRings = 16; // todo needs to be taken from the DataBase
     private ArrayList<String> mDataset;
     private ArrayList<String> numOfPlayersPerArenaDataset;
     private ArrayList<String> idOfTheUserArenas;
     private NavDrawer parentActivity;
     private int indexForCountingArenas = 0;
+    private int viewVisablity;
 
 
     /**
@@ -79,19 +80,27 @@ public class RingFragment extends Fragment {
         // Initaliaze the list of rings
         //initDataset();
 
-        mDataset = getArguments().getStringArrayList("arg1");
-        numOfPlayersPerArenaDataset = getArguments().getStringArrayList("arg2");
-        idOfTheUserArenas = getArguments().getStringArrayList("arg3");
+
         if (getArguments() != null) {
+            // The user Has Arenas to present
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
+            mDataset = getArguments().getStringArrayList("arg1");
+            numOfPlayersPerArenaDataset = getArguments().getStringArrayList("arg2");
+            idOfTheUserArenas = getArguments().getStringArrayList("arg3");
+            viewVisablity = View.GONE;
 
         }
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        // Set the View
         View view = inflater.inflate(R.layout.fragment_ring_list, container, false);
+        // Set TextView - "No Arenas Yet"
+        TextView textView = view.findViewById(R.id.noArenas);
+        textView.setVisibility(viewVisablity);
         // Set FAB
         FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.addNewArena);
         fab.setOnClickListener(new View.OnClickListener() {

@@ -13,6 +13,16 @@
         android:background="#71f10909"
         />
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/noArenas"
+        android:text="No Arenas Yet, Go Ahead and create your first one"
+        android:textSize="15dp"
+        android:visibility="visible"
+        android:background="#71f1d609"
+        />
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/addNewArena"
         android:layout_width="match_parent"

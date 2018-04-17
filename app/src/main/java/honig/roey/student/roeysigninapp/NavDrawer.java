@@ -325,10 +325,7 @@ public class NavDrawer extends AppCompatActivity
 
         if (id == R.id.nav_rings) {
             // Handle the recycler view of the user's rings
-            // TODO: handle a Null pointer exception, that is - "No Rings"
-
-            // present loading animation
-            switchToFragment(R.id.appFragContainer,loadingAnimationFragment);
+            switchToFragment(R.id.appFragContainer,loadingAnimationFragment); // present loading animation
             // Scan DB and present Rings
             if (isRedirectedFromLoginActivity || mAuth.getCurrentUser() != null){
                 uid = mAuth.getCurrentUser().getUid();
@@ -539,20 +536,31 @@ public class NavDrawer extends AppCompatActivity
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference().child(tableName).child(UID);
 
-        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            myRef.addListenerForSingleValueEvent(new ValueEventListener() {
 
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                    //2nd Par "num" == 0, why?
-                    // doesn't matter for now. could be any long type number
-                    tableOfRingsPerUser.onDataListenerSuccess(dataSnapshot,0);
-            }
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    // Does this user have Arenas?
+                    if (dataSnapshot.hasChildren()){
+                        //2nd Par "num" == 0, why?
+                        // doesn't matter for now. could be any long type number
+                        tableOfRingsPerUser.onDataListenerSuccess(dataSnapshot,0);
+                    } else {
+                        // No Arenas - update UI accordinglly
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                //onDataListenerFailed(databaseError);
-            }
-        });
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    //onDataListenerFailed(databaseError);
+
+                }
+            });
+
+
+
 
 
     }
@@ -562,4 +570,6 @@ public class NavDrawer extends AppCompatActivity
     public void onListFragmentInteraction(DummyContent.DummyItem item) {
         // this is clickable from the Arena fragment (PlayerStatFragment)
     }
+
+
 }
