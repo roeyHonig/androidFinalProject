@@ -547,6 +547,8 @@ public class NavDrawer extends AppCompatActivity
                         tableOfRingsPerUser.onDataListenerSuccess(dataSnapshot,0);
                     } else {
                         // No Arenas - update UI accordinglly
+                        ringFragment.setArguments(null);
+                        switchToFragment(R.id.appFragContainer, ringFragment);
 
                     }
 

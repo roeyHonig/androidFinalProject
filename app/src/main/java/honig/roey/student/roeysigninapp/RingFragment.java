@@ -77,10 +77,7 @@ public class RingFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Initaliaze the list of rings
-        //initDataset();
-
-
+        // Are There Areneas for the current user?
         if (getArguments() != null) {
             // The user Has Arenas to present
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
@@ -89,6 +86,9 @@ public class RingFragment extends Fragment {
             idOfTheUserArenas = getArguments().getStringArrayList("arg3");
             viewVisablity = View.GONE;
 
+        } else {
+            // No Arenas for current User - show the "No Arenea Yet" UI
+            viewVisablity = View.VISIBLE;
         }
 
     }
@@ -111,18 +111,23 @@ public class RingFragment extends Fragment {
         });
 
         ringRecyclerView = view.findViewById(R.id.ringsList);
-        // Set the adapter
-            Context context = ringRecyclerView.getContext();
-            //RecyclerView recyclerView = (RecyclerView) view;
-            if (mColumnCount <= 1) {
-                ringRecyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
-                ringRecyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-            }
-            indexForCountingArenas = mDataset.size();
-            mAdapter = new MyRingRecyclerViewAdapter(mDataset, numOfPlayersPerArenaDataset , idOfTheUserArenas, mListener);
-            ringRecyclerView.setAdapter(mAdapter);
-
+        // Are There Areneas for the current user?
+        if (viewVisablity != View.VISIBLE) {
+                    ringRecyclerView.setVisibility(View.VISIBLE);
+                    // Set the adapter for recyclerView
+                    Context context = ringRecyclerView.getContext();
+                    if (mColumnCount <= 1) {
+                        ringRecyclerView.setLayoutManager(new LinearLayoutManager(context));
+                    } else {
+                        ringRecyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
+                    }
+                    indexForCountingArenas = mDataset.size();
+                    mAdapter = new MyRingRecyclerViewAdapter(mDataset, numOfPlayersPerArenaDataset, idOfTheUserArenas, mListener);
+                    ringRecyclerView.setAdapter(mAdapter);
+        } else {
+            // No Arenas for current User - no need to display the recyclerView
+            ringRecyclerView.setVisibility(View.GONE);
+        }
 
         return view;
 
