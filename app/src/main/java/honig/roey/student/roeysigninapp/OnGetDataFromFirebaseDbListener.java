@@ -10,4 +10,6 @@ public interface OnGetDataFromFirebaseDbListener {
     public void onDataListenerStart();
     public void onDataListenerSuccess(DataSnapshot data, long num);
     public void onDataListenerFailed(DatabaseError databaseError);
+
+
 }

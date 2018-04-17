@@ -330,7 +330,9 @@ public class NavDrawer extends AppCompatActivity
             // present loading animation
             switchToFragment(R.id.appFragContainer,loadingAnimationFragment);
             // Scan DB and present Rings
-            if (isRedirectedFromLoginActivity){
+            if (isRedirectedFromLoginActivity || mAuth.getCurrentUser() != null){
+                uid = mAuth.getCurrentUser().getUid();
+                fullNameoFTheCurrentSignedInUser = mAuth.getCurrentUser().getDisplayName();
                 handler.postDelayed(switchToRings,1000);
             }
 
