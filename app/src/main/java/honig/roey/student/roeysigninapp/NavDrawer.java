@@ -30,6 +30,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -213,11 +214,16 @@ public class NavDrawer extends AppCompatActivity
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 if (firebaseAuth.getCurrentUser() == null){
                     // No User signed In -> redirect to login
+                    mAuth.removeAuthStateListener(mAuthListener);
                     startActivity(new Intent(NavDrawer.this, MainActivity.class));
                 } else {
                     // Set customized Nav Menu
+                    //TODO: this should be the correct one
                     loadProfileImage(mAuth.getCurrentUser().getPhotoUrl(),imageViewUserProfile);
+                    //loadProfileImage(Uri.parse("https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Creative-Tail-People-man.svg/128px-Creative-Tail-People-man.svg.png"),imageViewUserProfile);
+                    //TODO: this is the correct
                     loadUserFullName(mAuth.getCurrentUser().getDisplayName().toString(),navHeaderTitle);
+                    //loadUserFullName("no problems",navHeaderTitle);
                     // get the token
                     //uid = mAuth.getCurrentUser().getUid();
                 }
@@ -572,6 +578,8 @@ public class NavDrawer extends AppCompatActivity
     public void onListFragmentInteraction(DummyContent.DummyItem item) {
         // this is clickable from the Arena fragment (PlayerStatFragment)
     }
+
+
 
 
 }
