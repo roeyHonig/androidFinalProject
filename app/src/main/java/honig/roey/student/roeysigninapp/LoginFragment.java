@@ -43,7 +43,12 @@ public class LoginFragment extends Fragment{
     private EditText etEmailLogin;
     private EditText etPasswoedLogin;
     private Button btEmailPasswordSignIn;
+    private int arg1Value = 0;
 
+    // Getter
+    public int getArg1Value() {
+        return arg1Value;
+    }
 
     public LoginFragment() {
         // Required empty public constructor
@@ -64,6 +69,7 @@ public class LoginFragment extends Fragment{
         btEmailPasswordSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                arg1Value = 2;
                 signIntoTheApp(etEmailLogin.getText().toString(),etPasswoedLogin.getText().toString());
             }
         });
@@ -82,6 +88,7 @@ public class LoginFragment extends Fragment{
         btnGoogleSign.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                arg1Value = 1;
                 signIn();
                 //Toast.makeText(getContext(),"you've pressed SignIn",Toast.LENGTH_LONG).show();
             }
@@ -94,7 +101,7 @@ public class LoginFragment extends Fragment{
                 if (firebaseAuth.getCurrentUser() != null){
                     Intent intent = new Intent(getContext(), NavDrawer.class);
                     // this extra is for letting the NavDrawer activity know it was redirected from a LoginActivity, meaning there is a user
-                    intent.putExtra("arg1",true);
+                    intent.putExtra("arg1",arg1Value);
                     startActivity(intent);
                 }
             }
@@ -115,6 +122,8 @@ public class LoginFragment extends Fragment{
 
         return  view;
     }
+
+
 
     @Override
     public void onStart() {
@@ -141,6 +150,7 @@ public class LoginFragment extends Fragment{
                 firebaseAuthWithGoogle(account);
             } catch (ApiException e) {
                 // Google Sign In failed, update UI appropriately
+                arg1Value =0; // reset
                 Log.w(TAG, "Google sign in failed", e);
             }
 
@@ -158,6 +168,7 @@ public class LoginFragment extends Fragment{
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
+                            arg1Value = 1;
                             FirebaseUser user = mAuth.getCurrentUser();
 
                             //Toast.makeText(getContext(),"hi "+user.getDisplayName(), Toast.LENGTH_LONG).show();
@@ -185,6 +196,7 @@ public class LoginFragment extends Fragment{
                             // If sign in fails, display a message to the user.
                             Toast.makeText(parentActivity, "Authentication failed: "+task.getException().getMessage(),
                                     Toast.LENGTH_SHORT).show();
+                            arg1Value = 0; // reset
                         }
 
                     }

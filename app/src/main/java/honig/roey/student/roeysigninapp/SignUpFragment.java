@@ -122,7 +122,7 @@ public class SignUpFragment extends Fragment {
 
                             Intent intent = new Intent(getContext(), NavDrawer.class);
                             // this extra is for letting the NavDrawer activity know it was redirected from a SignupActivity, meaning there is a user
-                            intent.putExtra("arg1",true);
+                            intent.putExtra("arg1",2);
                             startActivity(intent);
 
                         }

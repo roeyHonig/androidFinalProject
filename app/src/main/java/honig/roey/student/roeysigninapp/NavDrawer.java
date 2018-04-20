@@ -37,6 +37,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.mklimek.circleinitialsview.CircleInitialsView;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.PicassoProvider;
 
@@ -51,6 +52,7 @@ import honig.roey.student.roeysigninapp.tables.UserStat;
 public class NavDrawer extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, RingFragment.OnListFragmentInteractionListener , PlayerStatFragment.OnListFragmentInteractionListener{
 
+    private boolean active = false; // Important To ask when doing things like changing the UI
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private String uid = "RRe3GGpTI6SeMb82413bJ4NPoA52";
@@ -60,11 +62,12 @@ public class NavDrawer extends AppCompatActivity
     private Menu menu;
     private MenuItem nav_Log_Off;
     private ImageView imageViewUserProfile;
+    private CircleInitialsView circleView;
     private TextView navHeaderTitle;
     private RingFragment ringFragment = new RingFragment();
     private PlayerStatFragment playerStatFragment = new PlayerStatFragment();
     private LoadingAnimationFragment loadingAnimationFragment = new LoadingAnimationFragment();
-    boolean isRedirectedFromLoginActivity = false;
+    private int isRedirectedFromLoginActivity=0; // 1 - google Signin , 2 - email \ password Signin
     private long counter =0;
     private ArrayList<RingGlobal> userDataBaseData = new ArrayList<RingGlobal>();
     private Handler handler = new Handler();
@@ -191,7 +194,9 @@ public class NavDrawer extends AppCompatActivity
                 ringFragment.setArguments(ringFragmentArgsBundle);
                 counter = 0; // reset the counter back to 0 to enable this process every time we hit Rings in Nav Menu
                 // :-) :-) :-) DB data has been retrieved -> safe to update the UI
-                switchToFragment(R.id.appFragContainer, ringFragment);
+                if (active /*Is Activity active?*/) {
+                    switchToFragment(R.id.appFragContainer, ringFragment);
+                }
             }
 
         }
@@ -230,8 +235,8 @@ public class NavDrawer extends AppCompatActivity
             }
         };
 
-        isRedirectedFromLoginActivity = getIntent().getBooleanExtra("arg1",false);
-        if (isRedirectedFromLoginActivity){
+        isRedirectedFromLoginActivity = getIntent().getIntExtra("arg1",0);
+        if (isRedirectedFromLoginActivity == 1 || isRedirectedFromLoginActivity == 2){
             uid = mAuth.getCurrentUser().getUid();
             fullNameoFTheCurrentSignedInUser = mAuth.getCurrentUser().getDisplayName();
         }
@@ -241,6 +246,7 @@ public class NavDrawer extends AppCompatActivity
         menu = navigationView.getMenu();
         nav_Log_Off = menu.findItem(R.id.nav_Log_Off);
         imageViewUserProfile = navigationView.getHeaderView(0).findViewById(R.id.ImageViewUserProfile);
+        circleView = navigationView.getHeaderView(0).findViewById(R.id.circleView);
         navHeaderTitle = navigationView.getHeaderView(0).findViewById(R.id.navHeaderTitle);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -285,8 +291,26 @@ public class NavDrawer extends AppCompatActivity
     @Override
     protected void onStart() {
         super.onStart();
+        active = true;
         mAuth.addAuthStateListener(mAuthListener);
+        //TODO: ok, so this is nice and good when we paused the app, from the Rings
+        // TODO: and we want to go back to the app (onStart) and not just see the animation forever
+        //TODO: but also read the DB and see the rings
+        //TODO: but what should happend if we paused from a diffrent fragment?
+        handler.postDelayed(switchToRings,1000);
 
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        handler.removeCallbacks(switchToRings);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        active  = false;
     }
 
     //TODO: maybe delete this all togeter - I don't want ant backPressed Navigation
@@ -333,7 +357,7 @@ public class NavDrawer extends AppCompatActivity
             // Handle the recycler view of the user's rings
             switchToFragment(R.id.appFragContainer,loadingAnimationFragment); // present loading animation
             // Scan DB and present Rings
-            if (isRedirectedFromLoginActivity || mAuth.getCurrentUser() != null){
+            if (isRedirectedFromLoginActivity == 1 || isRedirectedFromLoginActivity == 2  || mAuth.getCurrentUser() != null){
                 uid = mAuth.getCurrentUser().getUid();
                 fullNameoFTheCurrentSignedInUser = mAuth.getCurrentUser().getDisplayName();
                 handler.postDelayed(switchToRings,1000);
@@ -368,7 +392,23 @@ public class NavDrawer extends AppCompatActivity
 
     private void loadProfileImage(Uri uri, ImageView imageView){
         //ToDo make beutifull
-        Picasso.get().load(String.valueOf(uri)).into(imageView);
+        switch (isRedirectedFromLoginActivity){
+            case 1:
+                Picasso.get().load(String.valueOf(uri)).into(imageView);
+                imageViewUserProfile.setVisibility(View.VISIBLE);
+                circleView.setVisibility(View.GONE);
+                break;
+            case 2:
+                imageViewUserProfile.setVisibility(View.GONE);
+                circleView.setText(mAuth.getCurrentUser().getDisplayName().toString());
+                circleView.setTextSize(50);
+                circleView.setVisibility(View.VISIBLE);
+                break;
+            default:
+                break;
+
+        }
+
     }
 
     private void loadUserFullName (String name,TextView textView){
@@ -542,6 +582,8 @@ public class NavDrawer extends AppCompatActivity
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference().child(tableName).child(UID);
 
+
+
             myRef.addListenerForSingleValueEvent(new ValueEventListener() {
 
                 @Override
@@ -554,8 +596,9 @@ public class NavDrawer extends AppCompatActivity
                     } else {
                         // No Arenas - update UI accordinglly
                         ringFragment.setArguments(null);
-                        switchToFragment(R.id.appFragContainer, ringFragment);
-
+                        if (active /*Is Activty active*/) {
+                            switchToFragment(R.id.appFragContainer, ringFragment);
+                        }
                     }
 
                 }
