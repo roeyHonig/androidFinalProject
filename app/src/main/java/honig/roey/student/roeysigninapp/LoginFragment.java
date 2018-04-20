@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -111,7 +112,8 @@ public class LoginFragment extends Fragment{
         MainActivity parentActivity = (MainActivity) getActivity();
 
         // Setup Button to switch to signup screen
-        Button btGoToSignupScreen = view.findViewById(R.id.btGoToSignupScreen);
+        TextView btGoToSignupScreen = view.findViewById(R.id.btGoToSignupScreen);
+        btGoToSignupScreen.setText(Html.fromHtml("Not a Member Yet?, go ahead and <u>signup</u>"));
         btGoToSignupScreen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

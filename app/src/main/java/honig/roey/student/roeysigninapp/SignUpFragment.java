@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -74,6 +75,7 @@ public class SignUpFragment extends Fragment {
 
         // Setup Button to return to login screen
         TextView returnToLogin = view.findViewById(R.id.returnToLogin);
+        returnToLogin.setText(Html.fromHtml("Allready a Member?, Go Ahead and <u>LogIn</u>"));
         returnToLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -49,12 +49,13 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp" />
 
-    <Button
+    <TextView
         android:id="@+id/btGoToSignupScreen"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Not a Member Yet?, go ahead and signup"
         android:background="#f59191"
-        android:textAllCaps="false" />
+        android:gravity="center_horizontal"
+         />
 
 </LinearLayout>
