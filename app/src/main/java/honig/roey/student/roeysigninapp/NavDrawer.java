@@ -75,7 +75,10 @@ public class NavDrawer extends AppCompatActivity
     private Runnable switchToRings = new Runnable() {
         @Override
         public void run() {
+            // reset the counter back to 0 to enable this process every time we hit Rings in Nav Menu
+            counter = 0;
             userDataBaseData.clear();
+
             readFromFireBaseRealTimeDataBase2("ArenasPerUser", uid);
         }
     };
@@ -205,7 +208,8 @@ public class NavDrawer extends AppCompatActivity
 
                 ringFragment.setArguments(ringFragmentArgsBundle);
 
-                counter = 0; // reset the counter back to 0 to enable this process every time we hit Rings in Nav Menu
+
+
                 // :-) :-) :-) DB data has been retrieved -> safe to update the UI
 
                 if (active /*Is Activity active?*/) {
@@ -245,6 +249,7 @@ public class NavDrawer extends AppCompatActivity
                     //loadUserFullName("no problems",navHeaderTitle);
                     // get the token
                     //uid = mAuth.getCurrentUser().getUid();
+                    autoStartWithArenaNavDrawer(navigationView);
                 }
             }
         };
@@ -287,8 +292,9 @@ public class NavDrawer extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        navigationView.setCheckedItem(R.id.nav_rings); // higlight the Rings Item in the Menu on StartUp
-        navigationView.getMenu().performIdentifierAction(R.id.nav_rings, 0); // Perform the Action Associated with the Rings Menu Item
+
+
+
 
 
         //nav_Log_Off = findViewById(R.id.nav_Log_Off);
@@ -296,6 +302,11 @@ public class NavDrawer extends AppCompatActivity
 
 
 
+    }
+
+    private void autoStartWithArenaNavDrawer(NavigationView navigationView) {
+        navigationView.setCheckedItem(R.id.nav_rings); // higlight the Rings Item in the Menu on StartUp
+        navigationView.getMenu().performIdentifierAction(R.id.nav_rings, 0); // Perform the Action Associated with the Rings Menu Item
     }
 
     @Override
@@ -307,7 +318,8 @@ public class NavDrawer extends AppCompatActivity
         // TODO: and we want to go back to the app (onStart) and not just see the animation forever
         //TODO: but also read the DB and see the rings
         //TODO: but what should happend if we paused from a diffrent fragment?
-        handler.postDelayed(switchToRings,1000);
+        //autoStartWithArenaNavDrawer(navigationView);
+        //handler.postDelayed(switchToRings,1000);
 
     }
 
@@ -383,6 +395,7 @@ public class NavDrawer extends AppCompatActivity
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_Log_Off) {
+
 
             GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                     .requestIdToken(getString(R.string.default_web_client_id))
