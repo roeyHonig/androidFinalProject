@@ -216,7 +216,7 @@ public class RingFragment extends Fragment {
                                 parentActivity.pushAndSetNewChildAtArenasPerUserTable(parentActivity.getUid(),tmpArenaID);
                             }
 
-
+                            // TODO: replace with an exsisting function from the parentActivity
                             parentActivity.getNavigationView().setCheckedItem(R.id.nav_rings); // higlight the Rings Item in the Menu on StartUp
                             parentActivity.getNavigationView().getMenu().performIdentifierAction(R.id.nav_rings,0); // Perform Action Associated with Rings Menu Item
                         }

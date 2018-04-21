@@ -278,7 +278,7 @@ public class NavDrawer extends AppCompatActivity
                 //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                   //      .setAction("Action", null).show();
 
-                pushAndSetNewChildAtRequestsTable(new Request("1", "RRe3GGpTI6SeMb82413bJ4NPoA52", "UV2tVsaP8GVhB4YU2o2iHCAfOum2","-LACi87blVN6oegitFWn", 2));
+                pushAndSetNewChildAtRequestsTable(new Request("1", "UV2tVsaP8GVhB4YU2o2iHCAfOum2", "WGno1x9GkYQuU6d2NnrfOumnY2j2","-LAcPSBCZtg8NPZMFGE5", 2));
 
             }
         });
@@ -386,7 +386,9 @@ public class NavDrawer extends AppCompatActivity
             }
 
 
-        } else if (id == R.id.nav_gallery) {
+        } else if (id == R.id.nav_requests) {
+            // Handle recycler view of the user's requests to join Arena
+            switchToFragment(R.id.appFragContainer,loadingAnimationFragment); // present loading animation
 
         } else if (id == R.id.nav_slideshow) {
 
