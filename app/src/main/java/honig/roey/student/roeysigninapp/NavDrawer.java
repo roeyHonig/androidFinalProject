@@ -45,6 +45,7 @@ import java.net.URI;
 import java.util.ArrayList;
 
 import honig.roey.student.roeysigninapp.dummy.DummyContent;
+import honig.roey.student.roeysigninapp.tables.Request;
 import honig.roey.student.roeysigninapp.tables.RingGlobal;
 import honig.roey.student.roeysigninapp.tables.RingsPerUser;
 import honig.roey.student.roeysigninapp.tables.UserStat;
@@ -259,11 +260,7 @@ public class NavDrawer extends AppCompatActivity
                 //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                   //      .setAction("Action", null).show();
 
-                //exampleWriteToFireBaseRealTimeDataBase();
-               // exampleWriteToFireBaseRealTimeDataBase2();
-               // exampleWriteToFireBaseRealTimeDataBase3();
-               // readFromFireBaseRealTimeDataBase2("tableOfRingsPerUser", "RRe3GGpTI6SeMb82413bJ4NPoA52");
-                //pushAndSetNewChildAtArenasTable("fifa-2080","ZPoCCcIyTQReA5J03EnYiYZbhM32", "Rotem Walzer", "UV2tVsaP8GVhB4YU2o2iHCAfOum2", "Tal Efroni", "RRe3GGpTI6SeMb82413bJ4NPoA52", "Roey Honig");
+                pushAndSetNewChildAtRequestsTable(new Request("1", "RRe3GGpTI6SeMb82413bJ4NPoA52", "UV2tVsaP8GVhB4YU2o2iHCAfOum2","-LACi87blVN6oegitFWn", 2));
 
             }
         });
@@ -394,11 +391,13 @@ public class NavDrawer extends AppCompatActivity
         //ToDo make beutifull
         switch (isRedirectedFromLoginActivity){
             case 1:
+                // Google SignIn
                 Picasso.get().load(String.valueOf(uri)).into(imageView);
                 imageViewUserProfile.setVisibility(View.VISIBLE);
                 circleView.setVisibility(View.GONE);
                 break;
             case 2:
+                // Email / Password SignIn
                 imageViewUserProfile.setVisibility(View.GONE);
                 circleView.setText(mAuth.getCurrentUser().getDisplayName().toString());
                 circleView.setTextSize(50);
@@ -423,6 +422,7 @@ public class NavDrawer extends AppCompatActivity
     }
 
     @Override
+    // TODO: i think i need to add a flag to know from whic list the item was pressed
     public void onListFragmentInteraction(String item) {
         //TODO: item is the ID of the Arena the user clicked on, in the RingFragment
         //TODO: insted of Toast, switch to the PlayerStatFragment VIEW
@@ -479,6 +479,19 @@ public class NavDrawer extends AppCompatActivity
 
         return;
 
+    }
+
+
+    public void pushAndSetNewChildAtRequestsTable(Request jsonObject){
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("Request");
+        String tempKey = myRef.child(jsonObject.getRequestingUID()).push().getKey();
+        // change json field key to match the new pushed key
+        jsonObject.setKey(tempKey);
+        // set the JSON
+        myRef.child(jsonObject.getRequestingUID()).child(tempKey).setValue(jsonObject);
+        myRef.child(jsonObject.getApprovingUID()).child(tempKey).setValue(jsonObject);
+        return;
     }
 
     public String pushAndSetNewChildAtArenasTable(String nameOfAreana, String uid, String fullName){
