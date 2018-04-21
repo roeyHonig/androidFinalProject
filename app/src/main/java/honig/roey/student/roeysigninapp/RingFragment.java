@@ -202,15 +202,19 @@ public class RingFragment extends Fragment {
                         } else{
                             myDialog.dismiss();
 
-                            if (mDataset.contains(inputText)){
+                            if (getArguments() == null){
+                                // user has no Arenas
+                                String tmpArenaID =parentActivity.pushAndSetNewChildAtArenasTable(inputText, parentActivity.getUid(), parentActivity.getFullNameoFTheCurrentSignedInUser());
+                                parentActivity.pushAndSetNewChildAtArenasPerUserTable(parentActivity.getUid(),tmpArenaID);
+
+                            } else if (mDataset.contains(inputText)){
                                 //TODO: change to snackbar
-                                Toast.makeText(getActivity(),"Allready exsists",Toast.LENGTH_LONG).show();
+                                Toast.makeText(getActivity(),"Same Name Arena Already exists",Toast.LENGTH_LONG).show();
+
                             } else {
                                 String tmpArenaID =parentActivity.pushAndSetNewChildAtArenasTable(inputText, parentActivity.getUid(), parentActivity.getFullNameoFTheCurrentSignedInUser());
                                 parentActivity.pushAndSetNewChildAtArenasPerUserTable(parentActivity.getUid(),tmpArenaID);
                             }
-
-
 
 
                             parentActivity.getNavigationView().setCheckedItem(R.id.nav_rings); // higlight the Rings Item in the Menu on StartUp
