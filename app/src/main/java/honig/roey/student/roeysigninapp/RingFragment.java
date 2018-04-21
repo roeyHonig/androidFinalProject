@@ -201,9 +201,16 @@ public class RingFragment extends Fragment {
 
                         } else{
                             myDialog.dismiss();
-                            //TODO: before pushing, make sure the user didn't enter a name of an arena he allready has
-                            String tmpArenaID =parentActivity.pushAndSetNewChildAtArenasTable(inputText, parentActivity.getUid(), parentActivity.getFullNameoFTheCurrentSignedInUser());
-                            parentActivity.pushAndSetNewChildAtArenasPerUserTable(parentActivity.getUid(),tmpArenaID);
+
+                            if (mDataset.contains(inputText)){
+                                //TODO: change to snackbar
+                                Toast.makeText(getActivity(),"Allready exsists",Toast.LENGTH_LONG).show();
+                            } else {
+                                String tmpArenaID =parentActivity.pushAndSetNewChildAtArenasTable(inputText, parentActivity.getUid(), parentActivity.getFullNameoFTheCurrentSignedInUser());
+                                parentActivity.pushAndSetNewChildAtArenasPerUserTable(parentActivity.getUid(),tmpArenaID);
+                            }
+
+
 
 
                             parentActivity.getNavigationView().setCheckedItem(R.id.nav_rings); // higlight the Rings Item in the Menu on StartUp
