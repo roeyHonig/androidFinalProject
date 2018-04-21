@@ -52,6 +52,7 @@ public class RingFragment extends Fragment {
     private ArrayList<String> mDataset;
     private ArrayList<String> numOfPlayersPerArenaDataset;
     private ArrayList<String> idOfTheUserArenas;
+    private ArrayList<String> superUserOfTheUserArenas;
     private NavDrawer parentActivity;
     private int indexForCountingArenas = 0;
     private int viewVisablity;
@@ -84,6 +85,7 @@ public class RingFragment extends Fragment {
             mDataset = getArguments().getStringArrayList("arg1");
             numOfPlayersPerArenaDataset = getArguments().getStringArrayList("arg2");
             idOfTheUserArenas = getArguments().getStringArrayList("arg3");
+            superUserOfTheUserArenas = getArguments().getStringArrayList("arg4");
             viewVisablity = View.GONE;
 
         } else {
@@ -122,7 +124,7 @@ public class RingFragment extends Fragment {
                         ringRecyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
                     }
                     indexForCountingArenas = mDataset.size();
-                    mAdapter = new MyRingRecyclerViewAdapter(mDataset, numOfPlayersPerArenaDataset, idOfTheUserArenas, mListener);
+                    mAdapter = new MyRingRecyclerViewAdapter(mDataset, numOfPlayersPerArenaDataset, idOfTheUserArenas, superUserOfTheUserArenas,mListener);
                     ringRecyclerView.setAdapter(mAdapter);
         } else {
             // No Arenas for current User - no need to display the recyclerView
@@ -199,8 +201,11 @@ public class RingFragment extends Fragment {
 
                         } else{
                             myDialog.dismiss();
+                            //TODO: before pushing, make sure the user didn't enter a name of an arena he allready has
                             String tmpArenaID =parentActivity.pushAndSetNewChildAtArenasTable(inputText, parentActivity.getUid(), parentActivity.getFullNameoFTheCurrentSignedInUser());
                             parentActivity.pushAndSetNewChildAtArenasPerUserTable(parentActivity.getUid(),tmpArenaID);
+
+                            
                             parentActivity.getNavigationView().setCheckedItem(R.id.nav_rings); // higlight the Rings Item in the Menu on StartUp
                             parentActivity.getNavigationView().getMenu().performIdentifierAction(R.id.nav_rings,0); // Perform Action Associated with Rings Menu Item
                         }

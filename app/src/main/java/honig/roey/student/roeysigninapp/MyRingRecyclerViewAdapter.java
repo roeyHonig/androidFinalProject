@@ -27,14 +27,16 @@ public class MyRingRecyclerViewAdapter extends RecyclerView.Adapter<MyRingRecycl
                                                                 // as can be seen in the "onBindViewHolder" methood
     private final ArrayList<String> mSubValues;
     private final ArrayList<String> mThirdValues;
+    private final ArrayList<String> mForthValues;
     // Constractor for the adapter
     // when called to action, in our RingFragment, it will be passed (as an argument) the data which is the String[]
     // of rings names
     // also an instance of the OnListFragmentInteractionListener interface is the 2nd argument
-    public MyRingRecyclerViewAdapter(ArrayList<String> items, ArrayList<String> items2, ArrayList<String> items3 , OnListFragmentInteractionListener listener) {
+    public MyRingRecyclerViewAdapter(ArrayList<String> items, ArrayList<String> items2, ArrayList<String> items3 ,ArrayList<String> items4 ,OnListFragmentInteractionListener listener) {
         mValues = items;
         mSubValues = items2;
         mThirdValues = items3;
+        mForthValues = items4;
         mListener = listener;
     }
 

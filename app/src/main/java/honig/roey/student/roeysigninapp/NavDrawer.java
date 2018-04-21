@@ -141,6 +141,7 @@ public class NavDrawer extends AppCompatActivity
         public void onDataListenerSuccess(DataSnapshot data, long num) {
             counter = counter +1;
             boolean tmpIsPublicViewd = true;
+            String tmpSuperUser="";
             String tmpKey="";
             String tmpName="";
             String tmpUid;
@@ -156,6 +157,9 @@ public class NavDrawer extends AppCompatActivity
                         switch (recordInArenasTable.getKey()){
                             case "isPublicViewd":
                                 tmpIsPublicViewd = recordInArenasTable.getValue(Boolean.class).booleanValue();
+                                break;
+                            case "superUser":
+                                tmpSuperUser = recordInArenasTable.getValue(String.class);
                                 break;
                             case "key":
                                 tmpKey = recordInArenasTable.getValue(String.class);
@@ -176,25 +180,34 @@ public class NavDrawer extends AppCompatActivity
                             tmpArrayListUserStat.add(new UserStat(tmpUid,tmpFullName,tmpLos,tmpDrw,tmpWin));
                         }
             }
-            userDataBaseData.add(new RingGlobal(tmpKey,tmpName, tmpIsPublicViewd,tmpArrayListUserStat));
-            // we've itereated over every Arena
+            userDataBaseData.add(new RingGlobal(tmpKey,tmpName, tmpIsPublicViewd,tmpSuperUser,tmpArrayListUserStat));
+
+
             if (counter == num){
+                // we've itereated over every Arena
                 Bundle ringFragmentArgsBundle = new Bundle();
                 ArrayList<String> namesOfTheUserArenas = new ArrayList<String>();
                 ArrayList<String> numberOfPlayersInEveryUserArenas = new ArrayList<String>();
                 ArrayList<String> idOfTheUserArenas = new ArrayList<String>();
+                ArrayList<String> superUserOfTheUserArenas = new ArrayList<String>();
+
                 for (RingGlobal arena: userDataBaseData
                      ) {
                     namesOfTheUserArenas.add(arena.getName());
                     numberOfPlayersInEveryUserArenas.add(String.valueOf(arena.getNumPlayers()));
                     idOfTheUserArenas.add(arena.getKey());
+                    superUserOfTheUserArenas.add(arena.getSuperUser());
                 }
                 ringFragmentArgsBundle.putStringArrayList("arg1", namesOfTheUserArenas);
                 ringFragmentArgsBundle.putStringArrayList("arg2", numberOfPlayersInEveryUserArenas);
                 ringFragmentArgsBundle.putStringArrayList("arg3", idOfTheUserArenas);
+                ringFragmentArgsBundle.putStringArrayList("arg4", superUserOfTheUserArenas);
+
                 ringFragment.setArguments(ringFragmentArgsBundle);
+
                 counter = 0; // reset the counter back to 0 to enable this process every time we hit Rings in Nav Menu
                 // :-) :-) :-) DB data has been retrieved -> safe to update the UI
+
                 if (active /*Is Activity active?*/) {
                     switchToFragment(R.id.appFragContainer, ringFragment);
                 }
@@ -465,12 +478,14 @@ public class NavDrawer extends AppCompatActivity
         //userStats.add(new UserStat(uid1,fullName1,5,2,6));
         //userStats.add(new UserStat(uid2,fullName2,1,7,3));
         //userStats.add(new UserStat(uid3,fullName3,4,3,7));
-        RingGlobal tempArena = new RingGlobal(tempKey,nameOfAreana, true,userStats);
+        RingGlobal tempArena = new RingGlobal(tempKey,nameOfAreana, true,uid1,userStats);
         // set the JSON
         myRef.child(tempKey).child("key").setValue(tempArena.getKey());
         myRef.child(tempKey).child("name").setValue(tempArena.getName());
         myRef.child(tempKey).child("numPlayers").setValue(tempArena.getNumPlayers());
         myRef.child(tempKey).child("isPublicViewd").setValue(tempArena.isPublicViewd());
+        myRef.child(tempKey).child("superUser").setValue(tempArena.getSuperUser());
+
         myRef.child(tempKey).child(uid1).setValue(userStats.get(0));
         myRef.child(tempKey).child(uid2).setValue(userStats.get(1));
         myRef.child(tempKey).child(uid3).setValue(userStats.get(2));
@@ -502,12 +517,13 @@ public class NavDrawer extends AppCompatActivity
         // create a JSON
         ArrayList<UserStat> userStats = new ArrayList<UserStat>();
         userStats.add(new UserStat(uid,fullName,0,0,0));
-        RingGlobal tempArena = new RingGlobal(tempKey,nameOfAreana, true,userStats);
+        RingGlobal tempArena = new RingGlobal(tempKey,nameOfAreana, true,uid,userStats);
         // set the JSON
         myRef.child(tempKey).child("key").setValue(tempArena.getKey());
         myRef.child(tempKey).child("name").setValue(tempArena.getName());
         myRef.child(tempKey).child("numPlayers").setValue(tempArena.getNumPlayers());
         myRef.child(tempKey).child("isPublicViewd").setValue(tempArena.isPublicViewd());
+        myRef.child(tempKey).child("superUser").setValue(tempArena.getSuperUser());
         myRef.child(tempKey).child(uid).setValue(userStats.get(0));
 
         return tempKey;

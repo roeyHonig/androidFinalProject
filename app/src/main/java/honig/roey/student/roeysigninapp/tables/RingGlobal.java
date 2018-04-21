@@ -10,31 +10,8 @@ public class RingGlobal implements Parcelable {
     private String name;
     private int numPlayers;
     private boolean isPublicViewd;
+    private  String superUser;
     private ArrayList<UserStat> userStats;
-
-
-    //Ctors
-    public RingGlobal() {
-        // Default constructor required for calls to DataSnapshot.getValue(RingGlobal.class)
-    }
-
-    public RingGlobal(String key, String name, boolean isPublicViewd, ArrayList<UserStat> userStats) {
-        this.key = key;
-        this.name = name;
-        this.numPlayers = userStats.size();
-        this.isPublicViewd = isPublicViewd;
-        this.userStats = userStats;
-
-    }
-
-    // public getters
-
-    protected RingGlobal(Parcel in) {
-        key = in.readString();
-        name = in.readString();
-        numPlayers = in.readInt();
-        isPublicViewd = in.readByte() != 0;
-    }
 
     public static final Creator<RingGlobal> CREATOR = new Creator<RingGlobal>() {
         @Override
@@ -48,6 +25,34 @@ public class RingGlobal implements Parcelable {
         }
     };
 
+
+
+    //Ctors
+    public RingGlobal() {
+        // Default constructor required for calls to DataSnapshot.getValue(RingGlobal.class)
+    }
+
+    public RingGlobal(String key, String name, boolean isPublicViewd, String superUser, ArrayList<UserStat> userStats) {
+        this.key = key;
+        this.name = name;
+        this.numPlayers = userStats.size();
+        this.isPublicViewd = isPublicViewd;
+        this.superUser = superUser;
+        this.userStats = userStats;
+
+    }
+
+    protected RingGlobal(Parcel in) {
+        key = in.readString();
+        name = in.readString();
+        numPlayers = in.readInt();
+        isPublicViewd = in.readByte() != 0;
+        superUser = in.readString();
+    }
+
+
+
+    // public getters
     public String getKey() {
         return key;
     }
@@ -64,9 +69,15 @@ public class RingGlobal implements Parcelable {
         return isPublicViewd;
     }
 
+    public String getSuperUser() {
+        return superUser;
+    }
+
     public ArrayList<UserStat> getUserStats() {
         return userStats;
     }
+
+
 
     @Override
     public int describeContents() {
@@ -79,6 +90,7 @@ public class RingGlobal implements Parcelable {
         parcel.writeString(name);
         parcel.writeInt(numPlayers);
         parcel.writeByte((byte) (isPublicViewd ? 1 : 0));
+        parcel.writeString(superUser);
 
     }
 }
