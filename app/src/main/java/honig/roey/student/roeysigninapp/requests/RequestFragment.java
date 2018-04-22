@@ -72,8 +72,8 @@ public class RequestFragment extends Fragment {
 
 
 
-            
 
+            //
             Toast.makeText(getActivity(),userInvites.get(0).getRequestingUID(),Toast.LENGTH_LONG).show();
 
             if (userAproves.size()!=0){
