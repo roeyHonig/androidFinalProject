@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import honig.roey.student.roeysigninapp.R;
@@ -39,7 +40,8 @@ public class RequestFragment extends Fragment {
     private  int noInvitesVisibility;
     private ArrayList<Request> userAproves;
     private ArrayList<Request> userInvites;
-    private MyRequestRecyclerViewAdapter mAdapter;
+    private MyRequestRecyclerViewAdapter mInvitesAdapter;
+    private MyRequestRecyclerViewAdapter mRequestsAdapter;
 
 
     /**
@@ -67,6 +69,13 @@ public class RequestFragment extends Fragment {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
             userAproves=getArguments().getParcelableArrayList("arg1");
             userInvites = getArguments().getParcelableArrayList("arg2");
+
+
+
+            
+
+            Toast.makeText(getActivity(),userInvites.get(0).getRequestingUID(),Toast.LENGTH_LONG).show();
+
             if (userAproves.size()!=0){
                 noRequestsVisibility = View.GONE;
             } else {
@@ -144,7 +153,8 @@ public class RequestFragment extends Fragment {
             } else {
                 invitesRecyclerView.setLayoutManager(new GridLayoutManager(invitesRecyclerViewContext, mColumnCount));
             }
-            mAdapter = new MyRequestRecyclerViewAdapter(userInvites,mListener,1);
+            mInvitesAdapter = new MyRequestRecyclerViewAdapter(userInvites,mListener,1);
+            invitesRecyclerView.setAdapter(mInvitesAdapter);
 
 
         } else {
@@ -164,12 +174,12 @@ public class RequestFragment extends Fragment {
             } else {
                 invitesRecyclerView.setLayoutManager(new GridLayoutManager(requestRecyclerViewContext, mColumnCount));
             }
-            mAdapter = new MyRequestRecyclerViewAdapter(userAproves,mListener,2);
-
+            mRequestsAdapter = new MyRequestRecyclerViewAdapter(userAproves,mListener,2);
+            requestRecyclerView.setAdapter(mRequestsAdapter);
 
         } else {
             // No invites
-            invitesRecyclerView.setVisibility(View.GONE);
+            requestRecyclerView.setVisibility(View.GONE);
         }
 
 

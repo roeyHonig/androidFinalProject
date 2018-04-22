@@ -53,7 +53,7 @@ import honig.roey.student.roeysigninapp.tables.RingsPerUser;
 import honig.roey.student.roeysigninapp.tables.UserStat;
 
 public class NavDrawer extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, RingFragment.OnListFragmentInteractionListener , PlayerStatFragment.OnListFragmentInteractionListener{
+        implements NavigationView.OnNavigationItemSelectedListener, RingFragment.OnListFragmentInteractionListener , PlayerStatFragment.OnListFragmentInteractionListener , RequestFragment.OnListFragmentInteractionListener{
 
     private boolean active = false; // Important To ask when doing things like changing the UI
     private FirebaseAuth mAuth;
@@ -316,7 +316,7 @@ public class NavDrawer extends AppCompatActivity
 
             }
             // Decide what kind of a request this is
-            if (uid.equals(tmpRequestingUID)){
+            if (mAuth.getCurrentUser().getUid().equals(tmpRequestingUID)){
                 // Requests or Invites
                         /*
                         String tmptmpApprovingUID = tmpApprovingUID;
@@ -443,7 +443,7 @@ public class NavDrawer extends AppCompatActivity
                 //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                   //      .setAction("Action", null).show();
 
-                pushAndSetNewChildAtRequestsTable(new Request("1", "UV2tVsaP8GVhB4YU2o2iHCAfOum2", "WGno1x9GkYQuU6d2NnrfOumnY2j2","-LAcPSBCZtg8NPZMFGE5", 2));
+                pushAndSetNewChildAtRequestsTable(new Request("1", "RRe3GGpTI6SeMb82413bJ4NPoA52", "WGno1x9GkYQuU6d2NnrfOumnY2j2","-LActIbj-cgoOI3_Zr-m", 1));
 
             }
         });
@@ -563,7 +563,7 @@ public class NavDrawer extends AppCompatActivity
             // Handle recycler view of the user's requests to join Arena
             switchToFragment(R.id.appFragContainer,loadingAnimationFragment); // present loading animation
             // Scan DB and present Requests
-
+            handler.postDelayed(switchToRequests,1000);
 
         } else if (id == R.id.nav_slideshow) {
 
@@ -654,10 +654,6 @@ public class NavDrawer extends AppCompatActivity
 
         playerStatFragment.setArguments(playerStatFragmentArgsBundle);
        switchToFragment(R.id.appFragContainer, playerStatFragment);
-    }
-    // TODO: for example, this is from the request fragment (when selecting an item there)
-    public void onListFragmentInteraction(int item){
-
     }
 
 
@@ -888,6 +884,8 @@ public class NavDrawer extends AppCompatActivity
     }
 
 
+    @Override
+    public void onListFragmentInteraction(int item) {
 
-
+    }
 }

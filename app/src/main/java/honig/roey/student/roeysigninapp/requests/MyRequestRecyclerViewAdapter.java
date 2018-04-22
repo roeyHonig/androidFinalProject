@@ -45,11 +45,11 @@ public class MyRequestRecyclerViewAdapter extends RecyclerView.Adapter<MyRequest
         if (mflag == 1){
             // Invite Item
             holder.mItemTitle.setText(mRequestValues.get(position).getApprovingUID());
-            holder.mItemStatus.setText(mRequestValues.get(position).getStatus());
+            //holder.mItemStatus.setText(mRequestValues.get(position).getStatus());
         } else {
             // Request Item
             holder.mItemTitle.setText(mRequestValues.get(position).getArenaID());
-            holder.mItemStatus.setText(mRequestValues.get(position).getStatus());
+            //holder.mItemStatus.setText(mRequestValues.get(position).getStatus());
         }
 
 
