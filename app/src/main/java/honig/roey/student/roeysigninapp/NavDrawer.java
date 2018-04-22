@@ -45,7 +45,9 @@ import java.net.URI;
 import java.util.ArrayList;
 
 import honig.roey.student.roeysigninapp.dummy.DummyContent;
+import honig.roey.student.roeysigninapp.requests.RequestFragment;
 import honig.roey.student.roeysigninapp.tables.Request;
+import honig.roey.student.roeysigninapp.tables.RequestsPerUser;
 import honig.roey.student.roeysigninapp.tables.RingGlobal;
 import honig.roey.student.roeysigninapp.tables.RingsPerUser;
 import honig.roey.student.roeysigninapp.tables.UserStat;
@@ -66,11 +68,16 @@ public class NavDrawer extends AppCompatActivity
     private CircleInitialsView circleView;
     private TextView navHeaderTitle;
     private RingFragment ringFragment = new RingFragment();
+    private RequestFragment requestFragment = new RequestFragment();
     private PlayerStatFragment playerStatFragment = new PlayerStatFragment();
     private LoadingAnimationFragment loadingAnimationFragment = new LoadingAnimationFragment();
     private int isRedirectedFromLoginActivity=0; // 1 - google Signin , 2 - email \ password Signin
     private long counter =0;
     private ArrayList<RingGlobal> userDataBaseData = new ArrayList<RingGlobal>();
+    private ArrayList<Request> userRequests = new ArrayList<Request>();
+    private ArrayList<Request> userInvites = new ArrayList<Request>();
+    private ArrayList<Request> userAproves = new ArrayList<Request>();
+    private long counterRequests =0;
     private Handler handler = new Handler();
     private Runnable switchToRings = new Runnable() {
         @Override
@@ -78,8 +85,18 @@ public class NavDrawer extends AppCompatActivity
             // reset the counter back to 0 to enable this process every time we hit Rings in Nav Menu
             counter = 0;
             userDataBaseData.clear();
-
             readFromFireBaseRealTimeDataBase2("ArenasPerUser", uid);
+        }
+    };
+    private Runnable switchToRequests = new Runnable() {
+        @Override
+        public void run() {
+            // reset the counter back to 0 to enable this process every time we hit Rings in Nav Menu
+            counterRequests = 0;
+            userRequests.clear();
+            userInvites.clear();
+            userAproves.clear();
+            readFromFireBaseRealTimeDataBase3("Request",uid,tableOfRequests,requestFragment);
         }
     };
 
@@ -224,6 +241,139 @@ public class NavDrawer extends AppCompatActivity
 
         }
     };
+    // Do This after reading the Requets table in the DB
+    OnGetDataFromFirebaseDbListener tableOfRequests = new OnGetDataFromFirebaseDbListener() {
+        @Override
+        public void onDataListenerStart() {
+
+        }
+
+        @Override
+        public void onDataListenerSuccess(DataSnapshot data,long num) {
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference myRef;
+            for (DataSnapshot record:data.getChildren()
+                    ) {
+                String requestID = record.getKey();
+                myRef = database.getReference().child("Request").child(requestID);
+                myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        //2nd Par "data.getChildrenCount()": how many requests does the user have
+                        // we need this number to make sure we've iteareted over all of them before updating the UI
+                        singleRequest.onDataListenerSuccess(dataSnapshot,(long) data.getChildrenCount());
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
+            }
+
+        }
+
+        @Override
+        public void onDataListenerFailed(DatabaseError databaseError) {
+
+        }
+    };
+    // Do This after reading a single Requet record of the current userDB
+    OnGetDataFromFirebaseDbListener singleRequest = new OnGetDataFromFirebaseDbListener() {
+        @Override
+        public void onDataListenerStart() {
+
+        }
+
+        @Override
+        public void onDataListenerSuccess(DataSnapshot data, long num) {
+            String tmpKey="";
+            String tmpRequestingUID="";
+            String tmpApprovingUID="";
+            String tmpArenaID="";
+            int tmpStatus = 0;
+
+            for (DataSnapshot aSingleFieldInRequestRecord: data.getChildren()
+                 ) {
+
+                // simple fields in the DB
+                switch (aSingleFieldInRequestRecord.getKey()){
+                    case "approvingUID":
+                        tmpApprovingUID = aSingleFieldInRequestRecord.getValue(String.class);
+                        break;
+                    case "arenaID":
+                        tmpArenaID = aSingleFieldInRequestRecord.getValue(String.class);
+                        break;
+                    case "key":
+                        tmpKey = aSingleFieldInRequestRecord.getValue(String.class);
+                        break;
+                    case "requestingUID":
+                        tmpRequestingUID = aSingleFieldInRequestRecord.getValue(String.class);
+                    case "status":
+                        tmpStatus = aSingleFieldInRequestRecord.getValue(Integer.class);
+                        break;
+                    default:
+                        break;
+                }
+
+            }
+            // Decide what kind of a request this is
+            if (uid.equals(tmpRequestingUID)){
+                // Requests or Invites
+                        String tmptmpApprovingUID = tmpApprovingUID;
+                        String tmptmpArenaID = tmpArenaID;
+                        String tmptmpKey = tmpKey;
+                        String tmptmpRequestingUID = tmpRequestingUID;
+                        int tmptmpStatus = tmpStatus;
+
+                        FirebaseDatabase database = FirebaseDatabase.getInstance();
+                        DatabaseReference myRef = database.getReference().child("Arenas").child(tmpArenaID);
+                        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                counterRequests = counterRequests + 1;
+                                if (dataSnapshot.child("superUser").getValue(String.class).equals(uid)){
+                                    // Invite
+                                    userInvites.add(new Request(tmptmpKey,tmptmpRequestingUID,tmptmpApprovingUID,tmptmpArenaID,tmptmpStatus));
+                                } else {
+                                    // Request
+                                    userRequests.add(new Request(tmptmpKey,tmptmpRequestingUID,tmptmpApprovingUID,tmptmpArenaID,tmptmpStatus));
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+
+            } else {
+                // Approves
+                counterRequests = counterRequests + 1;
+                userAproves.add(new Request(tmpKey,tmpRequestingUID,tmpApprovingUID, tmpArenaID,tmpStatus));
+            }
+
+            if (counterRequests == num){
+                // We've iterated on every request and classifed it
+                Bundle requestFragmentArgsBundle = new Bundle();
+                requestFragmentArgsBundle.putParcelableArrayList("arg1",userAproves);
+                requestFragmentArgsBundle.putParcelableArrayList("arg1",userRequests);
+                requestFragmentArgsBundle.putParcelableArrayList("arg1",userInvites);
+                requestFragment.setArguments(requestFragmentArgsBundle);
+
+                if (active /*Is Activity active?*/) {
+                    switchToFragment(R.id.appFragContainer, requestFragment);
+                }
+
+            }
+
+        }
+
+        @Override
+        public void onDataListenerFailed(DatabaseError databaseError) {
+
+        }
+    };
+
+
     // ****************************************************************
 
     @Override
@@ -240,6 +390,11 @@ public class NavDrawer extends AppCompatActivity
                     mAuth.removeAuthStateListener(mAuthListener);
                     startActivity(new Intent(NavDrawer.this, MainActivity.class));
                 } else {
+
+                    logTheTimeOfUserSigningIntoTheApp();
+
+
+
                     // Set customized Nav Menu
                     //TODO: this should be the correct one
                     loadProfileImage(mAuth.getCurrentUser().getPhotoUrl(),imageViewUserProfile);
@@ -258,7 +413,10 @@ public class NavDrawer extends AppCompatActivity
         if (isRedirectedFromLoginActivity == 1 || isRedirectedFromLoginActivity == 2){
             uid = mAuth.getCurrentUser().getUid();
             fullNameoFTheCurrentSignedInUser = mAuth.getCurrentUser().getDisplayName();
+
         }
+
+
 
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -302,6 +460,14 @@ public class NavDrawer extends AppCompatActivity
 
 
 
+    }
+
+    private void logTheTimeOfUserSigningIntoTheApp() {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("UsersLoginTime");
+        myRef.child(mAuth.getCurrentUser().getUid()).child("email").setValue(mAuth.getCurrentUser().getEmail());
+        myRef.child(mAuth.getCurrentUser().getUid()).child("time").setValue(System.currentTimeMillis());
+        //TODO: also add a child "display name" and set its value to mAuth.getCurrentUser().getEDisplayName()
     }
 
     private void autoStartWithArenaNavDrawer(NavigationView navigationView) {
@@ -389,6 +555,8 @@ public class NavDrawer extends AppCompatActivity
         } else if (id == R.id.nav_requests) {
             // Handle recycler view of the user's requests to join Arena
             switchToFragment(R.id.appFragContainer,loadingAnimationFragment); // present loading animation
+            // Scan DB and present Requests
+
 
         } else if (id == R.id.nav_slideshow) {
 
@@ -653,6 +821,47 @@ public class NavDrawer extends AppCompatActivity
 
                 }
             });
+
+
+
+
+
+
+
+    }
+
+    private void readFromFireBaseRealTimeDataBase3(String tableName, String UID, OnGetDataFromFirebaseDbListener listener,android.support.v4.app.Fragment fragment ){
+        // reads from the FireBase DataBase
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference().child(tableName).child(UID);
+
+
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // Does this user have any Records in this DB table?
+                if (dataSnapshot.hasChildren()){
+                    listener.onDataListenerSuccess(dataSnapshot,dataSnapshot.getChildrenCount());
+
+                } else {
+                    // No Records - update UI accordinglly
+                    fragment.setArguments(null);
+                    if (active /*Is Activty active*/) {
+                        switchToFragment(R.id.appFragContainer, fragment);
+                    }
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                //onDataListenerFailed(databaseError);
+
+            }
+        });
+
+
 
 
 

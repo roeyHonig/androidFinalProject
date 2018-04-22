@@ -45,6 +45,17 @@
                 android:checked="false"
                 />
 
+            <ToggleButton
+                android:id="@+id/toggleButton5"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="ToggleButton"
+                android:layout_weight="0.5"
+                android:textOn="Outgoing Requests"
+                android:textOff="Outgoing Requests"
+                android:checked="false"
+                />
+
         </TableRow>
 
 
