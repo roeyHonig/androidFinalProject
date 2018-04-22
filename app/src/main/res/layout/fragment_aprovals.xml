@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/text_margin"
         android:textAppearance="?attr/textAppearanceListItem"
-        android:text="ido is asking to join fifa2019 Arena"
+        android:text="ido is inviting you to join fifa2019 Arena"
         />
 
     <TextView

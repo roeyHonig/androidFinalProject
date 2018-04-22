@@ -318,12 +318,18 @@ public class NavDrawer extends AppCompatActivity
             // Decide what kind of a request this is
             if (uid.equals(tmpRequestingUID)){
                 // Requests or Invites
+                        /*
                         String tmptmpApprovingUID = tmpApprovingUID;
                         String tmptmpArenaID = tmpArenaID;
                         String tmptmpKey = tmpKey;
                         String tmptmpRequestingUID = tmpRequestingUID;
                         int tmptmpStatus = tmpStatus;
+                        */
 
+                counterRequests = counterRequests + 1;
+                userInvites.add(new Request(tmpKey,tmpRequestingUID,tmpApprovingUID, tmpArenaID,tmpStatus));
+
+                        /*
                         FirebaseDatabase database = FirebaseDatabase.getInstance();
                         DatabaseReference myRef = database.getReference().child("Arenas").child(tmpArenaID);
                         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -344,6 +350,7 @@ public class NavDrawer extends AppCompatActivity
 
                             }
                         });
+                        */
 
             } else {
                 // Approves
@@ -354,9 +361,9 @@ public class NavDrawer extends AppCompatActivity
             if (counterRequests == num){
                 // We've iterated on every request and classifed it
                 Bundle requestFragmentArgsBundle = new Bundle();
+                //requestFragmentArgsBundle.putParcelableArrayList("arg1",userAproves);
                 requestFragmentArgsBundle.putParcelableArrayList("arg1",userAproves);
-                requestFragmentArgsBundle.putParcelableArrayList("arg1",userRequests);
-                requestFragmentArgsBundle.putParcelableArrayList("arg1",userInvites);
+                requestFragmentArgsBundle.putParcelableArrayList("arg2",userInvites);
                 requestFragment.setArguments(requestFragmentArgsBundle);
 
                 if (active /*Is Activity active?*/) {

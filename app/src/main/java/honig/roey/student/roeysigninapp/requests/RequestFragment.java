@@ -2,6 +2,7 @@ package honig.roey.student.roeysigninapp.requests;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Parcel;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,11 +10,16 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import honig.roey.student.roeysigninapp.R;
 import honig.roey.student.roeysigninapp.requests.dummy.DummyContent;
 import honig.roey.student.roeysigninapp.requests.dummy.DummyContent.DummyItem;
+import honig.roey.student.roeysigninapp.tables.Request;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,6 +35,11 @@ public class RequestFragment extends Fragment {
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
+    private  int noRequestsVisibility;
+    private  int noInvitesVisibility;
+    private ArrayList<Request> userAproves;
+    private ArrayList<Request> userInvites;
+
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -53,13 +64,67 @@ public class RequestFragment extends Fragment {
 
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
+            userAproves=getArguments().getParcelableArrayList("arg1");
+            userInvites = getArguments().getParcelableArrayList("arg2");
+            if (userAproves.size()!=0){
+                noRequestsVisibility = View.GONE;
+            } else {
+                noRequestsVisibility = View.VISIBLE;
+            }
+
+            if (userInvites.size()!=0){
+                noInvitesVisibility = View.GONE;
+            } else {
+                noInvitesVisibility = View.VISIBLE;
+            }
+
+            /*
+            Parcel roey = Parcel.obtain();
+            userAproves.get(0).writeToParcel(roey,0);
+            userAproves.add(Request.CREATOR.createFromParcel(roey));
+            */
+        } else {
+            // No Requests of any type for current User - show the "No Arenea Yet" UI
+            noRequestsVisibility = View.VISIBLE;
+            noInvitesVisibility = View.VISIBLE;
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        // Set the View
         View view = inflater.inflate(R.layout.fragment_request_list, container, false);
+        // Set TextViews visibility - "No Requests \ Invites"
+        TextView textViewNoInvites = view.findViewById(R.id.noInvites);
+        textViewNoInvites.setVisibility(noInvitesVisibility);
+        TextView textViewNoRequests = view.findViewById(R.id.noRequests);
+        textViewNoRequests.setVisibility(noRequestsVisibility);
+        
+        // set recyclerViews
+        RecyclerView recyclerViewInvitesList = view.findViewById(R.id.invitesList);
+        RecyclerView recyclerViewRequestsList = view.findViewById(R.id.aprovalsList);
+
+
+        // set Toggle buttons
+        Button toggleButtonInvites = view.findViewById(R.id.toggleButtonInvites);
+        Button toggleButtonRequests = view.findViewById(R.id.toggleButtonRequests);
+
+        toggleButtonInvites.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                recyclerViewInvitesList.setVisibility(View.VISIBLE);
+                recyclerViewRequestsList.setVisibility(View.GONE);
+            }
+        });
+
+        toggleButtonRequests.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                recyclerViewInvitesList.setVisibility(View.GONE);
+                recyclerViewRequestsList.setVisibility(View.VISIBLE);
+            }
+        });
 
         // Set the adapter
         if (view instanceof RecyclerView) {
