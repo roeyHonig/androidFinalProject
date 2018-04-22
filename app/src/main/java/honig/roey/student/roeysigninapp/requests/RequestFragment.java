@@ -39,6 +39,7 @@ public class RequestFragment extends Fragment {
     private  int noInvitesVisibility;
     private ArrayList<Request> userAproves;
     private ArrayList<Request> userInvites;
+    private MyRequestRecyclerViewAdapter mAdapter;
 
 
     /**
@@ -100,7 +101,7 @@ public class RequestFragment extends Fragment {
         textViewNoInvites.setVisibility(noInvitesVisibility);
         TextView textViewNoRequests = view.findViewById(R.id.noRequests);
         textViewNoRequests.setVisibility(noRequestsVisibility);
-        
+
         // set recyclerViews
         RecyclerView recyclerViewInvitesList = view.findViewById(R.id.invitesList);
         RecyclerView recyclerViewRequestsList = view.findViewById(R.id.aprovalsList);
@@ -114,7 +115,10 @@ public class RequestFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 recyclerViewInvitesList.setVisibility(View.VISIBLE);
+                textViewNoInvites.setVisibility(noInvitesVisibility);
+
                 recyclerViewRequestsList.setVisibility(View.GONE);
+                textViewNoRequests.setVisibility(View.GONE);
             }
         });
 
@@ -122,21 +126,61 @@ public class RequestFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 recyclerViewInvitesList.setVisibility(View.GONE);
+                textViewNoInvites.setVisibility(View.GONE);
+
                 recyclerViewRequestsList.setVisibility(View.VISIBLE);
+                textViewNoRequests.setVisibility(noRequestsVisibility);
             }
         });
 
-        // Set the adapter
-        if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
+
+        RecyclerView invitesRecyclerView = view.findViewById(R.id.invitesList);
+        if (noInvitesVisibility == View.GONE){
+            invitesRecyclerView.setVisibility(View.VISIBLE);
+            // Set the adapter for recyclerView
+            Context invitesRecyclerViewContext = invitesRecyclerView.getContext();
             if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
+                invitesRecyclerView.setLayoutManager(new LinearLayoutManager(invitesRecyclerViewContext));
             } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
+                invitesRecyclerView.setLayoutManager(new GridLayoutManager(invitesRecyclerViewContext, mColumnCount));
             }
-            recyclerView.setAdapter(new MyRequestRecyclerViewAdapter(DummyContent.ITEMS, mListener));
+            mAdapter = new MyRequestRecyclerViewAdapter(userInvites,mListener,1);
+
+
+        } else {
+            // No invites
+            invitesRecyclerView.setVisibility(View.GONE);
         }
+
+
+
+        RecyclerView requestRecyclerView = view.findViewById(R.id.aprovalsList);
+        if (noRequestsVisibility == View.GONE){
+            requestRecyclerView.setVisibility(View.VISIBLE);
+            // Set the adapter for recyclerView
+            Context requestRecyclerViewContext = invitesRecyclerView.getContext();
+            if (mColumnCount <= 1) {
+                invitesRecyclerView.setLayoutManager(new LinearLayoutManager(requestRecyclerViewContext));
+            } else {
+                invitesRecyclerView.setLayoutManager(new GridLayoutManager(requestRecyclerViewContext, mColumnCount));
+            }
+            mAdapter = new MyRequestRecyclerViewAdapter(userAproves,mListener,2);
+
+
+        } else {
+            // No invites
+            invitesRecyclerView.setVisibility(View.GONE);
+        }
+
+
+
+
+
+
+
+
+
+
         return view;
     }
 
@@ -170,6 +214,6 @@ public class RequestFragment extends Fragment {
      */
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onListFragmentInteraction(DummyItem item);
+        void onListFragmentInteraction(int item);
     }
 }

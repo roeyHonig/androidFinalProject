@@ -6,9 +6,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import honig.roey.student.roeysigninapp.R;
 import honig.roey.student.roeysigninapp.requests.RequestFragment.OnListFragmentInteractionListener;
 import honig.roey.student.roeysigninapp.requests.dummy.DummyContent.DummyItem;
+import honig.roey.student.roeysigninapp.tables.Request;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,12 +21,14 @@ import java.util.List;
  */
 public class MyRequestRecyclerViewAdapter extends RecyclerView.Adapter<MyRequestRecyclerViewAdapter.ViewHolder> {
 
-    private final List<DummyItem> mValues;
+    private final ArrayList<Request> mRequestValues;
     private final OnListFragmentInteractionListener mListener;
+    private final int mflag; // 1  - Invites   2 - requests
 
-    public MyRequestRecyclerViewAdapter(List<DummyItem> items, OnListFragmentInteractionListener listener) {
-        mValues = items;
+    public MyRequestRecyclerViewAdapter(ArrayList<Request> items, OnListFragmentInteractionListener listener, int flag) {
+        mRequestValues = items;
         mListener = listener;
+        mflag = flag;
     }
 
     @Override
@@ -35,9 +40,20 @@ public class MyRequestRecyclerViewAdapter extends RecyclerView.Adapter<MyRequest
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText(mValues.get(position).content);
+        //holder.mItem = mValuesInvite.get(position);
+        holder.mItem = 1;
+        if (mflag == 1){
+            // Invite Item
+            holder.mItemTitle.setText(mRequestValues.get(position).getApprovingUID());
+            holder.mItemStatus.setText(mRequestValues.get(position).getStatus());
+        } else {
+            // Request Item
+            holder.mItemTitle.setText(mRequestValues.get(position).getArenaID());
+            holder.mItemStatus.setText(mRequestValues.get(position).getStatus());
+        }
+
+
+
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,25 +69,27 @@ public class MyRequestRecyclerViewAdapter extends RecyclerView.Adapter<MyRequest
 
     @Override
     public int getItemCount() {
-        return mValues.size();
+        return mRequestValues.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        public final TextView mIdView;
-        public final TextView mContentView;
-        public DummyItem mItem;
+        public final TextView mItemTitle;
+        public final TextView mItemStatus;
+        // TODO: this is what we pass to the parent activity when we click on it, change it to someting valubale if needed
+        public int mItem;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mIdView = (TextView) view.findViewById(R.id.item_number);
-            mContentView = (TextView) view.findViewById(R.id.content);
+            mItemTitle = (TextView) view.findViewById(R.id.item_title);
+            mItemStatus = (TextView) view.findViewById(R.id.item_status);
+            mItem = 1;
         }
 
         @Override
         public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
+            return super.toString() + " '" + mItemTitle.getText() + "'";
         }
     }
 }

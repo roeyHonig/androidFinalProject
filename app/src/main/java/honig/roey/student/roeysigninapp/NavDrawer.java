@@ -655,6 +655,11 @@ public class NavDrawer extends AppCompatActivity
         playerStatFragment.setArguments(playerStatFragmentArgsBundle);
        switchToFragment(R.id.appFragContainer, playerStatFragment);
     }
+    // TODO: for example, this is from the request fragment (when selecting an item there)
+    public void onListFragmentInteraction(int item){
+
+    }
+
 
 
 

@@ -5,21 +5,21 @@
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/item_number"
+        android:id="@+id/item_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/text_margin"
         android:textAppearance="?attr/textAppearanceListItem"
-        android:text="You've requested to Join fifa2019 Arena"
+        android:text="Some Head Title Text"
         />
 
     <TextView
-        android:id="@+id/content"
+        android:id="@+id/item_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/text_margin"
         android:textAppearance="?attr/textAppearanceListItem"
-        android:text="Pending Approval from "
+        android:text="some Subtitle Text "
         android:textSize="12dp"
         android:layout_gravity="center_horizontal"
         />
