@@ -255,7 +255,7 @@ public class NavDrawer extends AppCompatActivity
             for (DataSnapshot record:data.getChildren()
                     ) {
                 String requestID = record.getKey();
-                myRef = database.getReference().child("Request").child(requestID);
+                myRef = database.getReference().child("Request").child(uid).child(requestID);
                 myRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -307,6 +307,7 @@ public class NavDrawer extends AppCompatActivity
                         break;
                     case "requestingUID":
                         tmpRequestingUID = aSingleFieldInRequestRecord.getValue(String.class);
+                        break;
                     case "status":
                         tmpStatus = aSingleFieldInRequestRecord.getValue(Integer.class);
                         break;

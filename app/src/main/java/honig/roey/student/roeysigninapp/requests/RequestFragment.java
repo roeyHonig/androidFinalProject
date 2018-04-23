@@ -74,7 +74,7 @@ public class RequestFragment extends Fragment {
 
 
             //
-            Toast.makeText(getActivity(),userInvites.get(0).getRequestingUID(),Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(),""+userAproves.get(0).getStatus(),Toast.LENGTH_LONG).show();
 
             if (userAproves.size()!=0){
                 noRequestsVisibility = View.GONE;
