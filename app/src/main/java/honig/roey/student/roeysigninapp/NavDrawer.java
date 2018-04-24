@@ -115,7 +115,7 @@ public class NavDrawer extends AppCompatActivity
 
     // Interface to call methods after reading the FireBase Realtime DB
     // ****************************************************************
-    // Do This after reading the ArenasPerUser table in the DB
+    // Do This after reading the "ArenasPerUser" table in the DB
     OnGetDataFromFirebaseDbListener tableOfRingsPerUser = new OnGetDataFromFirebaseDbListener() {
         @Override
         public void onDataListenerStart() {
@@ -150,7 +150,7 @@ public class NavDrawer extends AppCompatActivity
 
         }
     };
-    // Do This after reading the Arenas table in the DB
+    // Do This after reading the "Arenas table" in the DB
     OnGetDataFromFirebaseDbListener tableOfRings = new OnGetDataFromFirebaseDbListener() {
         @Override
         public void onDataListenerStart() {
@@ -241,7 +241,7 @@ public class NavDrawer extends AppCompatActivity
 
         }
     };
-    // Do This after reading the Requets table in the DB
+    // Do This after reading the "Requets" table in the DB
     OnGetDataFromFirebaseDbListener tableOfRequests = new OnGetDataFromFirebaseDbListener() {
         @Override
         public void onDataListenerStart() {
@@ -287,8 +287,11 @@ public class NavDrawer extends AppCompatActivity
         public void onDataListenerSuccess(DataSnapshot data, long num) {
             String tmpKey="";
             String tmpRequestingUID="";
+            String tmpRequestingName="";
             String tmpApprovingUID="";
-            String tmpArenaID="";
+            String tmpApprovingName="";
+            String tmpArenaName="";
+            String tmpArenaID = "";
             int tmpStatus = 0;
 
             for (DataSnapshot aSingleFieldInRequestRecord: data.getChildren()
@@ -299,6 +302,12 @@ public class NavDrawer extends AppCompatActivity
                     case "approvingUID":
                         tmpApprovingUID = aSingleFieldInRequestRecord.getValue(String.class);
                         break;
+                    case "approvingName":
+                        tmpApprovingName = aSingleFieldInRequestRecord.getValue(String.class);
+                        break;
+                    case "arenaName":
+                        tmpArenaName = aSingleFieldInRequestRecord.getValue(String.class);
+                        break;
                     case "arenaID":
                         tmpArenaID = aSingleFieldInRequestRecord.getValue(String.class);
                         break;
@@ -307,6 +316,9 @@ public class NavDrawer extends AppCompatActivity
                         break;
                     case "requestingUID":
                         tmpRequestingUID = aSingleFieldInRequestRecord.getValue(String.class);
+                        break;
+                    case "requestingName":
+                        tmpRequestingName = aSingleFieldInRequestRecord.getValue(String.class);
                         break;
                     case "status":
                         tmpStatus = aSingleFieldInRequestRecord.getValue(Integer.class);
@@ -319,50 +331,17 @@ public class NavDrawer extends AppCompatActivity
             // Decide what kind of a request this is
             if (mAuth.getCurrentUser().getUid().equals(tmpRequestingUID)){
                 // Requests or Invites
-                        /*
-                        String tmptmpApprovingUID = tmpApprovingUID;
-                        String tmptmpArenaID = tmpArenaID;
-                        String tmptmpKey = tmpKey;
-                        String tmptmpRequestingUID = tmpRequestingUID;
-                        int tmptmpStatus = tmpStatus;
-                        */
-
                 counterRequests = counterRequests + 1;
-                userInvites.add(new Request(tmpKey,tmpRequestingUID,tmpApprovingUID, tmpArenaID,tmpStatus));
-
-                        /*
-                        FirebaseDatabase database = FirebaseDatabase.getInstance();
-                        DatabaseReference myRef = database.getReference().child("Arenas").child(tmpArenaID);
-                        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                counterRequests = counterRequests + 1;
-                                if (dataSnapshot.child("superUser").getValue(String.class).equals(uid)){
-                                    // Invite
-                                    userInvites.add(new Request(tmptmpKey,tmptmpRequestingUID,tmptmpApprovingUID,tmptmpArenaID,tmptmpStatus));
-                                } else {
-                                    // Request
-                                    userRequests.add(new Request(tmptmpKey,tmptmpRequestingUID,tmptmpApprovingUID,tmptmpArenaID,tmptmpStatus));
-                                }
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-
-                            }
-                        });
-                        */
-
+                userInvites.add(new Request(tmpKey,tmpRequestingUID,tmpRequestingName,tmpApprovingUID,tmpApprovingName, tmpArenaName,tmpArenaID,tmpStatus));
             } else {
                 // Approves
                 counterRequests = counterRequests + 1;
-                userAproves.add(new Request(tmpKey,tmpRequestingUID,tmpApprovingUID, tmpArenaID,tmpStatus));
+                userAproves.add(new Request(tmpKey,tmpRequestingUID,tmpRequestingName,tmpApprovingUID,tmpApprovingName, tmpArenaName,tmpArenaID,tmpStatus));
             }
 
             if (counterRequests == num){
                 // We've iterated on every request and classifed it
                 Bundle requestFragmentArgsBundle = new Bundle();
-                //requestFragmentArgsBundle.putParcelableArrayList("arg1",userAproves);
                 requestFragmentArgsBundle.putParcelableArrayList("arg1",userAproves);
                 requestFragmentArgsBundle.putParcelableArrayList("arg2",userInvites);
                 requestFragment.setArguments(requestFragmentArgsBundle);
@@ -380,7 +359,6 @@ public class NavDrawer extends AppCompatActivity
 
         }
     };
-
 
     // ****************************************************************
 
@@ -444,7 +422,7 @@ public class NavDrawer extends AppCompatActivity
                 //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                   //      .setAction("Action", null).show();
 
-                pushAndSetNewChildAtRequestsTable(new Request("1", "RRe3GGpTI6SeMb82413bJ4NPoA52", "WGno1x9GkYQuU6d2NnrfOumnY2j2","-LActIbj-cgoOI3_Zr-m", 1));
+                pushAndSetNewChildAtRequestsTable(new Request("1", "RRe3GGpTI6SeMb82413bJ4NPoA52","Roey Honig", "UV2tVsaP8GVhB4YU2o2iHCAfOum2" ,"Tal Efroni","fifa with friends","-LActIbj-cgoOI3_Zr-m" ,1));
 
             }
         });
@@ -475,7 +453,8 @@ public class NavDrawer extends AppCompatActivity
         DatabaseReference myRef = database.getReference("UsersLoginTime");
         myRef.child(mAuth.getCurrentUser().getUid()).child("email").setValue(mAuth.getCurrentUser().getEmail());
         myRef.child(mAuth.getCurrentUser().getUid()).child("time").setValue(System.currentTimeMillis());
-        //TODO: also add a child "display name" and set its value to mAuth.getCurrentUser().getEDisplayName()
+        myRef.child(mAuth.getCurrentUser().getUid()).child("display name").setValue(mAuth.getCurrentUser().getDisplayName());
+        myRef.child(mAuth.getCurrentUser().getUid()).child("uid").setValue(mAuth.getCurrentUser().getUid());
     }
 
     private void autoStartWithArenaNavDrawer(NavigationView navigationView) {
@@ -658,7 +637,15 @@ public class NavDrawer extends AppCompatActivity
     }
 
 
-
+    public  void unMaskFieldRequestingUIDinObjectRequest(Request request, String name){
+        return;
+    }
+    public  void unMaskFieldApprovingUIDinObjectRequest(Request request, String name){
+        return;
+    }
+    public  void unMaskFieldArenaIDinObjectRequest(Request request, String name){
+        return;
+    }
 
     public void pushAndSetNewChildAtArenasTable(String nameOfAreana, String uid1 , String fullName1, String uid2 , String fullName2, String uid3, String fullName3){
         // write the JSON to the FireBase DataBase
@@ -692,7 +679,7 @@ public class NavDrawer extends AppCompatActivity
     public void pushAndSetNewChildAtRequestsTable(Request jsonObject){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("Request");
-        String tempKey = myRef.child(jsonObject.getRequestingUID()).push().getKey();
+        String tempKey = myRef.child(mAuth.getCurrentUser().getUid()).push().getKey();
         // change json field key to match the new pushed key
         jsonObject.setKey(tempKey);
         // set the JSON
@@ -842,8 +829,10 @@ public class NavDrawer extends AppCompatActivity
     private void readFromFireBaseRealTimeDataBase3(String tableName, String UID, OnGetDataFromFirebaseDbListener listener,android.support.v4.app.Fragment fragment ){
         // reads from the FireBase DataBase
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference().child(tableName).child(UID);
-
+        DatabaseReference myRef = database.getReference().child(tableName);
+        if (UID != null){
+             myRef = database.getReference().child(tableName).child(UID);
+        }
 
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
 
@@ -853,12 +842,10 @@ public class NavDrawer extends AppCompatActivity
                 if (dataSnapshot.hasChildren()){
                     listener.onDataListenerSuccess(dataSnapshot,dataSnapshot.getChildrenCount());
 
-                } else {
+                } else if(fragment != null && active) {
                     // No Records - update UI accordinglly
                     fragment.setArguments(null);
-                    if (active /*Is Activty active*/) {
-                        switchToFragment(R.id.appFragContainer, fragment);
-                    }
+                    switchToFragment(R.id.appFragContainer, fragment);
                 }
 
             }
