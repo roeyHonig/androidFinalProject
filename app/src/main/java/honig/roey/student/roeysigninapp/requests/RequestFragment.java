@@ -70,12 +70,6 @@ public class RequestFragment extends Fragment {
             userAproves=getArguments().getParcelableArrayList("arg1");
             userInvites = getArguments().getParcelableArrayList("arg2");
 
-
-
-
-            //
-            Toast.makeText(getActivity(),""+userAproves.get(0).getStatus(),Toast.LENGTH_LONG).show();
-
             if (userAproves.size()!=0){
                 noRequestsVisibility = View.GONE;
             } else {
