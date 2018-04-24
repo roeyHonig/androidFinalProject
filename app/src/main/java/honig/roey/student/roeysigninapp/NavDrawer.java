@@ -101,6 +101,10 @@ public class NavDrawer extends AppCompatActivity
     };
 
     // Getters
+    public FirebaseAuth getmAuth() {
+        return mAuth;
+    }
+
     public String getUid() {
         return uid;
     }

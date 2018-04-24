@@ -200,6 +200,7 @@ public class RingFragment extends Fragment {
                         if (inputText.equals("")) {
 
                         } else{
+                            //TODO: need to make sure the user doesn't allready have an arena like that
                             myDialog.dismiss();
 
                             if (getArguments() == null){

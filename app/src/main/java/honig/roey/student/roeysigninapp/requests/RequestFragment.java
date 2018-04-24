@@ -19,7 +19,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import honig.roey.student.roeysigninapp.NavDrawer;
+import honig.roey.student.roeysigninapp.OnGetDataFromFirebaseDbListener;
 import honig.roey.student.roeysigninapp.R;
 import honig.roey.student.roeysigninapp.requests.dummy.DummyContent;
 import honig.roey.student.roeysigninapp.requests.dummy.DummyContent.DummyItem;
@@ -48,6 +55,58 @@ public class RequestFragment extends Fragment {
     private MyRequestRecyclerViewAdapter mInvitesAdapter;
     private MyRequestRecyclerViewAdapter mRequestsAdapter;
     private NavDrawer parentActivity;
+    private AlertDialog myDialog;
+    private Request newRequest = new Request("1","null","null","null","null","null","null",2);
+    private int errorCode = 0;
+    /*
+    1 - I invited a user that doesn't exsists
+
+
+     */
+
+    // Interface to call methods after reading the FireBase Realtime DB
+    // ****************************************************************
+    // Do this after reading the lists of Arenas Id's the current user have
+        OnGetDataFromFirebaseDbListener cureentUserArenas = new OnGetDataFromFirebaseDbListener() {
+        @Override
+        public void onDataListenerStart() {
+
+        }
+
+        @Override
+        public void onDataListenerSuccess(DataSnapshot data, long num) {
+
+            for (DataSnapshot record: data.getChildren()
+                 ) {
+
+            }
+
+        }
+
+        @Override
+        public void onDataListenerFailed(DatabaseError databaseError) {
+
+        }
+    };
+    // Do this after reading the table UsersLoginTime
+    OnGetDataFromFirebaseDbListener tableUsersLoginTimeSnapShot = new OnGetDataFromFirebaseDbListener() {
+        @Override
+        public void onDataListenerStart() {
+
+        }
+
+        @Override
+        public void onDataListenerSuccess(DataSnapshot data, long num) {
+
+        }
+
+        @Override
+        public void onDataListenerFailed(DatabaseError databaseError) {
+
+        }
+    }
+
+    // ****************************************************************
 
 
     /**
@@ -256,7 +315,7 @@ public class RequestFragment extends Fragment {
                 });
 
         builder.setView(dialogView);
-        final AlertDialog myDialog = builder.create();
+        myDialog = builder.create();
 
         myDialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
@@ -265,18 +324,28 @@ public class RequestFragment extends Fragment {
                 button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        errorCode = 0;
                         String inputEmail = approvingEmail.getText().toString();
                         String inputArena = arenaID.getText().toString();
-                        if (inputEmail.equals("") || inputArena.equals("")) {
+                        if (inputEmail.equals(parentActivity.getmAuth().getCurrentUser().getEmail())){
+                            Toast.makeText(getActivity(),"Don't invite yourself, that's sad...",Toast.LENGTH_LONG).show();
+                        } else if (inputEmail.equals("")) {
 
-                        } else{
-                            myDialog.dismiss();
-                            // TODO: Add new request to the DB!!!!!!!!!!!!!!!!!!!!
+                        } else if (inputArena.equals("")){
+
+                        }else{
+                            //TODO: present some spinner animation
+
+                            newRequest.setRequestingUID(parentActivity.getmAuth().getCurrentUser().getUid());
+                            newRequest.setRequestingName(parentActivity.getmAuth().getCurrentUser().getDisplayName());
+                            isApprovingUserExsists(inputEmail, inputArena);
 
 
 
 
-                            parentActivity.autoStartWithAnItemFromNavDrawer(parentActivity.getNavigationView(),R.id.nav_requests);
+
+
+
                             /*
                             parentActivity.getNavigationView().setCheckedItem(R.id.nav_requests); // higlight the share Item in the Menu on StartUp
                             parentActivity.getNavigationView().getMenu().performIdentifierAction(R.id.nav_requests,0); // Perform Action Associated with Share Menu Item
@@ -288,4 +357,67 @@ public class RequestFragment extends Fragment {
         });
         myDialog.show();
     }
+
+    private void isApprovingUserExsists(String inputEmail, String inputArena) {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference().child("UsersLoginTime");
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                
+                /*
+                for (DataSnapshot appUser: dataSnapshot.getChildren())
+                {
+
+                    if (appUser.child("email").getValue(String.class).equals(inputEmail)){
+                        newRequest.setRequestingUID(appUser.child("uid").getValue(String.class));
+                        newRequest.setRequestingUID(appUser.child("display name").getValue(String.class));
+                        errorCode = 0;
+                        break;
+                    }
+                    else {
+                        errorCode = 1;
+                    }
+
+                }
+
+                if (errorCode == 0){
+
+                    //TODO: continue with inspection
+                    //isValidArenaName(inputArena)
+
+                } else {
+                    Toast.makeText(getActivity(),"No such user or wrong email",Toast.LENGTH_LONG).show();
+
+                }
+                myDialog.dismiss();
+                parentActivity.autoStartWithAnItemFromNavDrawer(parentActivity.getNavigationView(),R.id.nav_requests);
+                */
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void isValidArenaName() {
+        String currentUser = parentActivity.getmAuth().getCurrentUser().getUid();
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference().child("ArenasPerUser").child(currentUser);
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                cureentUserArenas.onDataListenerSuccess(dataSnapshot,dataSnapshot.getChildrenCount());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+
 }
