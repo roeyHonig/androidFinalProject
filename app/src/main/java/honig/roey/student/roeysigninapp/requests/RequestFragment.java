@@ -70,11 +70,13 @@ public class RequestFragment extends Fragment {
             userAproves=getArguments().getParcelableArrayList("arg1");
             userInvites = getArguments().getParcelableArrayList("arg2");
 
+
             if (userAproves.size()!=0){
                 noRequestsVisibility = View.GONE;
             } else {
                 noRequestsVisibility = View.VISIBLE;
             }
+
 
             if (userInvites.size()!=0){
                 noInvitesVisibility = View.GONE;
@@ -103,7 +105,7 @@ public class RequestFragment extends Fragment {
         TextView textViewNoInvites = view.findViewById(R.id.noInvites);
         textViewNoInvites.setVisibility(noInvitesVisibility);
         TextView textViewNoRequests = view.findViewById(R.id.noRequests);
-        textViewNoRequests.setVisibility(noRequestsVisibility);
+        //textViewNoRequests.setVisibility(noRequestsVisibility);
 
         // set recyclerViews
         RecyclerView recyclerViewInvitesList = view.findViewById(R.id.invitesList);
@@ -139,7 +141,7 @@ public class RequestFragment extends Fragment {
 
         RecyclerView invitesRecyclerView = view.findViewById(R.id.invitesList);
         if (noInvitesVisibility == View.GONE){
-            invitesRecyclerView.setVisibility(View.VISIBLE);
+            //invitesRecyclerView.setVisibility(View.VISIBLE);
             // Set the adapter for recyclerView
             Context invitesRecyclerViewContext = invitesRecyclerView.getContext();
             if (mColumnCount <= 1) {
@@ -160,7 +162,7 @@ public class RequestFragment extends Fragment {
 
         RecyclerView requestRecyclerView = view.findViewById(R.id.aprovalsList);
         if (noRequestsVisibility == View.GONE){
-            requestRecyclerView.setVisibility(View.VISIBLE);
+            //requestRecyclerView.setVisibility(View.VISIBLE);
             // Set the adapter for recyclerView
             Context requestRecyclerViewContext = invitesRecyclerView.getContext();
             if (mColumnCount <= 1) {
@@ -172,7 +174,7 @@ public class RequestFragment extends Fragment {
             requestRecyclerView.setAdapter(mRequestsAdapter);
 
         } else {
-            // No invites
+            // No requests
             requestRecyclerView.setVisibility(View.GONE);
         }
 
