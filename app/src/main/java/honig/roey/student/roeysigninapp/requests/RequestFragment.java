@@ -62,7 +62,10 @@ public class RequestFragment extends Fragment {
     private Request newRequest = new Request("1","null","null","null","null","null","null",2);
     private int errorCode = 0;
     private boolean isApprovingUserExsists = false;
+    private boolean isArenaNameValid = false;
+    private boolean isSuperUser = false;
     private long itearationOverAppUsersCounter = 0;
+    private long itearationOverUserArenasCounter = 0;
     /*
     1 - I invited a user that doesn't exsists
 
@@ -71,7 +74,7 @@ public class RequestFragment extends Fragment {
 
     // Interface to call methods after reading the FireBase Realtime DB
     // ****************************************************************
-    // Do this after reading the lists of Arenas Id's the current user have
+    // Do this after reading arena per user table. this is a dataSnapsot of the lists of Arenas Id's the current user have
         OnGetDataFromFirebaseDbListener cureentUserArenas = new OnGetDataFromFirebaseDbListener() {
         @Override
         public void onDataListenerStart() {
@@ -80,9 +83,65 @@ public class RequestFragment extends Fragment {
 
         @Override
         public void onDataListenerSuccess(DataSnapshot data, long num) {
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference myRef;
 
-            for (DataSnapshot record: data.getChildren()
-                 ) {
+            for (DataSnapshot arena: data.getChildren())
+            {
+                myRef = database.getReference().child("Arenas").child(arena.getKey());
+                myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        aSingleArenaTheUserHave.onDataListenerSuccess(dataSnapshot,num);
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+
+            }
+
+        }
+
+        @Override
+        public void onDataListenerFailed(DatabaseError databaseError) {
+
+        }
+    };
+    // Do this after reading a single arena. this is a dataSnapsot of a specific arena the current user have
+        OnGetDataFromFirebaseDbListener aSingleArenaTheUserHave = new OnGetDataFromFirebaseDbListener() {
+        @Override
+        public void onDataListenerStart() {
+
+        }
+
+        @Override
+        public void onDataListenerSuccess(DataSnapshot data, long num) {
+            itearationOverUserArenasCounter = itearationOverUserArenasCounter + 1;
+            String tmp = parentActivity.getmAuth().getCurrentUser().getUid();
+            if (data.child("name").getValue(String.class).equals(inputArena) && data.child("superUser").getValue(String.class).equals(tmp)){
+                isArenaNameValid = true;
+                isSuperUser = true;
+                newRequest.setArenaName(inputArena);
+                newRequest.setArenaID(data.child("key").getValue(String.class));
+            }
+
+            if (itearationOverUserArenasCounter == num){
+                if (isArenaNameValid && isSuperUser){
+                    //TODO: continue with inspection
+                    //TODO: dont forget to put inside inspection the following
+                    myDialog.dismiss();
+                    parentActivity.autoStartWithAnItemFromNavDrawer(parentActivity.getNavigationView(),R.id.nav_requests);
+
+                } else {
+                    Toast.makeText(getActivity(),"No Arena with that name or you're not the Super User",Toast.LENGTH_LONG).show();
+                    myDialog.dismiss();
+                    parentActivity.autoStartWithAnItemFromNavDrawer(parentActivity.getNavigationView(),R.id.nav_requests);
+                }
 
             }
 
@@ -94,7 +153,7 @@ public class RequestFragment extends Fragment {
         }
     };
     // Do this after reading the table UsersLoginTime
-    OnGetDataFromFirebaseDbListener tableUsersLoginTimeSnapShot = new OnGetDataFromFirebaseDbListener() {
+        OnGetDataFromFirebaseDbListener tableUsersLoginTimeSnapShot = new OnGetDataFromFirebaseDbListener() {
         @Override
         public void onDataListenerStart() {
 
@@ -123,35 +182,11 @@ public class RequestFragment extends Fragment {
 
                             }
                         });
-
                     }
-
-                    /*
-                    if (appUser.child("email").getValue(String.class).equals(inputEmail)){
-                        newRequest.setRequestingUID(appUser.child("uid").getValue(String.class));
-                        newRequest.setRequestingUID(appUser.child("display name").getValue(String.class));
-                        errorCode = 0;
-                        break;
-                    }
-                    else {
-                        errorCode = 1;
-                    }
-                    */
 
                 }
 
-                /*
-                if (errorCode == 0){
 
-
-                    //isValidArenaName(inputArena)
-
-                } else {
-
-
-                }
-
-                */
 
         }
 
@@ -161,7 +196,7 @@ public class RequestFragment extends Fragment {
         }
     };
     // Do this after reading a single user record in table UsersLoginTime
-    OnGetDataFromFirebaseDbListener aSingleAppUser = new OnGetDataFromFirebaseDbListener() {
+        OnGetDataFromFirebaseDbListener aSingleAppUser = new OnGetDataFromFirebaseDbListener() {
         @Override
         public void onDataListenerStart() {
 
@@ -184,14 +219,14 @@ public class RequestFragment extends Fragment {
 
                 //we've ireateted Over all the registered users in the App. num-1 is because we have 1 dammy record of a readMe in this table
                 if (isApprovingUserExsists){
-                    Toast.makeText(getActivity(),newRequest.getApprovingName(),Toast.LENGTH_LONG).show();
-                    //TODO: continue with inspection
+                    isValidArenaName();
                 }
                 else {
                     Toast.makeText(getActivity(),"User isn't registered or wrong email",Toast.LENGTH_LONG).show();
+                    myDialog.dismiss();
+                    parentActivity.autoStartWithAnItemFromNavDrawer(parentActivity.getNavigationView(),R.id.nav_requests);
                 }
-                myDialog.dismiss();
-                parentActivity.autoStartWithAnItemFromNavDrawer(parentActivity.getNavigationView(),R.id.nav_requests);
+
             }
 
 
@@ -427,6 +462,9 @@ public class RequestFragment extends Fragment {
                         errorCode = 0;
                         isApprovingUserExsists = false;
                         itearationOverAppUsersCounter = 0;
+                        isArenaNameValid = false;
+                        isSuperUser = false;
+                        itearationOverUserArenasCounter = 0;
 
                         inputEmail = approvingEmail.getText().toString();
                         inputArena = arenaID.getText().toString();
