@@ -56,6 +56,7 @@ public class RequestFragment extends Fragment {
     private MyRequestRecyclerViewAdapter mRequestsAdapter;
     private NavDrawer parentActivity;
     private AlertDialog myDialog;
+    private Button btPositive;
     private String inputEmail="";
     private String inputArena="";
     private Request newRequest = new Request("1","null","null","null","null","null","null",2);
@@ -173,17 +174,18 @@ public class RequestFragment extends Fragment {
             String tmp =data.child("email").getValue(String.class) ;
 
             if (tmp.equals(inputEmail)){
-                newRequest.setRequestingUID(data.child("uid").getValue(String.class));
-                newRequest.setRequestingUID(data.child("display name").getValue(String.class));
+                newRequest.setApprovingUID(data.child("uid").getValue(String.class));
+                newRequest.setApprovingName(data.child("display name").getValue(String.class));
                 isApprovingUserExsists = true;
-                //TODO: continue with inspection
+
             }
 
             if (itearationOverAppUsersCounter == (num-1)){
 
-                //we've ireateted Over all the registered users in the App
+                //we've ireateted Over all the registered users in the App. num-1 is because we have 1 dammy record of a readMe in this table
                 if (isApprovingUserExsists){
-
+                    Toast.makeText(getActivity(),newRequest.getApprovingName(),Toast.LENGTH_LONG).show();
+                    //TODO: continue with inspection
                 }
                 else {
                     Toast.makeText(getActivity(),"User isn't registered or wrong email",Toast.LENGTH_LONG).show();
@@ -414,10 +416,13 @@ public class RequestFragment extends Fragment {
         myDialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(DialogInterface dialogInterface) {
-                Button button = ((AlertDialog) myDialog).getButton(AlertDialog.BUTTON_POSITIVE);
-                button.setOnClickListener(new View.OnClickListener() {
+                btPositive = ((AlertDialog) myDialog).getButton(AlertDialog.BUTTON_POSITIVE);
+                btPositive.setClickable(true);
+                btPositive.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        //Lock the Button
+                        btPositive.setClickable(false);
                         //reset inspection critirions
                         errorCode = 0;
                         isApprovingUserExsists = false;
