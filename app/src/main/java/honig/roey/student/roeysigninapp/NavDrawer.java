@@ -462,6 +462,11 @@ public class NavDrawer extends AppCompatActivity
         navigationView.getMenu().performIdentifierAction(R.id.nav_rings, 0); // Perform the Action Associated with the Rings Menu Item
     }
 
+    public void autoStartWithAnItemFromNavDrawer(NavigationView navigationView, int id) {
+        navigationView.setCheckedItem(id); // higlight the Rings Item in the Menu on StartUp
+        navigationView.getMenu().performIdentifierAction(id, 0); // Perform the Action Associated with the Rings Menu Item
+    }
+
     @Override
     protected void onStart() {
         super.onStart();

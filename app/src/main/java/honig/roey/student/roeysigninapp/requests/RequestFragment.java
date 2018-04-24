@@ -1,9 +1,12 @@
 package honig.roey.student.roeysigninapp.requests;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Parcel;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,10 +14,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import honig.roey.student.roeysigninapp.NavDrawer;
 import honig.roey.student.roeysigninapp.R;
 import honig.roey.student.roeysigninapp.requests.dummy.DummyContent;
 import honig.roey.student.roeysigninapp.requests.dummy.DummyContent.DummyItem;
@@ -42,6 +47,7 @@ public class RequestFragment extends Fragment {
     private ArrayList<Request> userInvites;
     private MyRequestRecyclerViewAdapter mInvitesAdapter;
     private MyRequestRecyclerViewAdapter mRequestsAdapter;
+    private NavDrawer parentActivity;
 
 
     /**
@@ -101,6 +107,8 @@ public class RequestFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Set the View
         View view = inflater.inflate(R.layout.fragment_request_list, container, false);
+        // Set the invite a Friend Fab
+        FloatingActionButton btInvite =view.findViewById(R.id.btInvite);
         // Set TextViews visibility - "No Requests \ Invites"
         TextView textViewNoInvites = view.findViewById(R.id.noInvites);
         textViewNoInvites.setVisibility(noInvitesVisibility);
@@ -124,6 +132,8 @@ public class RequestFragment extends Fragment {
 
                 recyclerViewRequestsList.setVisibility(View.GONE);
                 textViewNoRequests.setVisibility(View.GONE);
+
+                btInvite.setVisibility(View.VISIBLE);
             }
         });
 
@@ -135,6 +145,8 @@ public class RequestFragment extends Fragment {
 
                 recyclerViewRequestsList.setVisibility(View.VISIBLE);
                 textViewNoRequests.setVisibility(noRequestsVisibility);
+
+                btInvite.setVisibility(View.GONE);
             }
         });
 
@@ -180,8 +192,13 @@ public class RequestFragment extends Fragment {
 
 
 
-
-
+        // set a clickable listener
+        btInvite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openDialogBox();
+            }
+        });
 
 
 
@@ -191,9 +208,12 @@ public class RequestFragment extends Fragment {
     }
 
 
+
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        parentActivity = (NavDrawer) getActivity();
         if (context instanceof OnListFragmentInteractionListener) {
             mListener = (OnListFragmentInteractionListener) context;
         } else {
@@ -221,5 +241,51 @@ public class RequestFragment extends Fragment {
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
         void onListFragmentInteraction(int item);
+    }
+
+    private void openDialogBox() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        View dialogView = getLayoutInflater().inflate(R.layout.add_request_dialog,null);
+        final EditText approvingEmail = dialogView.findViewById(R.id.approvingEmail);
+        final EditText arenaID = dialogView.findViewById(R.id.arenaID);
+        builder.setPositiveButton("OK", null)
+                .setNegativeButton("Abourt", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Toast.makeText(getActivity(),"Later then...",Toast.LENGTH_LONG).show();
+                    }
+                });
+
+        builder.setView(dialogView);
+        final AlertDialog myDialog = builder.create();
+
+        myDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialogInterface) {
+                Button button = ((AlertDialog) myDialog).getButton(AlertDialog.BUTTON_POSITIVE);
+                button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        String inputEmail = approvingEmail.getText().toString();
+                        String inputArena = arenaID.getText().toString();
+                        if (inputEmail.equals("") || inputArena.equals("")) {
+
+                        } else{
+                            myDialog.dismiss();
+                            // TODO: Add new request to the DB!!!!!!!!!!!!!!!!!!!!
+
+
+
+
+                            parentActivity.autoStartWithAnItemFromNavDrawer(parentActivity.getNavigationView(),R.id.nav_requests);
+                            /*
+                            parentActivity.getNavigationView().setCheckedItem(R.id.nav_requests); // higlight the share Item in the Menu on StartUp
+                            parentActivity.getNavigationView().getMenu().performIdentifierAction(R.id.nav_requests,0); // Perform Action Associated with Share Menu Item
+                            */
+                        }
+                    }
+                });
+            }
+        });
+        myDialog.show();
     }
 }

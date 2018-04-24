@@ -49,6 +49,15 @@
 
     </TableLayout>
 
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/btInvite"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:visibility="visible"
+        android:background="#6a1fea08"
+        app:srcCompat="@drawable/ic_add_circle_black_24dp" />
+
 
     <TextView
         android:id="@+id/noRequests"
