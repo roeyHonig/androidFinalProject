@@ -56,8 +56,12 @@ public class RequestFragment extends Fragment {
     private MyRequestRecyclerViewAdapter mRequestsAdapter;
     private NavDrawer parentActivity;
     private AlertDialog myDialog;
+    private String inputEmail="";
+    private String inputArena="";
     private Request newRequest = new Request("1","null","null","null","null","null","null",2);
     private int errorCode = 0;
+    private boolean isApprovingUserExsists = false;
+    private long itearationOverAppUsersCounter = 0;
     /*
     1 - I invited a user that doesn't exsists
 
@@ -97,6 +101,56 @@ public class RequestFragment extends Fragment {
 
         @Override
         public void onDataListenerSuccess(DataSnapshot data, long num) {
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference myRef;
+
+                for (DataSnapshot appUser: data.getChildren())
+                {
+
+                    String uid = appUser.getKey();
+                    if (!uid.equals("readme")){
+                        // read all app users but not the dammy child of "readme"
+                        myRef = database.getReference().child("UsersLoginTime").child(uid);
+                        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                aSingleAppUser.onDataListenerSuccess(dataSnapshot,num);
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+
+                    }
+
+                    /*
+                    if (appUser.child("email").getValue(String.class).equals(inputEmail)){
+                        newRequest.setRequestingUID(appUser.child("uid").getValue(String.class));
+                        newRequest.setRequestingUID(appUser.child("display name").getValue(String.class));
+                        errorCode = 0;
+                        break;
+                    }
+                    else {
+                        errorCode = 1;
+                    }
+                    */
+
+                }
+
+                /*
+                if (errorCode == 0){
+
+
+                    //isValidArenaName(inputArena)
+
+                } else {
+
+
+                }
+
+                */
 
         }
 
@@ -104,8 +158,48 @@ public class RequestFragment extends Fragment {
         public void onDataListenerFailed(DatabaseError databaseError) {
 
         }
-    }
+    };
+    // Do this after reading a single user record in table UsersLoginTime
+    OnGetDataFromFirebaseDbListener aSingleAppUser = new OnGetDataFromFirebaseDbListener() {
+        @Override
+        public void onDataListenerStart() {
 
+        }
+
+        @Override
+        public void onDataListenerSuccess(DataSnapshot data, long num) {
+
+            itearationOverAppUsersCounter = itearationOverAppUsersCounter + 1;
+            String tmp =data.child("email").getValue(String.class) ;
+
+            if (tmp.equals(inputEmail)){
+                newRequest.setRequestingUID(data.child("uid").getValue(String.class));
+                newRequest.setRequestingUID(data.child("display name").getValue(String.class));
+                isApprovingUserExsists = true;
+                //TODO: continue with inspection
+            }
+
+            if (itearationOverAppUsersCounter == (num-1)){
+
+                //we've ireateted Over all the registered users in the App
+                if (isApprovingUserExsists){
+
+                }
+                else {
+                    Toast.makeText(getActivity(),"User isn't registered or wrong email",Toast.LENGTH_LONG).show();
+                }
+                myDialog.dismiss();
+                parentActivity.autoStartWithAnItemFromNavDrawer(parentActivity.getNavigationView(),R.id.nav_requests);
+            }
+
+
+        }
+
+        @Override
+        public void onDataListenerFailed(DatabaseError databaseError) {
+
+        }
+    };
     // ****************************************************************
 
 
@@ -324,9 +418,13 @@ public class RequestFragment extends Fragment {
                 button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        //reset inspection critirions
                         errorCode = 0;
-                        String inputEmail = approvingEmail.getText().toString();
-                        String inputArena = arenaID.getText().toString();
+                        isApprovingUserExsists = false;
+                        itearationOverAppUsersCounter = 0;
+
+                        inputEmail = approvingEmail.getText().toString();
+                        inputArena = arenaID.getText().toString();
                         if (inputEmail.equals(parentActivity.getmAuth().getCurrentUser().getEmail())){
                             Toast.makeText(getActivity(),"Don't invite yourself, that's sad...",Toast.LENGTH_LONG).show();
                         } else if (inputEmail.equals("")) {
@@ -338,7 +436,7 @@ public class RequestFragment extends Fragment {
 
                             newRequest.setRequestingUID(parentActivity.getmAuth().getCurrentUser().getUid());
                             newRequest.setRequestingName(parentActivity.getmAuth().getCurrentUser().getDisplayName());
-                            isApprovingUserExsists(inputEmail, inputArena);
+                            isApprovingUserExsists();
 
 
 
@@ -358,41 +456,13 @@ public class RequestFragment extends Fragment {
         myDialog.show();
     }
 
-    private void isApprovingUserExsists(String inputEmail, String inputArena) {
+    private void isApprovingUserExsists() {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference().child("UsersLoginTime");
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                
-                /*
-                for (DataSnapshot appUser: dataSnapshot.getChildren())
-                {
-
-                    if (appUser.child("email").getValue(String.class).equals(inputEmail)){
-                        newRequest.setRequestingUID(appUser.child("uid").getValue(String.class));
-                        newRequest.setRequestingUID(appUser.child("display name").getValue(String.class));
-                        errorCode = 0;
-                        break;
-                    }
-                    else {
-                        errorCode = 1;
-                    }
-
-                }
-
-                if (errorCode == 0){
-
-                    //TODO: continue with inspection
-                    //isValidArenaName(inputArena)
-
-                } else {
-                    Toast.makeText(getActivity(),"No such user or wrong email",Toast.LENGTH_LONG).show();
-
-                }
-                myDialog.dismiss();
-                parentActivity.autoStartWithAnItemFromNavDrawer(parentActivity.getNavigationView(),R.id.nav_requests);
-                */
+                tableUsersLoginTimeSnapShot.onDataListenerSuccess(dataSnapshot, dataSnapshot.getChildrenCount());
             }
 
             @Override
