@@ -83,6 +83,7 @@ public class RequestFragment extends Fragment {
 
         @Override
         public void onDataListenerSuccess(DataSnapshot data, long num) {
+
             FirebaseDatabase database = FirebaseDatabase.getInstance();
             DatabaseReference myRef;
 
@@ -121,8 +122,10 @@ public class RequestFragment extends Fragment {
 
         @Override
         public void onDataListenerSuccess(DataSnapshot data, long num) {
+
             itearationOverUserArenasCounter = itearationOverUserArenasCounter + 1;
             String tmp = parentActivity.getmAuth().getCurrentUser().getUid();
+
             if (data.child("name").getValue(String.class).equals(inputArena) && data.child("superUser").getValue(String.class).equals(tmp)){
                 isArenaNameValid = true;
                 isSuperUser = true;
@@ -132,13 +135,42 @@ public class RequestFragment extends Fragment {
 
             if (itearationOverUserArenasCounter == num){
                 if (isArenaNameValid && isSuperUser){
-                    //TODO: continue with inspection
-                    //TODO: dont forget to put inside inspection the following
+
+                    Toast.makeText(getActivity(),"All OK",Toast.LENGTH_LONG).show();
                     myDialog.dismiss();
                     parentActivity.autoStartWithAnItemFromNavDrawer(parentActivity.getNavigationView(),R.id.nav_requests);
 
+                    /*
+                    FirebaseDatabase database = FirebaseDatabase.getInstance();
+                    DatabaseReference myRef = database.getReference().child("Arenas").child(newRequest.getArenaID()).child(newRequest.getApprovingUID());
+
+                    myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.hasChildren()){
+                                Toast.makeText(getActivity(),"User is allready in this Arena",Toast.LENGTH_LONG).show();
+                                myDialog.dismiss();
+                                parentActivity.autoStartWithAnItemFromNavDrawer(parentActivity.getNavigationView(),R.id.nav_requests);
+                            } else {
+                                //TODO: continue with inspection
+                                //TODO: dont forget to put inside inspection the following
+                                Toast.makeText(getActivity(),"All OK",Toast.LENGTH_LONG).show();
+                                myDialog.dismiss();
+                                parentActivity.autoStartWithAnItemFromNavDrawer(parentActivity.getNavigationView(),R.id.nav_requests);
+                            }
+
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                    */
+
+
                 } else {
-                    Toast.makeText(getActivity(),"No Arena with that name or you're not the Super User",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(),"No Arena with that name or you're not the Super User " + data.child("superUser").getValue(String.class) + " " + tmp,Toast.LENGTH_LONG).show();
                     myDialog.dismiss();
                     parentActivity.autoStartWithAnItemFromNavDrawer(parentActivity.getNavigationView(),R.id.nav_requests);
                 }
