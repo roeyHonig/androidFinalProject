@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -69,7 +70,8 @@ public class RequestFragment extends Fragment {
     private long itearationOverUserArenasCounter = 0;
     private long itearteOverAllRequests = 0;
     private boolean isValidRequest = true;
-    
+    private LottieAnimationView loadingDialog;
+
 
     // Interface to call methods after reading the FireBase Realtime DB
     // ****************************************************************
@@ -529,6 +531,7 @@ public class RequestFragment extends Fragment {
         View dialogView = getLayoutInflater().inflate(R.layout.add_request_dialog,null);
         final EditText approvingEmail = dialogView.findViewById(R.id.approvingEmail);
         final EditText arenaID = dialogView.findViewById(R.id.arenaID);
+        loadingDialog = (LottieAnimationView) dialogView.findViewById(R.id.requestAnimationLoading);
         builder.setPositiveButton("OK", null)
                 .setNegativeButton("Abourt", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
@@ -542,6 +545,8 @@ public class RequestFragment extends Fragment {
         myDialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(DialogInterface dialogInterface) {
+                loadingDialog.setVisibility(View.INVISIBLE);
+                loadingDialog.pauseAnimation();
                 btPositive = ((AlertDialog) myDialog).getButton(AlertDialog.BUTTON_POSITIVE);
                 btPositive.setClickable(true);
                 btPositive.setOnClickListener(new View.OnClickListener() {
@@ -569,6 +574,8 @@ public class RequestFragment extends Fragment {
 
                         }else{
                             //TODO: present some spinner animation
+                            loadingDialog.setVisibility(View.VISIBLE);
+                            loadingDialog.resumeAnimation();
 
                             newRequest.setRequestingUID(parentActivity.getmAuth().getCurrentUser().getUid());
                             newRequest.setRequestingName(parentActivity.getmAuth().getCurrentUser().getDisplayName());
