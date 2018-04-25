@@ -135,15 +135,8 @@ public class RequestFragment extends Fragment {
 
             if (itearationOverUserArenasCounter == num){
                 if (isArenaNameValid && isSuperUser){
-
-                    Toast.makeText(getActivity(),"All OK",Toast.LENGTH_LONG).show();
-                    myDialog.dismiss();
-                    parentActivity.autoStartWithAnItemFromNavDrawer(parentActivity.getNavigationView(),R.id.nav_requests);
-
-                    /*
                     FirebaseDatabase database = FirebaseDatabase.getInstance();
                     DatabaseReference myRef = database.getReference().child("Arenas").child(newRequest.getArenaID()).child(newRequest.getApprovingUID());
-
                     myRef.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
@@ -166,7 +159,7 @@ public class RequestFragment extends Fragment {
 
                         }
                     });
-                    */
+
 
 
                 } else {
