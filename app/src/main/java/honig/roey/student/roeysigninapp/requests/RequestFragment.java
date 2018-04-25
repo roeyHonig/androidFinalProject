@@ -2,6 +2,7 @@ package honig.roey.student.roeysigninapp.requests;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.media.RemoteControlClient;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.support.design.widget.FloatingActionButton;
@@ -66,11 +67,9 @@ public class RequestFragment extends Fragment {
     private boolean isSuperUser = false;
     private long itearationOverAppUsersCounter = 0;
     private long itearationOverUserArenasCounter = 0;
-    /*
-    1 - I invited a user that doesn't exsists
-
-
-     */
+    private long itearteOverAllRequests = 0;
+    private boolean isValidRequest = true;
+    
 
     // Interface to call methods after reading the FireBase Realtime DB
     // ****************************************************************
@@ -145,11 +144,7 @@ public class RequestFragment extends Fragment {
                                 myDialog.dismiss();
                                 parentActivity.autoStartWithAnItemFromNavDrawer(parentActivity.getNavigationView(),R.id.nav_requests);
                             } else {
-                                //TODO: continue with inspection
-                                //TODO: dont forget to put inside inspection the following
-                                Toast.makeText(getActivity(),"All OK",Toast.LENGTH_LONG).show();
-                                myDialog.dismiss();
-                                parentActivity.autoStartWithAnItemFromNavDrawer(parentActivity.getNavigationView(),R.id.nav_requests);
+                                isValidRequest();
                             }
 
                         }
@@ -163,7 +158,7 @@ public class RequestFragment extends Fragment {
 
 
                 } else {
-                    Toast.makeText(getActivity(),"No Arena with that name or you're not the Super User " + data.child("superUser").getValue(String.class) + " " + tmp,Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(),"No Arena with that name or you're not the Super User",Toast.LENGTH_LONG).show();
                     myDialog.dismiss();
                     parentActivity.autoStartWithAnItemFromNavDrawer(parentActivity.getNavigationView(),R.id.nav_requests);
                 }
@@ -254,6 +249,77 @@ public class RequestFragment extends Fragment {
 
             }
 
+
+        }
+
+        @Override
+        public void onDataListenerFailed(DatabaseError databaseError) {
+
+        }
+    };
+    // Do this after reading the user active requests
+        OnGetDataFromFirebaseDbListener userRequests = new OnGetDataFromFirebaseDbListener() {
+        @Override
+        public void onDataListenerStart() {
+
+        }
+
+        @Override
+        public void onDataListenerSuccess(DataSnapshot data, long num) {
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference myRef;
+            String currentUser = parentActivity.getmAuth().getCurrentUser().getUid();
+            for (DataSnapshot request :data.getChildren()) {
+                myRef = database.getReference().child("Request").child(currentUser).child(request.getKey());
+                myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        aSingleRequest.onDataListenerSuccess(dataSnapshot,num);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+            }
+
+        }
+
+        @Override
+        public void onDataListenerFailed(DatabaseError databaseError) {
+
+        }
+    };
+    // Do this after reading a single request of the user active requests
+        OnGetDataFromFirebaseDbListener aSingleRequest = new OnGetDataFromFirebaseDbListener() {
+        @Override
+        public void onDataListenerStart() {
+
+        }
+
+        @Override
+        public void onDataListenerSuccess(DataSnapshot data, long num) {
+            itearteOverAllRequests = itearteOverAllRequests + 1;
+            String tmpApprovingUID = data.child("approvingUID").getValue(String.class);
+            String tmpArenaId = data.child("arenaID").getValue(String.class);
+            if (tmpApprovingUID.equals(newRequest.getApprovingUID()) && tmpArenaId.equals(newRequest.getArenaID())){
+                isValidRequest = false;
+            }
+
+            if (itearteOverAllRequests == num){
+                // we've iterated over all the user requests
+                if (isValidRequest){
+                    Toast.makeText(getActivity(),"All is OK",Toast.LENGTH_LONG).show();
+                    //TODO: Append the newRequest Object to the Request Table in the DB
+                    myDialog.dismiss();
+                    parentActivity.autoStartWithAnItemFromNavDrawer(parentActivity.getNavigationView(),R.id.nav_requests);
+                } else {
+                    Toast.makeText(getActivity(),"There's allready a pending invitation to that user",Toast.LENGTH_LONG).show();
+                    myDialog.dismiss();
+                    parentActivity.autoStartWithAnItemFromNavDrawer(parentActivity.getNavigationView(),R.id.nav_requests);
+                }
+            }
 
         }
 
@@ -490,6 +556,8 @@ public class RequestFragment extends Fragment {
                         isArenaNameValid = false;
                         isSuperUser = false;
                         itearationOverUserArenasCounter = 0;
+                        itearteOverAllRequests = 0;
+                        isValidRequest = true;
 
                         inputEmail = approvingEmail.getText().toString();
                         inputArena = arenaID.getText().toString();
@@ -548,6 +616,23 @@ public class RequestFragment extends Fragment {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 cureentUserArenas.onDataListenerSuccess(dataSnapshot,dataSnapshot.getChildrenCount());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void isValidRequest() {
+        String currentUser = parentActivity.getmAuth().getCurrentUser().getUid();
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference().child("Request").child(currentUser);
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                userRequests.onDataListenerSuccess(dataSnapshot,dataSnapshot.getChildrenCount());
             }
 
             @Override
