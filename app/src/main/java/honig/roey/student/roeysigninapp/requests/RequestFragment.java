@@ -21,6 +21,7 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -71,7 +72,9 @@ public class RequestFragment extends Fragment {
     private long itearteOverAllRequests = 0;
     private boolean isValidRequest = true;
     private LottieAnimationView loadingDialog;
-
+    private ChildEventListener userRequestsListener;
+    private int currentRequestCount = 0;
+    private int childEventCounter = 0; // to make sure the ChildAdded event will fireup just when children are added
 
     // Interface to call methods after reading the FireBase Realtime DB
     // ****************************************************************
@@ -383,6 +386,7 @@ public class RequestFragment extends Fragment {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
             userAproves=getArguments().getParcelableArrayList("arg1");
             userInvites = getArguments().getParcelableArrayList("arg2");
+            currentRequestCount = userAproves.size() + userInvites.size();
 
 
             if (userAproves.size()!=0){
@@ -407,6 +411,8 @@ public class RequestFragment extends Fragment {
             // No Requests of any type for current User - show the "No Arenea Yet" UI
             noRequestsVisibility = View.VISIBLE;
             noInvitesVisibility = View.VISIBLE;
+            currentRequestCount = 0;
+
         }
     }
 
@@ -521,6 +527,7 @@ public class RequestFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        childEventCounter = 0;
         parentActivity = (NavDrawer) getActivity();
         if (context instanceof OnListFragmentInteractionListener) {
             mListener = (OnListFragmentInteractionListener) context;
@@ -528,12 +535,55 @@ public class RequestFragment extends Fragment {
             throw new RuntimeException(context.toString()
                     + " must implement OnListFragmentInteractionListener");
         }
+        String currentUser =parentActivity.getmAuth().getCurrentUser().getUid();
+        userRequestsListener = new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                childEventCounter = childEventCounter + 1;
+                if (childEventCounter > currentRequestCount) {
+                    // reLoad the fragment
+                    parentActivity.autoStartWithAnItemFromNavDrawer(parentActivity.getNavigationView(),R.id.nav_requests);
+                }
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                // reLoad the fragment
+                parentActivity.autoStartWithAnItemFromNavDrawer(parentActivity.getNavigationView(),R.id.nav_requests);
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        };
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference().child("Request").child(currentUser);
+        myRef.addChildEventListener(userRequestsListener);
+
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
+        String currentUser =parentActivity.getmAuth().getCurrentUser().getUid();
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference().child("Request").child(currentUser);
+        myRef.removeEventListener(userRequestsListener);
+
     }
 
     /**
