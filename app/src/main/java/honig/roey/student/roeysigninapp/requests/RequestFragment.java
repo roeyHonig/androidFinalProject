@@ -27,6 +27,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.mklimek.circleinitialsview.CircleInitialsView;
 
 import honig.roey.student.roeysigninapp.NavDrawer;
 import honig.roey.student.roeysigninapp.OnGetDataFromFirebaseDbListener;
@@ -55,6 +56,8 @@ public class RequestFragment extends Fragment {
     private  int noInvitesVisibility;
     private ArrayList<Request> userAproves;
     private ArrayList<Request> userInvites;
+    private String numInvites;
+    private String numRequests;
     private MyRequestRecyclerViewAdapter mInvitesAdapter;
     private MyRequestRecyclerViewAdapter mRequestsAdapter;
     private NavDrawer parentActivity;
@@ -387,6 +390,8 @@ public class RequestFragment extends Fragment {
             userAproves=getArguments().getParcelableArrayList("arg1");
             userInvites = getArguments().getParcelableArrayList("arg2");
             currentRequestCount = userAproves.size() + userInvites.size();
+            numInvites = String.valueOf(userInvites.size());
+            numRequests = String.valueOf(userAproves.size());
 
 
             if (userAproves.size()!=0){
@@ -412,6 +417,8 @@ public class RequestFragment extends Fragment {
             noRequestsVisibility = View.VISIBLE;
             noInvitesVisibility = View.VISIBLE;
             currentRequestCount = 0;
+            numInvites = "0";
+            numRequests = "0";
 
         }
     }
@@ -432,6 +439,19 @@ public class RequestFragment extends Fragment {
         // set recyclerViews
         RecyclerView recyclerViewInvitesList = view.findViewById(R.id.invitesList);
         RecyclerView recyclerViewRequestsList = view.findViewById(R.id.aprovalsList);
+        // set the circle views
+        CircleInitialsView cvInvites = view.findViewById(R.id.cvInvites);
+        CircleInitialsView cvRequests = view.findViewById(R.id.cvRequests);
+        cvInvites.setVisibility(View.INVISIBLE);
+        cvRequests.setVisibility(View.INVISIBLE);
+        if (!numInvites.equals("0")){
+            cvInvites.setText(numInvites);
+            cvInvites.setVisibility(View.VISIBLE);
+        }
+        if (!numRequests.equals("0")){
+            cvRequests.setText(numRequests);
+            cvRequests.setVisibility(View.VISIBLE);
+        }
 
 
         // set Toggle buttons
