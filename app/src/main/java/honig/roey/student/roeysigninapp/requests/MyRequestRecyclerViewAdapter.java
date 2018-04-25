@@ -46,11 +46,11 @@ public class MyRequestRecyclerViewAdapter extends RecyclerView.Adapter<MyRequest
             // Invite Item
             holder.mItemTitle.setText("You've invited " + mRequestValues.get(position).getApprovingName() +
                     " to join Arena " + mRequestValues.get(position).getArenaName());
-            //holder.mItemStatus.setText(mRequestValues.get(position).getStatus());
+            holder.mItemStatus.setText("Status: " + mRequestValues.get(position).getStatus());
         } else {
             // Request Item
             holder.mItemTitle.setText(mRequestValues.get(position).getRequestingName() + " has invited you to join Arena " + mRequestValues.get(position).getArenaName());
-            //holder.mItemStatus.setText(mRequestValues.get(position).getStatus());
+            holder.mItemStatus.setText("Status: " + mRequestValues.get(position).getStatus());
         }
 
 

@@ -61,7 +61,7 @@ public class RequestFragment extends Fragment {
     private Button btPositive;
     private String inputEmail="";
     private String inputArena="";
-    private Request newRequest = new Request("1","null","null","null","null","null","null",2);
+    private Request newRequest;
     private int errorCode = 0;
     private boolean isApprovingUserExsists = false;
     private boolean isArenaNameValid = false;
@@ -271,20 +271,31 @@ public class RequestFragment extends Fragment {
             FirebaseDatabase database = FirebaseDatabase.getInstance();
             DatabaseReference myRef;
             String currentUser = parentActivity.getmAuth().getCurrentUser().getUid();
-            for (DataSnapshot request :data.getChildren()) {
-                myRef = database.getReference().child("Request").child(currentUser).child(request.getKey());
-                myRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        aSingleRequest.onDataListenerSuccess(dataSnapshot,num);
-                    }
+            if (num == 0){
+                // this user never invited anyone, so there can't be any duplicate request
+                Toast.makeText(getActivity(),"All is really OK",Toast.LENGTH_LONG).show();
+                parentActivity.pushAndSetNewChildAtRequestsTable(newRequest);
+                myDialog.dismiss();
+                parentActivity.autoStartWithAnItemFromNavDrawer(parentActivity.getNavigationView(),R.id.nav_requests);
+            } else {
+                // cheack all the user's request for a duplicate request
+                for (DataSnapshot request :data.getChildren()) {
+                    myRef = database.getReference().child("Request").child(currentUser).child(request.getKey());
+                    myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            aSingleRequest.onDataListenerSuccess(dataSnapshot,num);
+                        }
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
 
-                    }
-                });
+                        }
+                    });
+                }
+
             }
+
 
         }
 
@@ -314,6 +325,7 @@ public class RequestFragment extends Fragment {
                 if (isValidRequest){
                     Toast.makeText(getActivity(),"All is OK",Toast.LENGTH_LONG).show();
                     //TODO: Append the newRequest Object to the Request Table in the DB
+                    parentActivity.pushAndSetNewChildAtRequestsTable(newRequest);
                     myDialog.dismiss();
                     parentActivity.autoStartWithAnItemFromNavDrawer(parentActivity.getNavigationView(),R.id.nav_requests);
                 } else {
@@ -555,6 +567,7 @@ public class RequestFragment extends Fragment {
                         //Lock the Button
                         btPositive.setClickable(false);
                         //reset inspection critirions
+                        newRequest = new Request("1","null","null","null","null","null","null",2);
                         errorCode = 0;
                         isApprovingUserExsists = false;
                         itearationOverAppUsersCounter = 0;
