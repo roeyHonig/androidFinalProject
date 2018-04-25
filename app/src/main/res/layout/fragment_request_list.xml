@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#6a1fea08"
@@ -26,20 +28,62 @@
             >
 
 
-
-
-
-            <Button
-                android:id="@+id/toggleButtonInvites"
+            <LinearLayout
+                android:orientation="horizontal"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Invites" />
+                android:gravity="center"
 
-            <Button
-                android:id="@+id/toggleButtonRequests"
+                >
+
+                <Button
+                    android:id="@+id/toggleButtonInvites"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:text="Invites" />
+
+                <com.mklimek.circleinitialsview.CircleInitialsView
+                    android:id="@+id/cvInvites"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    custom:circleInitialsView_backgroundColor="#771175"
+                    custom:circleInitialsView_text="1"
+                    custom:circleInitialsView_textColor="#48c192"
+                    custom:circleInitialsView_textSize="30dp"
+                    android:visibility="visible"/>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Requests" />
+                android:gravity="center"
+                >
+
+                <Button
+                    android:id="@+id/toggleButtonRequests"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:text="Requests" />
+
+                <com.mklimek.circleinitialsview.CircleInitialsView
+                    android:id="@+id/cvRequests"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    custom:circleInitialsView_backgroundColor="#771175"
+                    custom:circleInitialsView_text="1"
+                    custom:circleInitialsView_textColor="#48c192"
+                    custom:circleInitialsView_textSize="30dp"
+                    android:visibility="visible"/>
+
+
+            </LinearLayout>
+
+
+
+
 
 
 
