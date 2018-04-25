@@ -88,24 +88,37 @@ public class RequestFragment extends Fragment {
             FirebaseDatabase database = FirebaseDatabase.getInstance();
             DatabaseReference myRef;
 
-            for (DataSnapshot arena: data.getChildren())
-            {
-                myRef = database.getReference().child("Arenas").child(arena.getKey());
-                myRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        aSingleArenaTheUserHave.onDataListenerSuccess(dataSnapshot,num);
+            if (num == 0){
+                // the current user have no arenas
+                // Obviuslly he can't invite any one to anywhere
+                Toast.makeText(getActivity(),"No Arena with that name or you're not the Super User",Toast.LENGTH_LONG).show();
+                myDialog.dismiss();
+                parentActivity.autoStartWithAnItemFromNavDrawer(parentActivity.getNavigationView(),R.id.nav_requests);
 
-                    }
+            } else {
+                // cheack if the user invited someone to an exsisting arena in which he is the superuser
+                for (DataSnapshot arena: data.getChildren())
+                {
+                    myRef = database.getReference().child("Arenas").child(arena.getKey());
+                    myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            aSingleArenaTheUserHave.onDataListenerSuccess(dataSnapshot,num);
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
+                        }
 
-                    }
-                });
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
 
+                        }
+                    });
+
+
+                }
 
             }
+
+
 
         }
 
@@ -586,24 +599,13 @@ public class RequestFragment extends Fragment {
                         } else if (inputArena.equals("")){
 
                         }else{
-                            //TODO: present some spinner animation
+                            //Loading Animation
                             loadingDialog.setVisibility(View.VISIBLE);
                             loadingDialog.resumeAnimation();
 
                             newRequest.setRequestingUID(parentActivity.getmAuth().getCurrentUser().getUid());
                             newRequest.setRequestingName(parentActivity.getmAuth().getCurrentUser().getDisplayName());
                             isApprovingUserExsists();
-
-
-
-
-
-
-
-                            /*
-                            parentActivity.getNavigationView().setCheckedItem(R.id.nav_requests); // higlight the share Item in the Menu on StartUp
-                            parentActivity.getNavigationView().getMenu().performIdentifierAction(R.id.nav_requests,0); // Perform Action Associated with Share Menu Item
-                            */
                         }
                     }
                 });
