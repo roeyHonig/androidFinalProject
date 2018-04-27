@@ -943,6 +943,8 @@ public class NavDrawer extends AppCompatActivity
                 } else if (rbPending.isChecked()) {
                      Toast.makeText(NavDrawer.this,"Pending",Toast.LENGTH_LONG).show();
                 } else if (rbCancel.isChecked()) {
+                    //TODO: change status, remove from request table of both requesting and approving uid's
+                    //TODO: log massage ("you've canceled your invite") for both users records in the logs table
                     Toast.makeText(NavDrawer.this,"will be canceled",Toast.LENGTH_LONG).show();
                 } else {
                     Toast.makeText(NavDrawer.this,"no change",Toast.LENGTH_LONG).show();
