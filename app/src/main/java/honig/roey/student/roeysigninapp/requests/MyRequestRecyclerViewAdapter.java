@@ -41,7 +41,8 @@ public class MyRequestRecyclerViewAdapter extends RecyclerView.Adapter<MyRequest
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         //holder.mItem = mValuesInvite.get(position);
-        holder.mItem = 1;
+        holder.mItem = position;
+        holder.mItemFlag = mflag;
         if (mflag == 1){
             // Invite Item
             holder.mItemTitle.setText("You've invited " + mRequestValues.get(position).getApprovingName() +
@@ -79,13 +80,13 @@ public class MyRequestRecyclerViewAdapter extends RecyclerView.Adapter<MyRequest
         public final TextView mItemStatus;
         // TODO: this is what we pass to the parent activity when we click on it, change it to someting valubale if needed
         public int mItem;
+        public int mItemFlag;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
             mItemTitle = (TextView) view.findViewById(R.id.item_title);
             mItemStatus = (TextView) view.findViewById(R.id.item_status);
-            mItem = 1;
         }
 
         @Override

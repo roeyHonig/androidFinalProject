@@ -2,6 +2,7 @@ package honig.roey.student.roeysigninapp;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -22,10 +24,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -63,6 +68,7 @@ public class NavDrawer extends AppCompatActivity
     private GoogleSignInClient mGoogleSignInClient;
     private NavigationView navigationView;
     private Menu menu;
+    private AlertDialog myDialog;
     private MenuItem nav_Log_Off;
     private ImageView imageViewUserProfile;
     private CircleInitialsView circleView;
@@ -427,6 +433,7 @@ public class NavDrawer extends AppCompatActivity
                   //      .setAction("Action", null).show();
 
                 //pushAndSetNewChildAtRequestsTable(new Request("1", "RRe3GGpTI6SeMb82413bJ4NPoA52","Roey Honig", "eCRG8HIaoFf4Z9D4v4OscRhV1JC3" ,"Roey Regev","fifa with friends","-LActIbj-cgoOI3_Zr-m" ,1));
+                openDialogToChangeInviteOrRequestStatus();
 
             }
         });
@@ -883,6 +890,33 @@ public class NavDrawer extends AppCompatActivity
 
     @Override
     public void onListFragmentInteraction(int item) {
+
+    }
+
+    public void openDialogToChangeInviteOrRequestStatus(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        View dialogView = getLayoutInflater().inflate(R.layout.update_request_status,null);
+        final TextView massage = dialogView.findViewById(R.id.tvInviteOrRequestMassage);
+        final RadioButton rbPending = dialogView.findViewById(R.id.rbPending);
+        final RadioButton rbApproved = dialogView.findViewById(R.id.rbApproved);
+        final RadioButton rbDenied = dialogView.findViewById(R.id.rbDenied);
+
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Toast.makeText(NavDrawer.this,"positive Button",Toast.LENGTH_LONG).show();
+            }
+        })
+                .setNegativeButton("Abourt", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Toast.makeText(NavDrawer.this,"Later then...",Toast.LENGTH_LONG).show();
+                    }
+                });
+
+        builder.setView(dialogView);
+        myDialog = builder.create();
+        myDialog.show();
+
 
     }
 }
