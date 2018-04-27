@@ -618,7 +618,7 @@ public class RequestFragment extends Fragment {
      */
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onListFragmentInteraction(int item);
+        void onListFragmentInteraction(int flag, Request request);
     }
 
     private void openDialogBox() {

@@ -433,7 +433,7 @@ public class NavDrawer extends AppCompatActivity
                   //      .setAction("Action", null).show();
 
                 //pushAndSetNewChildAtRequestsTable(new Request("1", "RRe3GGpTI6SeMb82413bJ4NPoA52","Roey Honig", "eCRG8HIaoFf4Z9D4v4OscRhV1JC3" ,"Roey Regev","fifa with friends","-LActIbj-cgoOI3_Zr-m" ,1));
-                openDialogToChangeInviteOrRequestStatus();
+                //openDialogToChangeInviteOrRequestStatus();
 
             }
         });
@@ -621,7 +621,7 @@ public class NavDrawer extends AppCompatActivity
     }
 
     @Override
-    // TODO: i think i need to add a flag to know from whic list the item was pressed
+    // Do When pressing an Item from the Arenas list
     public void onListFragmentInteraction(String item) {
         //TODO: item is the ID of the Arena the user clicked on, in the RingFragment
         //TODO: insted of Toast, switch to the PlayerStatFragment VIEW
@@ -889,22 +889,64 @@ public class NavDrawer extends AppCompatActivity
 
 
     @Override
-    public void onListFragmentInteraction(int item) {
-
+    // Do When pressing an Item from the Request list
+    public void onListFragmentInteraction(int flag, Request request) {
+                openDialogToChangeInviteOrRequestStatus(flag, request);
     }
 
-    public void openDialogToChangeInviteOrRequestStatus(){
+    public void openDialogToChangeInviteOrRequestStatus(int flag, Request request){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         View dialogView = getLayoutInflater().inflate(R.layout.update_request_status,null);
         final TextView massage = dialogView.findViewById(R.id.tvInviteOrRequestMassage);
         final RadioButton rbPending = dialogView.findViewById(R.id.rbPending);
         final RadioButton rbApproved = dialogView.findViewById(R.id.rbApproved);
         final RadioButton rbDenied = dialogView.findViewById(R.id.rbDenied);
+        final RadioButton rbCancel = dialogView.findViewById(R.id.rbCancel);
+        final RadioButton rbDontCancel = dialogView.findViewById(R.id.rbDontCancel);
+
+
+
+        if (flag == 1){
+            // Responding to an Invite Item
+            rbDontCancel.setChecked(true);
+            rbPending.setVisibility(View.GONE);
+            rbApproved.setVisibility(View.GONE);
+            rbDenied.setVisibility(View.GONE);
+            massage.setText("You've invited " + request.getApprovingName() +
+                    " to join Arena " + request.getArenaName() + ". Would you like to Cancel the invitation?");
+        } else {
+            // Responding to a Request Item
+            rbPending.setChecked(true);
+            rbCancel.setVisibility(View.GONE);
+            rbDontCancel.setVisibility(View.GONE);
+            massage.setText(request.getRequestingName() + " has invited you to join Arena " + request.getArenaName());
+        }
+
 
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                Toast.makeText(NavDrawer.this,"positive Button",Toast.LENGTH_LONG).show();
+                if (rbApproved.isChecked()){
+                    // TODO: present loading animation
+                    //TODO: change status, remove from request table of both approving and requesting uid's
+                    // TODO: update the arena's per user table and the global arena
+                    // TODO: update the individuals Arenas - add the new user vs every one else
+                    //TODO: Log Massage("you joined arena")
+                    Toast.makeText(NavDrawer.this,"Approved",Toast.LENGTH_LONG).show();
+
+                } else if (rbDenied.isChecked()){
+                    // TODO: present loading animation
+                    //TODO: change status, remove from request table of both approving and requesting uid's
+                    //TODO: Log Massage("you denied joining arena")
+                    Toast.makeText(NavDrawer.this,"Denied",Toast.LENGTH_LONG).show();
+
+                } else if (rbPending.isChecked()) {
+                     Toast.makeText(NavDrawer.this,"Pending",Toast.LENGTH_LONG).show();
+                } else if (rbCancel.isChecked()) {
+                    Toast.makeText(NavDrawer.this,"will be canceled",Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(NavDrawer.this,"no change",Toast.LENGTH_LONG).show();
+                }
             }
         })
                 .setNegativeButton("Abourt", new DialogInterface.OnClickListener() {

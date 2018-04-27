@@ -14,6 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#c7c6c6"
+        android:textSize="20dp"
         android:text="Presenting the Invite \ Request Massage" />
 
 
@@ -29,6 +30,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
             android:text="Pending - Still thinking about it"
             android:checked="true"
             />
@@ -38,6 +41,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
             android:text="Approved - Glad to Join" />
 
         <RadioButton
@@ -45,8 +50,27 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
             android:text="Denied - Sorry, not interested" />
 
+        <RadioButton
+            android:id="@+id/rbCancel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:text="Yes" />
+
+        <RadioButton
+            android:id="@+id/rbDontCancel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:text="No" />
 
     </RadioGroup>
 
