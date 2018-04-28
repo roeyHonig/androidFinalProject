@@ -77,7 +77,9 @@ public class RingGlobal implements Parcelable {
         return userStats;
     }
 
-
+    public void setNumPlayers(int numPlayers) {
+        this.numPlayers = getUserStats().size();
+    }
 
     @Override
     public int describeContents() {

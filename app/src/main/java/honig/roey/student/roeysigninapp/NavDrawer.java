@@ -696,6 +696,26 @@ public class NavDrawer extends AppCompatActivity
         return tempKey;
     }
 
+    public void addanotherPlayerInArenasTable(String idOfAreana, String uid, String fullName){
+        UserStat newPlayer = new UserStat(uid,fullName, profileImage, 0,0,0,0,0,0);
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("Arenas");
+        myRef.child(idOfAreana).child(uid).setValue(newPlayer);
+        myRef.child(idOfAreana).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                int newNumOfPlayers = dataSnapshot.child("numPlayers").getValue(Integer.class);
+                newNumOfPlayers = newNumOfPlayers + 1;
+                myRef.child(idOfAreana).child("numPlayers").setValue(newNumOfPlayers);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
     public void pushAndSetNewChildAtArenasPerUserTable(String uid, String newArenaId){
         // write the JSON to the FireBase DataBase
         FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -831,7 +851,11 @@ public class NavDrawer extends AppCompatActivity
                 if (rbApproved.isChecked()){
                     // TODO: present loading animation
                     //TODO: change status, remove from request table of both approving and requesting uid's
+                    changeRequestStatustTo(request,"Approved");
+                    removeRequest(request);
                     // TODO: update the arena's per user table and the global arena
+                    pushAndSetNewChildAtArenasPerUserTable(request.getApprovingUID(),request.getArenaID());
+                    addanotherPlayerInArenasTable(request.getArenaID(),request.getApprovingUID(),request.getApprovingName());
                     // TODO: update the individuals Arenas - add the new user vs every one else
                     //TODO: Log Massage("you joined arena")
                     Toast.makeText(NavDrawer.this,"Approved",Toast.LENGTH_LONG).show();
@@ -841,9 +865,12 @@ public class NavDrawer extends AppCompatActivity
                     //TODO: change status, remove from request table of both approving and requesting uid's
                     //TODO: Log Massage("you denied joining arena")
                     Toast.makeText(NavDrawer.this,"Denied",Toast.LENGTH_LONG).show();
+                    changeRequestStatustTo(request,"Denied");
+                    removeRequest(request);
 
                 } else if (rbPending.isChecked()) {
                      Toast.makeText(NavDrawer.this,"Pending",Toast.LENGTH_LONG).show();
+                    changeRequestStatustTo(request,"Pending Approval");
                 } else if (rbCancel.isChecked()) {
                     //TODO: change status, remove from request table of both requesting and approving uid's
                     //TODO: log massage ("you've canceled your invite") for both users records in the logs table
@@ -864,5 +891,37 @@ public class NavDrawer extends AppCompatActivity
         myDialog.show();
 
 
+    }
+
+    private void removeRequest(Request request) {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("Request");
+        myRef.child(request.getRequestingUID()).child(request.getKey()).removeValue();
+        myRef.child(request.getApprovingUID()).child(request.getKey()).removeValue();
+    }
+
+    public void changeRequestStatustTo(Request request,String newStatus) {
+        int newStatusCode;
+        switch (newStatus){
+            case "Approved":
+                newStatusCode = 0;
+                break;
+            case "Denied":
+                newStatusCode = 1;
+                break;
+            case "Pending Approval":
+                newStatusCode = 2;
+                break;
+            case "Canceled":
+                newStatusCode = 3;
+                break;
+            default:
+                newStatusCode = 5;
+        }
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("Request");
+        myRef.child(request.getApprovingUID()).child(request.getKey()).child("status").setValue(newStatusCode);
+        myRef.child(request.getRequestingUID()).child(request.getKey()).child("status").setValue(newStatusCode);
     }
 }
