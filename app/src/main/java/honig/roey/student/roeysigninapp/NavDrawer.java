@@ -874,12 +874,10 @@ public class NavDrawer extends AppCompatActivity
 
                 } else if (rbDenied.isChecked()){
                     // TODO: present loading animation
-                    //TODO: change status, remove from request table of both approving and requesting uid's
-                    //TODO: Log Massage("you denied joining arena")
                     Toast.makeText(NavDrawer.this,"Denied",Toast.LENGTH_LONG).show();
                     changeRequestStatustTo(request,"Denied");
                     removeRequest(request);
-
+                    //TODO: Log Massage("you denied joining arena")
                 } else if (rbPending.isChecked()) {
                      Toast.makeText(NavDrawer.this,"Pending",Toast.LENGTH_LONG).show();
                     changeRequestStatustTo(request,"Pending Approval");
@@ -887,6 +885,8 @@ public class NavDrawer extends AppCompatActivity
                     //TODO: change status, remove from request table of both requesting and approving uid's
                     //TODO: log massage ("you've canceled your invite") for both users records in the logs table
                     Toast.makeText(NavDrawer.this,"will be canceled",Toast.LENGTH_LONG).show();
+                    changeRequestStatustTo(request,"Canceled");
+                    removeRequest(request);
                 } else {
                     Toast.makeText(NavDrawer.this,"no change",Toast.LENGTH_LONG).show();
                 }
