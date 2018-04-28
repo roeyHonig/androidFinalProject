@@ -696,7 +696,7 @@ public class NavDrawer extends AppCompatActivity
         return tempKey;
     }
 
-    public void addanotherPlayerInArenasTable(String idOfAreana, String uid, String fullName){
+    public void addAnotherPlayerInArenasTable(String idOfAreana, String uid, String fullName){
         UserStat newPlayer = new UserStat(uid,fullName, profileImage, 0,0,0,0,0,0);
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("Arenas");
@@ -707,6 +707,19 @@ public class NavDrawer extends AppCompatActivity
                 int newNumOfPlayers = dataSnapshot.child("numPlayers").getValue(Integer.class);
                 newNumOfPlayers = newNumOfPlayers + 1;
                 myRef.child(idOfAreana).child("numPlayers").setValue(newNumOfPlayers);
+
+                for (DataSnapshot item: dataSnapshot.getChildren())
+                {
+                    if (item.hasChildren() && !item.getKey().equals(uid)){
+                        // item is a player in the Arena and not the player we've just added
+                        FirebaseDatabase database = FirebaseDatabase.getInstance();
+                        DatabaseReference myRef = database.getReference("IndividualArenas").child(idOfAreana);
+                        String tempKey = myRef.push().getKey();
+                        // set the new player and vs the player against him
+                        myRef.child(tempKey).child(uid).setValue(new UserStat(uid, fullName, profileImage,0,0,0,0,0,0));
+                        myRef.child(tempKey).child(item.getKey()).setValue(new UserStat(item.getKey(), item.child("fullName").getValue(String.class), item.child("profileImage").getValue(String.class),0,0,0,0,0,0));
+                    }
+                }
             }
 
             @Override
@@ -850,13 +863,12 @@ public class NavDrawer extends AppCompatActivity
             public void onClick(DialogInterface dialogInterface, int i) {
                 if (rbApproved.isChecked()){
                     // TODO: present loading animation
-                    //TODO: change status, remove from request table of both approving and requesting uid's
                     changeRequestStatustTo(request,"Approved");
                     removeRequest(request);
-                    // TODO: update the arena's per user table and the global arena
                     pushAndSetNewChildAtArenasPerUserTable(request.getApprovingUID(),request.getArenaID());
-                    addanotherPlayerInArenasTable(request.getArenaID(),request.getApprovingUID(),request.getApprovingName());
-                    // TODO: update the individuals Arenas - add the new user vs every one else
+                    // Adding the newPlayer to the individual rings is done from within the following method
+                    addAnotherPlayerInArenasTable(request.getArenaID(),request.getApprovingUID(),request.getApprovingName());
+
                     //TODO: Log Massage("you joined arena")
                     Toast.makeText(NavDrawer.this,"Approved",Toast.LENGTH_LONG).show();
 
@@ -892,6 +904,8 @@ public class NavDrawer extends AppCompatActivity
 
 
     }
+
+
 
     private void removeRequest(Request request) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
