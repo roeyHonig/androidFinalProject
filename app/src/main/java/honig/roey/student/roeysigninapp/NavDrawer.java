@@ -65,6 +65,7 @@ public class NavDrawer extends AppCompatActivity
     private FirebaseAuth.AuthStateListener mAuthListener;
     private String uid = "RRe3GGpTI6SeMb82413bJ4NPoA52";
     private String fullNameoFTheCurrentSignedInUser;
+    private String profileImage = "circleView"; // circleView means the user has no profile image and we present letters of hisname in circleView
     private GoogleSignInClient mGoogleSignInClient;
     private NavigationView navigationView;
     private Menu menu;
@@ -123,8 +124,9 @@ public class NavDrawer extends AppCompatActivity
         return fullNameoFTheCurrentSignedInUser;
     }
 
-    // Interface to call methods after reading the FireBase Realtime DB
-    // ****************************************************************
+    // Interface to call methods. these methods will recive as a parmeter a FireBase Realtime DB SnapShot
+    // Inside these Interface we actually extract the data from the DB Snapshot
+    // ***************************************************************************************************
     // Do This after reading the "ArenasPerUser" table in the DB
     OnGetDataFromFirebaseDbListener tableOfRingsPerUser = new OnGetDataFromFirebaseDbListener() {
         @Override
@@ -176,9 +178,13 @@ public class NavDrawer extends AppCompatActivity
             String tmpName="";
             String tmpUid;
             String tmpFullName;
+            String tmpProfileImage;
             long tmpLos;
             long tmpDrw;
             long tmpWin;
+            long tmpGoalsFor;
+            long tmpGoalsAgainst;
+            long tmpWinningStrike;
             ArrayList<UserStat> tmpArrayListUserStat = new ArrayList<UserStat>();
 
             for (DataSnapshot recordInArenasTable: data.getChildren()
@@ -204,10 +210,14 @@ public class NavDrawer extends AppCompatActivity
                         if (recordInArenasTable.hasChildren()){
                             tmpUid = recordInArenasTable.child("uid").getValue(String.class);
                             tmpFullName = recordInArenasTable.child("fullName").getValue(String.class);
+                            tmpProfileImage = recordInArenasTable.child("profileImage").getValue(String.class);
                             tmpLos = recordInArenasTable.child("los").getValue(Long.class);
                             tmpDrw = recordInArenasTable.child("drw").getValue(Long.class);
                             tmpWin = recordInArenasTable.child("win").getValue(Long.class);
-                            tmpArrayListUserStat.add(new UserStat(tmpUid,tmpFullName,tmpLos,tmpDrw,tmpWin));
+                            tmpGoalsFor = recordInArenasTable.child("goalsFor").getValue(Long.class);
+                            tmpGoalsAgainst = recordInArenasTable.child("goalsAgainst").getValue(Long.class);
+                            tmpWinningStrike = recordInArenasTable.child("winningStrike").getValue(Long.class);
+                            tmpArrayListUserStat.add(new UserStat(tmpUid,tmpFullName, tmpProfileImage,tmpLos,tmpDrw,tmpWin, tmpGoalsFor, tmpGoalsAgainst, tmpWinningStrike));
                         }
             }
             userDataBaseData.add(new RingGlobal(tmpKey,tmpName, tmpIsPublicViewd,tmpSuperUser,tmpArrayListUserStat));
@@ -370,7 +380,7 @@ public class NavDrawer extends AppCompatActivity
         }
     };
 
-    // ****************************************************************
+    // ***************************************************************************************************
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -594,6 +604,8 @@ public class NavDrawer extends AppCompatActivity
                 Picasso.get().load(String.valueOf(uri)).into(imageView);
                 imageViewUserProfile.setVisibility(View.VISIBLE);
                 circleView.setVisibility(View.GONE);
+                profileImage = uri.toString();
+                //loadProfileImage(Uri.parse("https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Creative-Tail-People-man.svg/128px-Creative-Tail-People-man.svg.png"),imageViewUserProfile);
                 break;
             case 2:
                 // Email / Password SignIn
@@ -652,46 +664,6 @@ public class NavDrawer extends AppCompatActivity
        switchToFragment(R.id.appFragContainer, playerStatFragment);
     }
 
-
-    public  void unMaskFieldRequestingUIDinObjectRequest(Request request, String name){
-        return;
-    }
-    public  void unMaskFieldApprovingUIDinObjectRequest(Request request, String name){
-        return;
-    }
-    public  void unMaskFieldArenaIDinObjectRequest(Request request, String name){
-        return;
-    }
-
-    public void pushAndSetNewChildAtArenasTable(String nameOfAreana, String uid1 , String fullName1, String uid2 , String fullName2, String uid3, String fullName3){
-        // write the JSON to the FireBase DataBase
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("Arenas");
-        String tempKey = myRef.push().getKey();
-        // create a JSON
-        ArrayList<UserStat> userStats = new ArrayList<UserStat>();
-        //userStats.add(new UserStat(uid1,fullName1,5,2,6));
-        //userStats.add(new UserStat(uid2,fullName2,1,7,3));
-        //userStats.add(new UserStat(uid3,fullName3,4,3,7));
-        RingGlobal tempArena = new RingGlobal(tempKey,nameOfAreana, true,uid1,userStats);
-        // set the JSON
-        myRef.child(tempKey).child("key").setValue(tempArena.getKey());
-        myRef.child(tempKey).child("name").setValue(tempArena.getName());
-        myRef.child(tempKey).child("numPlayers").setValue(tempArena.getNumPlayers());
-        myRef.child(tempKey).child("isPublicViewd").setValue(tempArena.isPublicViewd());
-        myRef.child(tempKey).child("superUser").setValue(tempArena.getSuperUser());
-
-        myRef.child(tempKey).child(uid1).setValue(userStats.get(0));
-        myRef.child(tempKey).child(uid2).setValue(userStats.get(1));
-        myRef.child(tempKey).child(uid3).setValue(userStats.get(2));
-
-
-
-        return;
-
-    }
-
-
     public void pushAndSetNewChildAtRequestsTable(Request jsonObject){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("Request");
@@ -711,7 +683,7 @@ public class NavDrawer extends AppCompatActivity
         String tempKey = myRef.push().getKey();
         // create a JSON
         ArrayList<UserStat> userStats = new ArrayList<UserStat>();
-        userStats.add(new UserStat(uid,fullName,0,0,0));
+        userStats.add(new UserStat(uid,fullName,profileImage,0,0,0,0,0,0));
         RingGlobal tempArena = new RingGlobal(tempKey,nameOfAreana, true,uid,userStats);
         // set the JSON
         myRef.child(tempKey).child("key").setValue(tempArena.getKey());
@@ -724,81 +696,11 @@ public class NavDrawer extends AppCompatActivity
         return tempKey;
     }
 
-    public String pushAndSetNewChildAtRingsTable(String name, boolean isPublic){
-        // write the JSON to the FireBase DataBase
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("tableOfRings");
-        String tempKey = myRef.push().getKey();
-        // create a JSON
-        //RingGlobal tempArena = new RingGlobal(tempKey,name,2,isPublic, mAuth.getCurrentUser().getUid(), "", "", "", "", "");
-        // set the JSON
-        //myRef.child(tempKey).setValue(tempArena);
-
-        return tempKey;
-
-    }
-
-    public void pushAndSetNewChildAtRingsPerUserTable(int index, String newArenaId){
-        // write the JSON to the FireBase DataBase
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("tableOfRingsPerUser");
-        myRef.child(mAuth.getCurrentUser().getUid()).child("r"+index).setValue(newArenaId);
-        /*
-        myRef.child("RRe3GGpTI6SeMb82413bJ4NPoA52").child("numOfRings").setValue(2);
-        myRef.child("RRe3GGpTI6SeMb82413bJ4NPoA52").child("r0").setValue("blabla");
-        myRef.child("RRe3GGpTI6SeMb82413bJ4NPoA52").child("r1").setValue("blablagain");
-        myRef.child("RRe3GGpTI6SeMb82413bJ4NPoA52").child("r2").setValue("blablagainAndAgain");
-        */
-    }
-
     public void pushAndSetNewChildAtArenasPerUserTable(String uid, String newArenaId){
         // write the JSON to the FireBase DataBase
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("ArenasPerUser");
         myRef.child(uid).child(newArenaId).setValue(newArenaId);
-    }
-
-    private void exampleWriteToFireBaseRealTimeDataBase3(){
-        // write the JSON to the FireBase DataBase
-        ArrayList<String> temp = new ArrayList<>();
-        temp.add("-L9_sU7hfPxP5QuFSzS_");
-        temp.add("-L9aZMxhoEZZ0_O7-YI0");
-        temp.add("-L9aZQ8E9PxT1fiFQ3dk");
-
-        RingsPerUser tempRingsPerUser = new RingsPerUser(temp);
-
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("tableOfRingsPerUser");
-        for (int i = 0; i < tempRingsPerUser.getUserRings().size() ; i++) {
-            myRef.child("UV2tVsaP8GVhB4YU2o2iHCAfOum2").child("r"+i).setValue(tempRingsPerUser.getUserRings().get(i));
-        }
-    }
-
-    private void readFromFireBaseRealTimeDataBase(String tableName, String UID){
-        // reads from the FireBase DataBase
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference(tableName);
-        Query atempToQuery = myRef.orderByKey().equalTo(UID);
-        DatabaseReference userSpecificRef = atempToQuery.getRef();
-
-        userSpecificRef.addListenerForSingleValueEvent(new ValueEventListener() {
-
-           // long c;
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-              //c = dataSnapshot.getChildrenCount();
-                //onDataListenerSuccess(dataSnapshot);
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                //onDataListenerFailed(databaseError);
-            }
-        });
-
-      //  Toast.makeText(this,r0,Toast.LENGTH_LONG).show();
-
     }
 
     private void readFromFireBaseRealTimeDataBase2(String tableName, String UID){

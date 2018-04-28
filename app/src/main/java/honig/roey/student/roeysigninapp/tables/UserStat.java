@@ -4,22 +4,32 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class UserStat implements Parcelable {
-    String uid;
+    private String uid;
     private String fullName;
-    long los;
-    long drw;
-    long win;
-    long numGames;
-    double pct;
+    private String profileImage;
+    private long los;
+    private long drw;
+    private long win;
+    private long numGames;
+    private double pct;
+    private long goalsFor;
+    private long goalsAgainst;
+    private long winningStrike;
+    private double goalsForAverage;
+    private double goalsAgainstAverage;
+
+
 
     // Constractors
     public UserStat (){
 
     }
 
-    public UserStat(String uid ,String fullName, long los, long drw, long win) {
+    /*
+    public UserStat(String uid ,String fullName, String profileImage, long los, long drw, long win, long goalsFor, long goalsAgainst, long winningStrike, double goalsForAverage, double goalsAgainstAverage ) {
         this.uid = uid;
         this.fullName = fullName;
+        this.profileImage = profileImage;
         this.los = los;
         this.drw = drw;
         this.win = win;
@@ -29,6 +39,32 @@ public class UserStat implements Parcelable {
         } else {
             this.pct = (double) (drw+3*win)/(double)(3*numGames);
         }
+        this.goalsFor = goalsFor;
+    }
+    */
+
+    public UserStat(String uid, String fullName, String profileImage, long los, long drw, long win, long goalsFor, long goalsAgainst, long winningStrike) {
+        this.uid = uid;
+        this.fullName = fullName;
+        this.profileImage = profileImage;
+        this.los = los;
+        this.drw = drw;
+        this.win = win;
+        this.goalsFor = goalsFor;
+        this.goalsAgainst = goalsAgainst;
+        this.winningStrike = winningStrike;
+        this.numGames = los + drw + win;
+        if (this.numGames == 0) {
+            this.pct = 0;
+            this.goalsForAverage = 0;
+            this.goalsAgainstAverage = 0;
+        } else {
+            this.pct = (double) (drw+3*win)/(double)(3*numGames);
+            this.goalsForAverage = (double)(goalsFor)/(double)(this.numGames);
+            this.goalsAgainstAverage = (double)(goalsAgainst)/(double)(this.numGames);
+
+        }
+
     }
 
     // Getters & Setters
@@ -81,15 +117,61 @@ public class UserStat implements Parcelable {
         return pct;
     }
 
+    public String getProfileImage() {
+        return profileImage;
+    }
+
+    public long getGoalsFor() {
+        return goalsFor;
+    }
+
+    public long getGoalsAgainst() {
+        return goalsAgainst;
+    }
+
+    public long getWinningStrike() {
+        return winningStrike;
+    }
+
+    public double getGoalsForAverage() {
+        return goalsForAverage;
+    }
+
+    public double getGoalsAgainstAverage() {
+        return goalsAgainstAverage;
+    }
+
+    public void setProfileImage(String profileImage) {
+        this.profileImage = profileImage;
+    }
+
+    public void setGoalsFor(long goalsFor) {
+        this.goalsFor = goalsFor;
+    }
+
+    public void setGoalsAgainst(long goalsAgainst) {
+        this.goalsAgainst = goalsAgainst;
+    }
+
+    public void setWinningStrike(long winningStrike) {
+        this.winningStrike = winningStrike;
+    }
+
     // Constractor
     protected UserStat(Parcel in) {
         uid = in.readString();
         fullName = in.readString();
+        profileImage = in.readString();
         los = in.readLong();
         drw = in.readLong();
         win = in.readLong();
         numGames = in.readLong();
         pct = in.readDouble();
+        goalsFor = in.readLong();
+        goalsAgainst = in.readLong();
+        winningStrike = in.readLong();
+        goalsForAverage = in.readDouble();
+        goalsAgainstAverage = in.readDouble();
     }
 
     // final field (it's type is an interface - Creator<>) - requiered to implement Parcebale
@@ -115,10 +197,16 @@ public class UserStat implements Parcelable {
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(uid);
         parcel.writeString(fullName);
+        parcel.writeString(profileImage);
         parcel.writeLong(los);
         parcel.writeLong(drw);
         parcel.writeLong(win);
         parcel.writeLong(numGames);
         parcel.writeDouble(pct);
+        parcel.writeLong(goalsFor);
+        parcel.writeLong(goalsAgainst);
+        parcel.writeLong(winningStrike);
+        parcel.writeDouble(goalsForAverage);
+        parcel.writeDouble(goalsAgainstAverage);
     }
 }

@@ -346,7 +346,7 @@ public class RequestFragment extends Fragment {
                     //TODO: Append the newRequest Object to the Request Table in the DB
                     parentActivity.pushAndSetNewChildAtRequestsTable(newRequest);
                     myDialog.dismiss();
-                    parentActivity.autoStartWithAnItemFromNavDrawer(parentActivity.getNavigationView(),R.id.nav_requests);
+                    //parentActivity.autoStartWithAnItemFromNavDrawer(parentActivity.getNavigationView(),R.id.nav_requests);
                 } else {
                     Toast.makeText(getActivity(),"There's allready a pending invitation to that user",Toast.LENGTH_LONG).show();
                     myDialog.dismiss();
@@ -604,6 +604,7 @@ public class RequestFragment extends Fragment {
         DatabaseReference myRef = database.getReference().child("Request").child(currentUser);
         myRef.removeEventListener(userRequestsListener);
 
+
     }
 
     /**
@@ -622,6 +623,9 @@ public class RequestFragment extends Fragment {
     }
 
     private void openDialogBox() {
+
+
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         View dialogView = getLayoutInflater().inflate(R.layout.add_request_dialog,null);
         final EditText approvingEmail = dialogView.findViewById(R.id.approvingEmail);
