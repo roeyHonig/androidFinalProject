@@ -1,7 +1,4 @@
-package honig.roey.student.roeysigninapp;
-
-//TODO: basically delete this and the layout it represents
-//TODO: this was the old Arena Fragment
+package honig.roey.student.roeysigninapp.arena;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -12,13 +9,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
-import honig.roey.student.roeysigninapp.dummy.DummyContent;
-import honig.roey.student.roeysigninapp.dummy.DummyContent.DummyItem;
-import honig.roey.student.roeysigninapp.tables.UserStat;
+import honig.roey.student.roeysigninapp.R;
+import honig.roey.student.roeysigninapp.arena.dummy.DummyContent;
+import honig.roey.student.roeysigninapp.arena.dummy.DummyContent.DummyItem;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,35 +22,25 @@ import java.util.List;
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
-public class PlayerStatFragment extends Fragment {
+public class ArenaFragment extends Fragment {
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
     // TODO: Customize parameters
-    // if mColumnCount =1 -> Linear Layout otherwise Grid Layout
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
-
-    private String key;
-    private String name;
-    private int numPlayers;
-    private boolean isPublicViewd;
-    private ArrayList<UserStat> userStats;
-
-    // TODO: this is junk just to try and pass data to the adapter
-    private ArrayList<String> trymeout = new ArrayList<String>();
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public PlayerStatFragment() {
+    public ArenaFragment() {
     }
 
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
-    public static PlayerStatFragment newInstance(int columnCount) {
-        PlayerStatFragment fragment = new PlayerStatFragment();
+    public static ArenaFragment newInstance(int columnCount) {
+        ArenaFragment fragment = new ArenaFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_COLUMN_COUNT, columnCount);
         fragment.setArguments(args);
@@ -68,34 +53,25 @@ public class PlayerStatFragment extends Fragment {
 
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
-            
-            key = getArguments().getString("argKey");
-            name = getArguments().getString("argName");
-            numPlayers =getArguments().getInt("argNumPlayers") ;
-            isPublicViewd =getArguments().getBoolean("argIsPublicViewd") ;
-            userStats = getArguments().getParcelableArrayList("argUserStatArrayList");
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_playerstat_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_matchup_list, container, false);
 
-        TextView arenaNameTitle = view.findViewById(R.id.arenaNameTitle);
-        arenaNameTitle.setText(name);
-
-        RecyclerView recyclerView = view.findViewById(R.id.usersList);
         // Set the adapter
-            Context context = recyclerView.getContext();
+        if (view instanceof RecyclerView) {
+            Context context = view.getContext();
+            RecyclerView recyclerView = (RecyclerView) view;
             if (mColumnCount <= 1) {
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-
-            recyclerView.setAdapter(new MyPlayerStatRecyclerViewAdapter(userStats, mListener));
-
+            recyclerView.setAdapter(new MyMatchUpRecyclerViewAdapter(DummyContent.ITEMS, mListener));
+        }
         return view;
     }
 
