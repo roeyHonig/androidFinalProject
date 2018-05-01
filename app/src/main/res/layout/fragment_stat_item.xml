@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="#deb698"
+    android:gravity="center_horizontal"
+    >
+
+    <TextView
+        android:id="@+id/playerPct"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/text_margin"
+        android:textAppearance="?attr/textAppearanceListItem"
+        android:background="#a6caa0"
+        android:text="roey honig pct% is:"/>
+
+
+</LinearLayout>
