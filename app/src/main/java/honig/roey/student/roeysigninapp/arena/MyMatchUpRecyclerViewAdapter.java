@@ -7,12 +7,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import honig.roey.student.roeysigninapp.R;
-import honig.roey.student.roeysigninapp.arena.ArenaFragment.OnListFragmentInteractionListener;
+import honig.roey.student.roeysigninapp.arena.MatchUpsFragment.OnListFragmentInteractionListener;
 import honig.roey.student.roeysigninapp.arena.dummy.DummyContent.DummyItem;
 import honig.roey.student.roeysigninapp.tables.UserStat;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
