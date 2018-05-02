@@ -49,6 +49,7 @@ import com.squareup.picasso.PicassoProvider;
 import java.net.URI;
 import java.util.ArrayList;
 
+import honig.roey.student.roeysigninapp.arena.ArenaFragment;
 import honig.roey.student.roeysigninapp.dummy.DummyContent;
 import honig.roey.student.roeysigninapp.requests.RequestFragment;
 import honig.roey.student.roeysigninapp.tables.Request;
@@ -76,7 +77,8 @@ public class NavDrawer extends AppCompatActivity
     private TextView navHeaderTitle;
     private RingFragment ringFragment = new RingFragment();
     private RequestFragment requestFragment = new RequestFragment();
-    private PlayerStatFragment playerStatFragment = new PlayerStatFragment();
+    private PlayerStatFragment playerStatFragment = new PlayerStatFragment(); // TODO: delete this, replaced by
+    private ArenaFragment arenaFragment = new ArenaFragment();
     private LoadingAnimationFragment loadingAnimationFragment = new LoadingAnimationFragment();
     private int isRedirectedFromLoginActivity=0; // 1 - google Signin , 2 - email \ password Signin
     private long counter =0;

@@ -105,6 +105,6 @@ public class ArenaFragment extends Fragment {
      */
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onListFragmentInteraction(DummyItem item);
+        void onListFragmentInteraction(String specific2PlayersMatchUpKey);
     }
 }
