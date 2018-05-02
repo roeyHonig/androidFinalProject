@@ -59,7 +59,12 @@ import honig.roey.student.roeysigninapp.tables.RingsPerUser;
 import honig.roey.student.roeysigninapp.tables.UserStat;
 
 public class NavDrawer extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, RingFragment.OnListFragmentInteractionListener , PlayerStatFragment.OnListFragmentInteractionListener , RequestFragment.OnListFragmentInteractionListener{
+        implements NavigationView.OnNavigationItemSelectedListener,
+        RingFragment.OnListFragmentInteractionListener ,
+        PlayerStatFragment.OnListFragmentInteractionListener ,
+        RequestFragment.OnListFragmentInteractionListener ,
+        ArenaFragment.OnListFragmentInteractionListener
+{
 
     private boolean active = false; // Important To ask when doing things like changing the UI
     private FirebaseAuth mAuth;
@@ -634,12 +639,13 @@ public class NavDrawer extends AppCompatActivity
         fragmentTransaction.replace(id,fragment).commit();
     }
 
+
+    //TODO: item is the ID of the Arena the user clicked on, in the RingFragment
+    //TODO: insted of the current shit, switch to the newlly improved ArenaFragment !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     @Override
     // Do When pressing an Item from the Arenas list
     public void onListFragmentInteraction(String item) {
-        //TODO: item is the ID of the Arena the user clicked on, in the RingFragment
-        //TODO: insted of Toast, switch to the PlayerStatFragment VIEW
-        //Toast.makeText(this,"you've selected Arena with id: "+item,Toast.LENGTH_LONG).show();
+
         Bundle playerStatFragmentArgsBundle = new Bundle();
 
         int clickedArenaIndex=0;
@@ -939,5 +945,11 @@ public class NavDrawer extends AppCompatActivity
         DatabaseReference myRef = database.getReference("Request");
         myRef.child(request.getApprovingUID()).child(request.getKey()).child("status").setValue(newStatusCode);
         myRef.child(request.getRequestingUID()).child(request.getKey()).child("status").setValue(newStatusCode);
+    }
+
+    // Executed when a matchUp Item (2 players matchup in a specific Arena) is pressed
+    @Override
+    public void onMatchUpListInteraction(String specific2PlayersMatchUpKey) {
+        //TODO: present data relating to the specific2PlayersMatchUpKey
     }
 }

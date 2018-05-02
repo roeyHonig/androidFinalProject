@@ -55,7 +55,8 @@ public class MyMatchUpRecyclerViewAdapter extends RecyclerView.Adapter<MyMatchUp
                     // the item in question here, is a specific metchup between 2 players of the Arena
                     // mItem is a String containing the unique push() key representing this matchup
                     // this is what we pass back to the activity
-                    mListener.onListFragmentInteraction(holder.mItem);
+                    //mListener.onListFragmentInteraction(holder.mItem);
+                    mListener.onMatchUpListInteraction(holder.mItem);
                 }
             }
         });
