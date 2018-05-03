@@ -7,13 +7,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
+
 import honig.roey.student.roeysigninapp.R;
+import honig.roey.student.roeysigninapp.tables.UserStat;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class ArenaFragment extends Fragment {
-
+    private ArrayList<UserStat> mValues1;
+    private ArrayList<UserStat> mValues2;
+    private ArrayList<String> matchupKey;
 
     public ArenaFragment() {
         // Required empty public constructor
