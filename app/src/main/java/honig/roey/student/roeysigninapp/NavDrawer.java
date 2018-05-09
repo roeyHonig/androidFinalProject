@@ -111,7 +111,7 @@ public class NavDrawer extends AppCompatActivity
         @Override
         public void run() {
             // reset the counter back to 0 to enable this process every time we enter a specific Arena
-            counterOfArenaIndivdualMatchups = 0;
+            //counterOfArenaIndivdualMatchups = 0;
             arenaMatchupsData.clear();
             readFromFireBaseRealTimeDataBaseMatchupsTable("IndividualArenas", userDataBaseData.get(clickedArenaIndex).getKey());
         }
@@ -433,7 +433,7 @@ public class NavDrawer extends AppCompatActivity
 
         @Override
         public void onDataListenerSuccess(DataSnapshot data, long num) {
-            counterOfArenaIndivdualMatchups++;
+            //counterOfArenaIndivdualMatchups++;
             String tempMatchupkey = data.getKey();
             ArrayList<UserStat> tempPlayer = new ArrayList<>();
             for (DataSnapshot record:data.getChildren()) {
@@ -442,13 +442,14 @@ public class NavDrawer extends AppCompatActivity
             }
             arenaMatchupsData.add(new MatchUp(tempMatchupkey, tempPlayer));
 
-            if (counterOfArenaIndivdualMatchups == num){
+            if (arenaMatchupsData.size() == num){
                 // we've iterated over all the arena's matchUps
                 // update the UI
                 // switch to the Arena Fragment
                 // don't forget to put all the arguments
-                //toastfromwithin(arenaMatchupsData.get(4).getPlayers().get(1).getFullName());
-                toastfromwithin(""+arenaMatchupsData.size());
+                toastfromwithin(arenaMatchupsData.get(5).getPlayers().get(0).getFullName());
+                //toastfromwithin(arenaMatchupsData.get(5).getKey());
+                //toastfromwithin(""+arenaMatchupsData.size());
 
             }
 
