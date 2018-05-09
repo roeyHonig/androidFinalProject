@@ -43,6 +43,7 @@ import honig.roey.student.roeysigninapp.arena.ArenaFragment;
 import honig.roey.student.roeysigninapp.arena.MatchUpsFragment;
 import honig.roey.student.roeysigninapp.dummy.DummyContent;
 import honig.roey.student.roeysigninapp.requests.RequestFragment;
+import honig.roey.student.roeysigninapp.tables.MatchUp;
 import honig.roey.student.roeysigninapp.tables.Request;
 import honig.roey.student.roeysigninapp.tables.RingGlobal;
 import honig.roey.student.roeysigninapp.tables.UserStat;
@@ -77,11 +78,14 @@ public class NavDrawer extends AppCompatActivity
     private LoadingAnimationFragment loadingAnimationFragment = new LoadingAnimationFragment();
     private int isRedirectedFromLoginActivity=0; // 1 - google Signin , 2 - email \ password Signin
     private long counter =0;
+    private int clickedArenaIndex=0; // a field designed to keep track which arena was clicked, so we know the arena for which to colllect data in the DB
     private ArrayList<RingGlobal> userDataBaseData = new ArrayList<RingGlobal>();
     private ArrayList<Request> userRequests = new ArrayList<Request>();
     private ArrayList<Request> userInvites = new ArrayList<Request>();
     private ArrayList<Request> userAproves = new ArrayList<Request>();
     private long counterRequests =0;
+    private long counterOfArenaIndivdualMatchups = 0;
+    private ArrayList<MatchUp>  arenaMatchupsData = new ArrayList<>();
     private Handler handler = new Handler();
     private Runnable switchToRings = new Runnable() {
         @Override
@@ -103,6 +107,15 @@ public class NavDrawer extends AppCompatActivity
             readFromFireBaseRealTimeDataBase3("Request",uid,tableOfRequests,requestFragment);
         }
     };
+    private Runnable switchToSpecificArena = new Runnable() {
+        @Override
+        public void run() {
+            // reset the counter back to 0 to enable this process every time we enter a specific Arena
+            counterOfArenaIndivdualMatchups = 0;
+            arenaMatchupsData.clear();
+            readFromFireBaseRealTimeDataBaseMatchupsTable("IndividualArenas", userDataBaseData.get(clickedArenaIndex).getKey());
+        }
+    };
 
     // Getters
     public FirebaseAuth getmAuth() {
@@ -121,7 +134,7 @@ public class NavDrawer extends AppCompatActivity
         return fullNameoFTheCurrentSignedInUser;
     }
 
-    // Interface to call methods. these methods will recive as a parmeter a FireBase Realtime DB SnapShot
+    // Interface to call methods. these methods will recive as a parmeter: a FireBase Realtime DB SnapShot, and how many children it has
     // Inside these Interface we actually extract the data from the DB Snapshot
     // ***************************************************************************************************
     // Do This after reading the "ArenasPerUser" table in the DB
@@ -376,8 +389,85 @@ public class NavDrawer extends AppCompatActivity
 
         }
     };
+    // Do This after reading the matchups of a specific Arena
+    OnGetDataFromFirebaseDbListener arenaMatchUps = new OnGetDataFromFirebaseDbListener() {
+        @Override
+        public void onDataListenerStart() {
+
+        }
+
+        @Override
+        public void onDataListenerSuccess(DataSnapshot data, long num) {
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference myRef;
+            for (DataSnapshot record:data.getChildren()
+                    ) {
+                String matchupID = record.getKey();
+                myRef = database.getReference().child("IndividualArenas").child(data.getKey()).child(matchupID);
+                myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        //2nd Par num:
+                        // we need this number to make sure we've iteareted over all of them before updating the UI
+                        singleArenaMatchUp.onDataListenerSuccess(dataSnapshot,num);
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
+            }
+
+        }
+
+        @Override
+        public void onDataListenerFailed(DatabaseError databaseError) {
+
+        }
+    };
+    // Do This after reading a single matchup
+    OnGetDataFromFirebaseDbListener singleArenaMatchUp = new OnGetDataFromFirebaseDbListener() {
+        @Override
+        public void onDataListenerStart() {
+
+        }
+
+        @Override
+        public void onDataListenerSuccess(DataSnapshot data, long num) {
+            counterOfArenaIndivdualMatchups++;
+            if (counterOfArenaIndivdualMatchups == num + 1){
+                // we've iterated over all the arena's matchUps
+                // update the UI
+                // switch to the Arena Fragment
+                // don't forget to put all the arguments
+                //toastfromwithin(arenaMatchupsData.get(4).getPlayers().get(1).getFullName());
+                toastfromwithin(""+arenaMatchupsData.size());
+
+            } else {
+
+                String tempMatchupkey = data.getKey();
+                ArrayList<UserStat> tempPlayer = new ArrayList<>();
+                for (DataSnapshot record:data.getChildren()) {
+
+                   tempPlayer.add(record.getValue(UserStat.class));
+                }
+                arenaMatchupsData.add(new MatchUp(tempMatchupkey, tempPlayer));
+
+            }
+
+        }
+
+        @Override
+        public void onDataListenerFailed(DatabaseError databaseError) {
+
+        }
+    };
+
 
     // ***************************************************************************************************
+
+    private void toastfromwithin(String massage) {
+        Toast.makeText(this,massage, Toast.LENGTH_LONG).show();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -638,7 +728,7 @@ public class NavDrawer extends AppCompatActivity
 
         Bundle playerStatFragmentArgsBundle = new Bundle();
 
-        int clickedArenaIndex=0;
+
         for (RingGlobal arena: userDataBaseData
              ) {
             if (arena.getKey().equals(item)){
@@ -661,7 +751,14 @@ public class NavDrawer extends AppCompatActivity
         //TODO: this was the old fragment, delete this
        // playerStatFragment.setArguments(playerStatFragmentArgsBundle);
        arenaFragment.setArguments(playerStatFragmentArgsBundle);
-       switchToFragment(R.id.appFragContainer, arenaFragment);
+
+        switchToFragment(R.id.appFragContainer,loadingAnimationFragment); // present loading animation
+        // Scan DB and present Rings
+        handler.postDelayed(switchToSpecificArena,1000);
+
+
+       //TODO:!!!!!!!!!!!!!!!!!!!!!!!!! take this into when you're ready to switch and the abouve arguments
+       //switchToFragment(R.id.appFragContainer, arenaFragment);
     }
 
     public void pushAndSetNewChildAtRequestsTable(Request jsonObject){
@@ -768,6 +865,46 @@ public class NavDrawer extends AppCompatActivity
 
                 }
             });
+
+
+
+
+
+
+
+    }
+
+    private void readFromFireBaseRealTimeDataBaseMatchupsTable(String tableName, String arenaID){
+        // reads from the FireBase DataBase
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference().child(tableName).child(arenaID);
+
+
+
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // Does this arena have indiviudal matchups?
+                if (dataSnapshot.hasChildren()){
+
+                    arenaMatchUps.onDataListenerSuccess(dataSnapshot,dataSnapshot.getChildrenCount());
+                } else {
+                    // No Matchups - update UI accordinglly
+                    arenaFragment.setArguments(null);
+                    if (active /*Is Activty active*/) {
+                        switchToFragment(R.id.appFragContainer, arenaFragment);
+                    }
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                //onDataListenerFailed(databaseError);
+
+            }
+        });
 
 
 

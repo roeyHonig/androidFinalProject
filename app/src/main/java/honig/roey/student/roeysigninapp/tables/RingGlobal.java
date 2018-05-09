@@ -118,4 +118,21 @@ public class RingGlobal implements Parcelable {
     public void setUserStats(ArrayList<UserStat> userStats) {
         this.userStats = userStats;
     }
+
+    public String toShortString(){
+        String superUserName="";
+        String description = "Arena Id is: "+ this.getKey() +", "+
+                "Arena's Name is: "+ this.getName() +", "+
+                "There are: "+ this.getNumPlayers() +" Players in this Arena, "+
+                "Is this Arena visiable to all App users? "+ this.isPublicViewd() +", ";
+
+
+        for (UserStat player: this.getUserStats()) {
+            if (player.getUid().equals(this.getSuperUser())){superUserName = player.getFullName() ;}
+        }
+
+        description += "and the super User is "+ superUserName;
+
+        return description ;
+    }
 }
