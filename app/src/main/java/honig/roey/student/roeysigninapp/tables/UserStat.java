@@ -209,4 +209,23 @@ public class UserStat implements Parcelable {
         parcel.writeDouble(goalsForAverage);
         parcel.writeDouble(goalsAgainstAverage);
     }
+
+    @Override
+    public String toString() {
+        return "UserStat{" +
+                //"uid='" + uid + '\'' +
+                ", fullName='" + fullName + '\'' +
+                //", profileImage='" + profileImage + '\'' +
+                //", los=" + los +
+                //", drw=" + drw +
+                //", win=" + win +
+                //", numGames=" + numGames +
+                ", pct=" + pct +
+                //", goalsFor=" + goalsFor +
+                //", goalsAgainst=" + goalsAgainst +
+                //", winningStrike=" + winningStrike +
+                //", goalsForAverage=" + goalsForAverage +
+                //", goalsAgainstAverage=" + goalsAgainstAverage +
+                '}';
+    }
 }

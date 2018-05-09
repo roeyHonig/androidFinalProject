@@ -447,9 +447,26 @@ public class NavDrawer extends AppCompatActivity
                 // update the UI
                 // switch to the Arena Fragment
                 // don't forget to put all the arguments
-                toastfromwithin(arenaMatchupsData.get(5).getPlayers().get(0).getFullName());
+                //toastfromwithin(arenaMatchupsData.get(5).getPlayers().get(0).getFullName());
                 //toastfromwithin(arenaMatchupsData.get(5).getKey());
                 //toastfromwithin(""+arenaMatchupsData.size());
+                Bundle playerStatFragmentArgsBundle = new Bundle();
+
+                // Arguments of the Global Arena
+                playerStatFragmentArgsBundle.putString("argKey",userDataBaseData.get(clickedArenaIndex).getKey());
+                playerStatFragmentArgsBundle.putString("argName",userDataBaseData.get(clickedArenaIndex).getName());
+                playerStatFragmentArgsBundle.putInt("argNumPlayers",userDataBaseData.get(clickedArenaIndex).getNumPlayers());
+                playerStatFragmentArgsBundle.putBoolean("argIsPublicViewd",userDataBaseData.get(clickedArenaIndex).isPublicViewd());
+                playerStatFragmentArgsBundle.putString("argSuperUser",userDataBaseData.get(clickedArenaIndex).getSuperUser());
+                playerStatFragmentArgsBundle.putParcelableArrayList("argUserStatArrayList",userDataBaseData.get(clickedArenaIndex).getUserStats());
+
+                // Arguments of the individuaal MatchUps in the Arena
+                playerStatFragmentArgsBundle.putParcelableArrayList("argMatchUpsDataArrayList",arenaMatchupsData);
+
+                arenaFragment.setArguments(playerStatFragmentArgsBundle);
+                if (active /*Is Activty active*/) {
+                    switchToFragment(R.id.appFragContainer, arenaFragment);
+                }
 
             }
 
@@ -729,39 +746,17 @@ public class NavDrawer extends AppCompatActivity
     // Do When pressing an Item from the Arenas list
     public void onListFragmentInteraction(String item) {
 
-        Bundle playerStatFragmentArgsBundle = new Bundle();
-
-
         for (RingGlobal arena: userDataBaseData
              ) {
             if (arena.getKey().equals(item)){
                 clickedArenaIndex = userDataBaseData.indexOf(arena);
             }
         }
-        /*
-        ArrayList<UserStat> tryme = new ArrayList<UserStat>();
-        for (int i = 0; i < userDataBaseData.get(clickedArenaIndex).getNumPlayers()  ; i++) {
-            tryme.add(userDataBaseData.get(clickedArenaIndex).getUserStats())
-        }
-        */
-        playerStatFragmentArgsBundle.putString("argKey",userDataBaseData.get(clickedArenaIndex).getKey());
-        playerStatFragmentArgsBundle.putString("argName",userDataBaseData.get(clickedArenaIndex).getName());
-        playerStatFragmentArgsBundle.putInt("argNumPlayers",userDataBaseData.get(clickedArenaIndex).getNumPlayers());
-        playerStatFragmentArgsBundle.putBoolean("argIsPublicViewd",userDataBaseData.get(clickedArenaIndex).isPublicViewd());
-        playerStatFragmentArgsBundle.putString("argSuperUser",userDataBaseData.get(clickedArenaIndex).getSuperUser());
-        playerStatFragmentArgsBundle.putParcelableArrayList("argUserStatArrayList",userDataBaseData.get(clickedArenaIndex).getUserStats());
-
-        //TODO: this was the old fragment, delete this
-       // playerStatFragment.setArguments(playerStatFragmentArgsBundle);
-       arenaFragment.setArguments(playerStatFragmentArgsBundle);
 
         switchToFragment(R.id.appFragContainer,loadingAnimationFragment); // present loading animation
-        // Scan DB and present Rings
+        // Scan DB for individual Matchups of this arena
         handler.postDelayed(switchToSpecificArena,1000);
 
-
-       //TODO:!!!!!!!!!!!!!!!!!!!!!!!!! take this into when you're ready to switch and the abouve arguments
-       //switchToFragment(R.id.appFragContainer, arenaFragment);
     }
 
     public void pushAndSetNewChildAtRequestsTable(Request jsonObject){

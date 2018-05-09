@@ -11,6 +11,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import honig.roey.student.roeysigninapp.R;
+import honig.roey.student.roeysigninapp.tables.MatchUp;
 import honig.roey.student.roeysigninapp.tables.RingGlobal;
 import honig.roey.student.roeysigninapp.tables.UserStat;
 
@@ -22,6 +23,7 @@ public class ArenaFragment extends Fragment {
     private ArrayList<UserStat> mValues2;
     private ArrayList<String> matchupKey;
     private RingGlobal globalDataSet = new RingGlobal();
+    private ArrayList<MatchUp> individualMatchUpsDataSet = new ArrayList<>();
 
 
     public ArenaFragment() {
@@ -43,20 +45,22 @@ public class ArenaFragment extends Fragment {
             globalDataSet.setSuperUser(getArguments().getString("argSuperUser"));
             globalDataSet.setUserStats(getArguments().getParcelableArrayList("argUserStatArrayList"));
             globalDataSet.setNumPlayers(getArguments().getInt("argNumPlayers"));
+            individualMatchUpsDataSet = getArguments().getParcelableArrayList("argMatchUpsDataArrayList");
 
-            //globalDataSet.setNumPlayers(globalDataSet.getUserStats().size());
+            String tmpConcatation = "";
+
+            for (int i = 0; i < individualMatchUpsDataSet.size(); i++) {
+                tmpConcatation += individualMatchUpsDataSet.get(i).getPlayers().get(0).toString();
+                tmpConcatation += "* Vs *";
+                tmpConcatation += individualMatchUpsDataSet.get(i).getPlayers().get(1).toString();
+                tmpConcatation += "//////";
+            }
+
 
             // just a Test TextView To see i got the arguments out
             TextView tvBuffer =  view.findViewById(R.id.tvBuffer);
-        /*
-        tvBuffer.setText("Arena Id is: "+ globalDataSet.getKey() +", "+
-                "Arena's Name is: "+ globalDataSet.getName() +", "+
-                "There are: "+ globalDataSet.getNumPlayers() +" Players in this Arena, "+
-                "Is this Arena visiable to all App users? "+ globalDataSet.isPublicViewd() +", " +
-                "and the super User is "+ globalDataSet.getSuperUser()
-        );
-        */
-            tvBuffer.setText(globalDataSet.toShortString());
+
+            tvBuffer.setText(globalDataSet.toShortString() + tmpConcatation);
         }
 
 
