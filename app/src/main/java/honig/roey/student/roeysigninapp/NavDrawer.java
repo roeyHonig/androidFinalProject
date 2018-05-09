@@ -53,7 +53,8 @@ public class NavDrawer extends AppCompatActivity
         RingFragment.OnListFragmentInteractionListener ,
         PlayerStatFragment.OnListFragmentInteractionListener ,
         RequestFragment.OnListFragmentInteractionListener ,
-        MatchUpsFragment.OnListFragmentInteractionListener
+        MatchUpsFragment.OnListFragmentInteractionListener ,
+        ArenaFragment.OnListFragmentInteractionListener
 {
 
     private boolean active = false; // Important To ask when doing things like changing the UI
@@ -462,6 +463,9 @@ public class NavDrawer extends AppCompatActivity
 
                 // Arguments of the individuaal MatchUps in the Arena
                 playerStatFragmentArgsBundle.putParcelableArrayList("argMatchUpsDataArrayList",arenaMatchupsData);
+
+                //Argument for RecycelerView num of columbs
+                playerStatFragmentArgsBundle.putInt(ArenaFragment.ARG_COLUMN_COUNT,1);
 
                 arenaFragment.setArguments(playerStatFragmentArgsBundle);
                 if (active /*Is Activty active*/) {

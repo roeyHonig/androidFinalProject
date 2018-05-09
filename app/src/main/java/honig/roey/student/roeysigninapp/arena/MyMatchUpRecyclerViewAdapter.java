@@ -9,6 +9,7 @@ import android.widget.TextView;
 import honig.roey.student.roeysigninapp.R;
 import honig.roey.student.roeysigninapp.arena.MatchUpsFragment.OnListFragmentInteractionListener;
 import honig.roey.student.roeysigninapp.arena.dummy.DummyContent.DummyItem;
+import honig.roey.student.roeysigninapp.tables.MatchUp;
 import honig.roey.student.roeysigninapp.tables.UserStat;
 
 import java.util.ArrayList;
@@ -20,15 +21,12 @@ import java.util.ArrayList;
  */
 public class MyMatchUpRecyclerViewAdapter extends RecyclerView.Adapter<MyMatchUpRecyclerViewAdapter.ViewHolder> {
 
-    private final ArrayList<UserStat> mValues1;
-    private final ArrayList<UserStat> mValues2;
-    private final ArrayList<String> matchupKey;
-    private final OnListFragmentInteractionListener mListener;
 
-    public MyMatchUpRecyclerViewAdapter(ArrayList<UserStat> mValues1 ,ArrayList<UserStat> mValues2 ,ArrayList<String> matchupKey , OnListFragmentInteractionListener listener) {
-        this.mValues1 = mValues1;
-        this.mValues2 = mValues2;
-        this.matchupKey = matchupKey;
+    private final ArenaFragment.OnListFragmentInteractionListener mListener;
+    private ArrayList<MatchUp> individualMatchUpsDataSet = new ArrayList<>();
+
+    public MyMatchUpRecyclerViewAdapter(ArrayList<MatchUp> individualMatchUpsDataSet, ArenaFragment.OnListFragmentInteractionListener listener) {
+        this.individualMatchUpsDataSet = individualMatchUpsDataSet;
         mListener = listener;
     }
 
@@ -41,9 +39,8 @@ public class MyMatchUpRecyclerViewAdapter extends RecyclerView.Adapter<MyMatchUp
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = matchupKey.get(position);
-        holder.player1.setText(mValues1.get(position).getFullName());
-        holder.player2.setText(mValues2.get(position).getFullName());
+        holder.player1.setText(individualMatchUpsDataSet.get(position).getPlayers().get(0).getFullName());
+        holder.player2.setText(individualMatchUpsDataSet.get(position).getPlayers().get(1).getFullName());
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,11 +48,9 @@ public class MyMatchUpRecyclerViewAdapter extends RecyclerView.Adapter<MyMatchUp
                 if (null != mListener) {
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
-                    // the item in question here, is a specific metchup between 2 players of the Arena
-                    // mItem is a String containing the unique push() key representing this matchup
-                    // this is what we pass back to the activity
-                    //mListener.onListFragmentInteraction(holder.mItem);
-                    mListener.onMatchUpListInteraction(holder.mItem);
+                    // A String, containing the unique push() key representing this matchup
+                    // is what we pass back to the activity
+                    mListener.onMatchUpListInteraction(individualMatchUpsDataSet.get(position).getKey());
                 }
             }
         });
@@ -63,7 +58,7 @@ public class MyMatchUpRecyclerViewAdapter extends RecyclerView.Adapter<MyMatchUp
 
     @Override
     public int getItemCount() {
-        return mValues1.size();
+        return individualMatchUpsDataSet.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -72,7 +67,6 @@ public class MyMatchUpRecyclerViewAdapter extends RecyclerView.Adapter<MyMatchUp
         public final TextView player2;
         public ArrayList<UserStat> mItem1;
         public ArrayList<UserStat> mItem2;
-        public String mItem;
 
 
         public ViewHolder(View view) {

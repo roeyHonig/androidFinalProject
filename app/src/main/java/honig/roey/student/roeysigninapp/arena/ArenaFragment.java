@@ -1,9 +1,13 @@
 package honig.roey.student.roeysigninapp.arena;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +30,11 @@ public class ArenaFragment extends Fragment {
     private RingGlobal globalDataSet = new RingGlobal();
     private ArrayList<MatchUp> individualMatchUpsDataSet = new ArrayList<>();
 
+    public static final String ARG_COLUMN_COUNT = "column-count";
+    private int mColumnCount = 1;
+    private OnListFragmentInteractionListener mListener;
+
+
 
     public ArenaFragment() {
         // Required empty public constructor
@@ -36,6 +45,7 @@ public class ArenaFragment extends Fragment {
         super.onCreate(savedInstanceState);
         // get Arguments
         if (getArguments() != null){
+            mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
             globalDataSet.setKey(getArguments().getString("argKey"));
             globalDataSet.setName(getArguments().getString("argName"));
             globalDataSet.setPublicViewd(getArguments().getBoolean("argIsPublicViewd"));
@@ -54,6 +64,7 @@ public class ArenaFragment extends Fragment {
 
         // get Arguments
         if (globalDataSet != null && individualMatchUpsDataSet != null){
+            /*
             String tmpConcatation = "";
 
             for (int i = 0; i < individualMatchUpsDataSet.size(); i++) {
@@ -66,10 +77,49 @@ public class ArenaFragment extends Fragment {
             // just a Test TextView To see i got the arguments out
             TextView tvBuffer =  view.findViewById(R.id.tvBuffer);
             tvBuffer.setText(globalDataSet.toShortString() + tmpConcatation);
+            */
+
+            // Set the adapter for the matchUps List RecyclerView
+            RecyclerView matchUpRecyclerView = view.findViewById(R.id.matchUplist);
+            Context context = matchUpRecyclerView.getContext();
+            if (mColumnCount <= 1) {
+                matchUpRecyclerView.setLayoutManager(new LinearLayoutManager(context));
+            } else {
+                matchUpRecyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
+            }
+            matchUpRecyclerView.setAdapter(new MyMatchUpRecyclerViewAdapter(individualMatchUpsDataSet, mListener));
+
         }
 
 
         return view;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof MatchUpsFragment.OnListFragmentInteractionListener) {
+            mListener = (ArenaFragment.OnListFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnListFragmentInteractionListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
+
+    /**
+     * This interface must be implemented by activities that contain this
+     * fragment to allow an interaction between the RecyclerView's List Items
+     * and the hosting activity
+     *
+     */
+    public interface OnListFragmentInteractionListener {
+        void onMatchUpListInteraction(String MatchUpKey);
     }
 
 }
