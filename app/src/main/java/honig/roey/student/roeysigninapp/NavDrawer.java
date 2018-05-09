@@ -434,7 +434,15 @@ public class NavDrawer extends AppCompatActivity
         @Override
         public void onDataListenerSuccess(DataSnapshot data, long num) {
             counterOfArenaIndivdualMatchups++;
-            if (counterOfArenaIndivdualMatchups == num + 1){
+            String tempMatchupkey = data.getKey();
+            ArrayList<UserStat> tempPlayer = new ArrayList<>();
+            for (DataSnapshot record:data.getChildren()) {
+
+                tempPlayer.add(record.getValue(UserStat.class));
+            }
+            arenaMatchupsData.add(new MatchUp(tempMatchupkey, tempPlayer));
+
+            if (counterOfArenaIndivdualMatchups == num){
                 // we've iterated over all the arena's matchUps
                 // update the UI
                 // switch to the Arena Fragment
@@ -442,17 +450,11 @@ public class NavDrawer extends AppCompatActivity
                 //toastfromwithin(arenaMatchupsData.get(4).getPlayers().get(1).getFullName());
                 toastfromwithin(""+arenaMatchupsData.size());
 
-            } else {
-
-                String tempMatchupkey = data.getKey();
-                ArrayList<UserStat> tempPlayer = new ArrayList<>();
-                for (DataSnapshot record:data.getChildren()) {
-
-                   tempPlayer.add(record.getValue(UserStat.class));
-                }
-                arenaMatchupsData.add(new MatchUp(tempMatchupkey, tempPlayer));
-
             }
+
+
+
+
 
         }
 
