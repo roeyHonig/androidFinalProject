@@ -95,4 +95,27 @@ public class RingGlobal implements Parcelable {
         parcel.writeString(superUser);
 
     }
+
+    // public setters
+
+
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setPublicViewd(boolean publicViewd) {
+        isPublicViewd = publicViewd;
+    }
+
+    public void setSuperUser(String superUser) {
+        this.superUser = superUser;
+    }
+
+    public void setUserStats(ArrayList<UserStat> userStats) {
+        this.userStats = userStats;
+    }
 }

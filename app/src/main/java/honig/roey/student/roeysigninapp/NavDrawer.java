@@ -39,6 +39,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+import honig.roey.student.roeysigninapp.arena.ArenaFragment;
 import honig.roey.student.roeysigninapp.arena.MatchUpsFragment;
 import honig.roey.student.roeysigninapp.dummy.DummyContent;
 import honig.roey.student.roeysigninapp.requests.RequestFragment;
@@ -70,7 +71,8 @@ public class NavDrawer extends AppCompatActivity
     private TextView navHeaderTitle;
     private RingFragment ringFragment = new RingFragment();
     private RequestFragment requestFragment = new RequestFragment();
-    private PlayerStatFragment playerStatFragment = new PlayerStatFragment(); // TODO: delete this, replaced by
+    private PlayerStatFragment playerStatFragment = new PlayerStatFragment(); // TODO: delete this, replaced ArenaFragment
+    private ArenaFragment arenaFragment = new ArenaFragment();
     private MatchUpsFragment matchUpsFragment = new MatchUpsFragment();
     private LoadingAnimationFragment loadingAnimationFragment = new LoadingAnimationFragment();
     private int isRedirectedFromLoginActivity=0; // 1 - google Signin , 2 - email \ password Signin
@@ -653,11 +655,13 @@ public class NavDrawer extends AppCompatActivity
         playerStatFragmentArgsBundle.putString("argName",userDataBaseData.get(clickedArenaIndex).getName());
         playerStatFragmentArgsBundle.putInt("argNumPlayers",userDataBaseData.get(clickedArenaIndex).getNumPlayers());
         playerStatFragmentArgsBundle.putBoolean("argIsPublicViewd",userDataBaseData.get(clickedArenaIndex).isPublicViewd());
+        playerStatFragmentArgsBundle.putString("argSuperUser",userDataBaseData.get(clickedArenaIndex).getSuperUser());
         playerStatFragmentArgsBundle.putParcelableArrayList("argUserStatArrayList",userDataBaseData.get(clickedArenaIndex).getUserStats());
 
-
-        playerStatFragment.setArguments(playerStatFragmentArgsBundle);
-       switchToFragment(R.id.appFragContainer, playerStatFragment);
+        //TODO: this was the old fragment, delete this
+       // playerStatFragment.setArguments(playerStatFragmentArgsBundle);
+       arenaFragment.setArguments(playerStatFragmentArgsBundle);
+       switchToFragment(R.id.appFragContainer, arenaFragment);
     }
 
     public void pushAndSetNewChildAtRequestsTable(Request jsonObject){
