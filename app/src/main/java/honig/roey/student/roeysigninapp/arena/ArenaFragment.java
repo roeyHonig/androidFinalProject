@@ -2,6 +2,7 @@ package honig.roey.student.roeysigninapp.arena;
 
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,13 +31,9 @@ public class ArenaFragment extends Fragment {
         // Required empty public constructor
     }
 
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_arena, container, false);
-
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         // get Arguments
         if (getArguments() != null){
             globalDataSet.setKey(getArguments().getString("argKey"));
@@ -46,7 +43,17 @@ public class ArenaFragment extends Fragment {
             globalDataSet.setUserStats(getArguments().getParcelableArrayList("argUserStatArrayList"));
             globalDataSet.setNumPlayers(getArguments().getInt("argNumPlayers"));
             individualMatchUpsDataSet = getArguments().getParcelableArrayList("argMatchUpsDataArrayList");
+        }
+    }
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_arena, container, false);
+
+        // get Arguments
+        if (globalDataSet != null && individualMatchUpsDataSet != null){
             String tmpConcatation = "";
 
             for (int i = 0; i < individualMatchUpsDataSet.size(); i++) {
@@ -56,10 +63,8 @@ public class ArenaFragment extends Fragment {
                 tmpConcatation += "//////";
             }
 
-
             // just a Test TextView To see i got the arguments out
             TextView tvBuffer =  view.findViewById(R.id.tvBuffer);
-
             tvBuffer.setText(globalDataSet.toShortString() + tmpConcatation);
         }
 
