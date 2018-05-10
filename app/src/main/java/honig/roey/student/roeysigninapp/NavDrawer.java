@@ -467,6 +467,7 @@ public class NavDrawer extends AppCompatActivity
                 //Argument for RecycelerView num of columbs
                 playerStatFragmentArgsBundle.putInt(ArenaFragment.ARG_COLUMN_COUNT,1);
 
+
                 arenaFragment.setArguments(playerStatFragmentArgsBundle);
                 if (active /*Is Activty active*/) {
                     switchToFragment(R.id.appFragContainer, arenaFragment);
