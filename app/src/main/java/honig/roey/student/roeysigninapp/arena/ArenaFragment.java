@@ -17,7 +17,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+
 import java.util.ArrayList;
+import java.util.List;
 
 import honig.roey.student.roeysigninapp.NavDrawer;
 import honig.roey.student.roeysigninapp.R;
@@ -29,8 +36,26 @@ import honig.roey.student.roeysigninapp.tables.UserStat;
  * A simple {@link Fragment} subclass.
  */
 public class ArenaFragment extends Fragment {
+
+    private ArrayList<PointDataSet> pointDataSets = new ArrayList<>();
+    private List<BarEntry> entries = new ArrayList<>();
+    private BarDataSet set;
+    private BarData barData;
+    private BarChart chart;
+    private IAxisValueFormatter formatter;
+
+
     private RingGlobal globalDataSet = new RingGlobal();
+    private String[] names = new String[globalDataSet.getUserStats().size()]; // BarChart XAxis Labels - names of the players
     private ArrayList<MatchUp> individualMatchUpsDataSet = new ArrayList<>();
+    private ArrayList<ChartsCollection> globalAndMatchUpsCharts = new ArrayList<>();
+    // The type of data we present in chartView
+    private final int FOR_GLOBAL = 0;
+    private final int FOR_MATCHUP = 1;
+    private final int OF_TYPE_PCT = 0;
+    private final int OF_TYPE_NUM_WINS = 1;
+    private final int OF_TYPE_NUM_LOSS = 2;
+    private final int OF_TYPE_NUM_DRW = 3;
 
     public static final String ARG_COLUMN_COUNT = "column-count";
     private int mColumnCount = 1;
@@ -53,11 +78,6 @@ public class ArenaFragment extends Fragment {
     private TabLayout tabLayout;
     private int matchUpIndex; // -1 is global arena data Set. 0 or positive number is an individual matchUP
     private NavDrawer parentActivity;
-
-
-
-
-
 
     public RingGlobal getGlobalDataSet() {
         return globalDataSet;
@@ -307,6 +327,102 @@ public class ArenaFragment extends Fragment {
 
 
 
+
+    }
+
+    // init globalAndMatchUpsCharts
+    private void setCharts() {
+
+        for (int i = 0; i < globalAndMatchUpsCharts.size() ; i++) {
+            ChartsCollection chartsCollection;
+            if (i ==0){
+                //global
+                ArrayList<Chart> collection = new ArrayList<>();
+
+                    // PCT
+                    pointDataSets.clear();
+                    for (int j = 0; j < globalDataSet.getUserStats().size(); j++) {
+                        pointDataSets.add(new PointDataSet((float) (j + 1), (float) globalDataSet.getUserStats().get(j).getPct())); //to make sure xValue sorted
+                    }
+                    Chart chart = new Chart(pointDataSets);
+                    collection.add(chart);
+
+                    // #wins
+                    pointDataSets.clear();
+                    for (int j = 0; j < globalDataSet.getUserStats().size(); j++) {
+                        pointDataSets.add(new PointDataSet((float) (j + 1), (float) globalDataSet.getUserStats().get(j).getWin())); //to make sure xValue sorted
+                    }
+                    chart = new Chart(pointDataSets);
+                    collection.add(chart);
+
+
+                    // #loss
+                    pointDataSets.clear();
+                    for (int j = 0; j < globalDataSet.getUserStats().size(); j++) {
+                        pointDataSets.add(new PointDataSet((float) (j + 1), (float) globalDataSet.getUserStats().get(j).getLos())); //to make sure xValue sorted
+                    }
+                    chart = new Chart(pointDataSets);
+                    collection.add(chart);
+
+
+                    // #drw
+                    pointDataSets.clear();
+                    for (int j = 0; j < globalDataSet.getUserStats().size(); j++) {
+                        pointDataSets.add(new PointDataSet((float) (j + 1), (float) globalDataSet.getUserStats().get(j).getDrw())); //to make sure xValue sorted
+                    }
+                    chart = new Chart(pointDataSets);
+                    collection.add(chart);
+
+
+                chartsCollection = new ChartsCollection(collection);
+
+                globalAndMatchUpsCharts.add(chartsCollection);
+
+
+            } else {
+                // matchup
+                ArrayList<Chart> collection = new ArrayList<>();
+
+                // PCT
+                pointDataSets.clear();
+                for (int j = 0; j < 2; j++) {
+                    pointDataSets.add(new PointDataSet((float) (j + 1), (float) individualMatchUpsDataSet.get(i-1).getPlayers().get(j).getPct())); //to make sure xValue sorted
+                }
+                Chart chart = new Chart(pointDataSets);
+                collection.add(chart);
+
+                // #wins
+                pointDataSets.clear();
+                for (int j = 0; j < 2; j++) {
+                    pointDataSets.add(new PointDataSet((float) (j + 1), (float) individualMatchUpsDataSet.get(i-1).getPlayers().get(j).getWin())); //to make sure xValue sorted
+                }
+                chart = new Chart(pointDataSets);
+                collection.add(chart);
+
+
+                // #loss
+                pointDataSets.clear();
+                for (int j = 0; j < 2; j++) {
+                    pointDataSets.add(new PointDataSet((float) (j + 1), (float) individualMatchUpsDataSet.get(i-1).getPlayers().get(j).getLos())); //to make sure xValue sorted
+                }
+                chart = new Chart(pointDataSets);
+                collection.add(chart);
+
+
+                // #drw
+                pointDataSets.clear();
+                for (int j = 0; j < 2; j++) {
+                    pointDataSets.add(new PointDataSet((float) (j + 1), (float) individualMatchUpsDataSet.get(i-1).getPlayers().get(j).getDrw())); //to make sure xValue sorted
+                }
+                chart = new Chart(pointDataSets);
+                collection.add(chart);
+
+
+                chartsCollection = new ChartsCollection(collection);
+
+                globalAndMatchUpsCharts.add(chartsCollection);
+            }
+        }
 
     }
 

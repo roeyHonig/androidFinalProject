@@ -40,6 +40,7 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     implementation 'com.android.support:design:27.1.0'
     implementation 'com.github.mklimek:circle-initials-view:1.0.9'
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
 
 }
 
