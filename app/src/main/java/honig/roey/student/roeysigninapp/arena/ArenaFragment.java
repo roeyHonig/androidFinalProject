@@ -18,6 +18,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
@@ -41,14 +44,14 @@ public class ArenaFragment extends Fragment {
 
     private BarData barData;
     private BarChart chart;
-    private IAxisValueFormatter formatter;
+    private static IAxisValueFormatter formatter;
 
 
-    private RingGlobal globalDataSet = new RingGlobal();
-    private String[] names = new String[globalDataSet.getUserStats().size()]; // BarChart XAxis Labels - names of the players
+    private static RingGlobal globalDataSet = new RingGlobal();
+    private static String[] names = setChartsXAxisLabels();
     private ArrayList<MatchUp> individualMatchUpsDataSet = new ArrayList<>();
     private ArrayList<ChartsCollection> globalAndMatchUpsCharts = new ArrayList<>();     // retrived data from the DB
-    private ArrayList<SetCollection> globalAndMatchUpsBarChartsData = new ArrayList<>(); // retrived data from the DB arranged in special class (BarData) for the mChart
+    private static ArrayList<SetCollection> globalAndMatchUpsBarChartsData = new ArrayList<>(); // retrived data from the DB arranged in special class (BarData) for the mChart
     // The type of data we present in chartView
     private final int FOR_GLOBAL = 0;
     private final int FOR_MATCHUP = 1;
@@ -211,6 +214,11 @@ public class ArenaFragment extends Fragment {
         private int matchUpIndex = -1;
         private ArrayList<UserStat> globalUserStats;
 
+        private BarData barData;
+        private BarChart chart;
+        private BarDataSet set;
+
+
         public void setClicksOnFab(int matchUpIndex) {
             this.matchUpIndex = matchUpIndex;
         }
@@ -242,48 +250,73 @@ public class ArenaFragment extends Fragment {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.stat_page, container, false);
-            textView = (TextView) rootView.findViewById(R.id.section_label);
+            //textView = (TextView) rootView.findViewById(R.id.section_label);
+            chart =  rootView.findViewById(R.id.chart);
+            formatter = new IAxisValueFormatter() {
+                @Override
+                public String getFormattedValue(float value, AxisBase axis) {
+                    return names[(int) (value-1)];
+                }
+            };
 
-            String tmp = "";
-            switch (getArguments().getInt(ARG_SECTION_NUMBER)){
-                case 1:
-                    //pct
-                    for (UserStat globalPlayer: globalUserStats ) {
-                        tmp += " *** ";
-                        tmp += globalPlayer.getFullName() + " pct% is: " + globalPlayer.getPct();
-                    }
-                    textView.setText(tmp);
-                    break;
-                case 2:
-                    //loss
-                    for (UserStat globalPlayer: globalUserStats ) {
-                        tmp += " *** ";
-                        tmp += globalPlayer.getFullName() + " #loss is: " + globalPlayer.getLos();
-                    }
-                    textView.setText(tmp);
-                    break;
-                case 3:
-                    // drw
-                    for (UserStat globalPlayer: globalUserStats ) {
-                        tmp += " *** ";
-                        tmp += globalPlayer.getFullName() + " #drw is: " + globalPlayer.getDrw();
-                    }
-                    textView.setText(tmp);
-                    break;
-                case 4:
-                    //win
-                    for (UserStat globalPlayer: globalUserStats ) {
-                        tmp += " *** ";
-                        tmp += globalPlayer.getFullName() + " #win is: " + globalPlayer.getWin();
-                    }
-                    textView.setText(tmp);
-                    break;
-                default:
-                    break;
+            int sectionNumber = getArguments().getInt(ARG_SECTION_NUMBER) ;
+            // TODO: it's 0, meaning global, next step, all of the matchups as well
+            //TODO: right now: section 1 -> pct , section 2 -> win , section 3 -> los , section 4 -> drw
+            set = globalAndMatchUpsBarChartsData.get(0).setCollection.get(sectionNumber-1);
+            setBarChart(set);
 
-            }
             return rootView;
         }
+
+
+        private void setBarChart(BarDataSet set) {
+            barData = new BarData(set);
+            barData.setBarWidth(0.9f); // set custom bar width
+            chart.setData(barData);
+
+
+            // .. and more styling options
+            //chart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
+            chart.setPinchZoom(true); // zooming X & Y Axis at one gesture
+
+            // disable highlight of values by the user's gestures
+            chart.setHighlightPerDragEnabled(false);
+            chart.setHighlightPerTapEnabled(false);
+
+            XAxis xAxis = chart.getXAxis();
+
+        /*
+        This will prevent the formatter from drawing duplicate axis labels (caused by axis intervals < 1).
+        As soon as the "zoom level" of the chart is high enough, it will stop recalculating smaller intervals.
+         */
+            xAxis.setGranularity(1f); // minimum axis-step (interval) is 1
+
+            xAxis.setValueFormatter(formatter);
+            xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+            //xAxis.setTextSize();
+
+
+            chart.getAxisLeft().setAxisMinimum(0f);
+            chart.getAxisRight().setAxisMinimum(0f);
+
+            // Sets the Legend enabled or disabled
+            chart.getLegend().setEnabled(false);
+
+            //chart.setFitBars(true); // make the x-axis fit \ or not exactly all bars
+            // only 3 bars at the viewport
+            chart.setVisibleXRange(0,3);
+            // HighLight the Max Value
+            //chart.highlightValue(4,0);
+            // set an emphty ("") description in the right bottom corrner of the chart
+            Description description = new Description();
+            description.setText("");
+            chart.setDescription(description);
+
+            chart.invalidate(); // refresh
+        }
+
+
+
     }
 
 
@@ -344,6 +377,9 @@ public class ArenaFragment extends Fragment {
         */
 
         for (int i = 0; i < individualMatchUpsDataSet.size() + 1 ; i++) {
+            globalAndMatchUpsCharts.clear();
+            globalAndMatchUpsBarChartsData.clear();
+
             ChartsCollection chartsCollection;
             SetCollection barSetCollection;
             if (i ==0){
@@ -538,6 +574,14 @@ public class ArenaFragment extends Fragment {
             }
         }
 
+    }
+    // set the names of the players as the X-Axis labels for all charts
+    private static String[] setChartsXAxisLabels(){
+        String[] names = new String[globalDataSet.getUserStats().size()]; // BarChart XAxis Labels - names of the players
+        for (int i = 0; i < globalDataSet.getUserStats().size(); i++) {
+            names[i] = globalDataSet.getUserStats().get(i).getFullName();
+        }
+        return names;
     }
 
 
