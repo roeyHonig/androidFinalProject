@@ -101,7 +101,7 @@ public class ArenaFragment extends Fragment {
             globalDataSet.setNumPlayers(getArguments().getInt("argNumPlayers"));
             individualMatchUpsDataSet = getArguments().getParcelableArrayList("argMatchUpsDataArrayList");
 
-
+            setCharts();
 
 
         }
