@@ -274,12 +274,12 @@ public class ArenaFragment extends Fragment {
                 pointDataSets.add(new PointDataSet(3f,2f));
                 pointDataSets.add(new PointDataSet(4f,7f));
             } else {
-                pointDataSets.add(new PointDataSet(1f,7f));
+                pointDataSets.add(new PointDataSet(1f,(float) globalDataSet.getUserStats().get(0).getWin()));
                 pointDataSets.add(new PointDataSet(2f,2f));
                 pointDataSets.add(new PointDataSet(3f,3f));
                 pointDataSets.add(new PointDataSet(4f,1f));
             }
-            
+
 
 
             for (PointDataSet data : pointDataSets) {
