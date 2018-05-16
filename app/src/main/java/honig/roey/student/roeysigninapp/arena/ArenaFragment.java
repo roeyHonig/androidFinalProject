@@ -40,15 +40,14 @@ import honig.roey.student.roeysigninapp.tables.UserStat;
  */
 public class ArenaFragment extends Fragment {
 
-    private ArrayList<PointDataSet> pointDataSets = new ArrayList<>();
+    //private ArrayList<PointDataSet> pointDataSets = new ArrayList<>();
 
-    private BarData barData;
-    private BarChart chart;
+
     private static IAxisValueFormatter formatter;
 
 
     private static RingGlobal globalDataSet = new RingGlobal();
-    private static String[] names = setChartsXAxisLabels();
+    private static String[] names;
     private ArrayList<MatchUp> individualMatchUpsDataSet = new ArrayList<>();
     private ArrayList<ChartsCollection> globalAndMatchUpsCharts = new ArrayList<>();     // retrived data from the DB
     private static ArrayList<SetCollection> globalAndMatchUpsBarChartsData = new ArrayList<>(); // retrived data from the DB arranged in special class (BarData) for the mChart
@@ -104,6 +103,7 @@ public class ArenaFragment extends Fragment {
             globalDataSet.setNumPlayers(getArguments().getInt("argNumPlayers"));
             individualMatchUpsDataSet = getArguments().getParcelableArrayList("argMatchUpsDataArrayList");
 
+            names = setChartsXAxisLabels();
             setCharts();
 
 
@@ -214,9 +214,7 @@ public class ArenaFragment extends Fragment {
         private int matchUpIndex = -1;
         private ArrayList<UserStat> globalUserStats;
 
-        private BarData barData;
-        private BarChart chart;
-        private BarDataSet set;
+
 
 
         public void setClicksOnFab(int matchUpIndex) {
@@ -249,9 +247,14 @@ public class ArenaFragment extends Fragment {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
+
+            ArrayList<PointDataSet> pointDataSets = new ArrayList<>();
+            List<BarEntry> entries = new ArrayList<>();
+
             View rootView = inflater.inflate(R.layout.stat_page, container, false);
+            //TODO: if no arguments came, set something insted of the chart
             //textView = (TextView) rootView.findViewById(R.id.section_label);
-            chart =  rootView.findViewById(R.id.chart);
+            BarChart chart =  rootView.findViewById(R.id.chart);
             formatter = new IAxisValueFormatter() {
                 @Override
                 public String getFormattedValue(float value, AxisBase axis) {
@@ -259,17 +262,66 @@ public class ArenaFragment extends Fragment {
                 }
             };
 
+            //chart.setVisibility(View.GONE);
             int sectionNumber = getArguments().getInt(ARG_SECTION_NUMBER) ;
             // TODO: it's 0, meaning global, next step, all of the matchups as well
             //TODO: right now: section 1 -> pct , section 2 -> win , section 3 -> los , section 4 -> drw
-            set = globalAndMatchUpsBarChartsData.get(0).setCollection.get(sectionNumber-1);
-            setBarChart(set);
+            //BarDataSet set = globalAndMatchUpsBarChartsData.get(0).setCollection.get(sectionNumber-1);
+
+            if (sectionNumber == 1) {
+                pointDataSets.add(new PointDataSet(1f,1f));
+                pointDataSets.add(new PointDataSet(2f,3f));
+                pointDataSets.add(new PointDataSet(3f,2f));
+                pointDataSets.add(new PointDataSet(4f,7f));
+            } else {
+                pointDataSets.add(new PointDataSet(1f,7f));
+                pointDataSets.add(new PointDataSet(2f,2f));
+                pointDataSets.add(new PointDataSet(3f,3f));
+                pointDataSets.add(new PointDataSet(4f,1f));
+            }
+            
+
+
+            for (PointDataSet data : pointDataSets) {
+                // turn your data into Entry objects
+                entries.add(new BarEntry(data.getxValue(), data.getyValue()));
+            }
+
+            BarDataSet set = new BarDataSet(entries, "BarDataSet");
+
+            setset(chart,set, sectionNumber);
+
+            /*
+            switch (getArguments().getInt(ARG_SECTION_NUMBER)){
+                case 1:
+                    set = globalAndMatchUpsBarChartsData.get(0).setCollection.get(getArguments().getInt(ARG_SECTION_NUMBER)-1);
+                    setBarChart(set);
+                    break;
+                case 2:
+                    set = globalAndMatchUpsBarChartsData.get(0).setCollection.get(getArguments().getInt(ARG_SECTION_NUMBER)-1);
+                    setBarChart(set);
+                    break;
+                case 3:
+                    set = globalAndMatchUpsBarChartsData.get(0).setCollection.get(getArguments().getInt(ARG_SECTION_NUMBER)-1);
+                    setBarChart(set);
+                    break;
+                case 4:
+                    set = globalAndMatchUpsBarChartsData.get(0).setCollection.get(getArguments().getInt(ARG_SECTION_NUMBER)-1);
+                    setBarChart(set);
+                    break;
+            }
+            */
+
+
+
+
+
 
             return rootView;
         }
 
-
-        private void setBarChart(BarDataSet set) {
+        public void setset(BarChart chart, BarDataSet set, int sectionNumber) {
+            BarData barData;
             barData = new BarData(set);
             barData.setBarWidth(0.9f); // set custom bar width
             chart.setData(barData);
@@ -298,21 +350,33 @@ public class ArenaFragment extends Fragment {
 
             chart.getAxisLeft().setAxisMinimum(0f);
             chart.getAxisRight().setAxisMinimum(0f);
+            chart.getAxisLeft().setAxisMaximum(10f);
+            chart.getAxisRight().setAxisMaximum(10f);
 
             // Sets the Legend enabled or disabled
-            chart.getLegend().setEnabled(false);
+            chart.getLegend().setEnabled(true);
 
             //chart.setFitBars(true); // make the x-axis fit \ or not exactly all bars
+
             // only 3 bars at the viewport
-            chart.setVisibleXRange(0,3);
+            chart.setVisibleXRange(0,4);
+
             // HighLight the Max Value
             //chart.highlightValue(4,0);
+
             // set an emphty ("") description in the right bottom corrner of the chart
             Description description = new Description();
-            description.setText("");
+            description.setText(""+sectionNumber);
             chart.setDescription(description);
 
+
+
             chart.invalidate(); // refresh
+        }
+
+
+        private void ssetBarChart(BarDataSet set) {
+
         }
 
 
@@ -375,37 +439,41 @@ public class ArenaFragment extends Fragment {
 
         set = new BarDataSet(entries, "BarDataSet");
         */
-
+        globalAndMatchUpsCharts.clear();
+        globalAndMatchUpsBarChartsData.clear();
         for (int i = 0; i < individualMatchUpsDataSet.size() + 1 ; i++) {
-            globalAndMatchUpsCharts.clear();
-            globalAndMatchUpsBarChartsData.clear();
+
 
             ChartsCollection chartsCollection;
             SetCollection barSetCollection;
             if (i ==0){
                 //global
+                ArrayList<PointDataSet> pointDataSets = new ArrayList<>();
                 ArrayList<Chart> collection = new ArrayList<>();
                 ArrayList<BarDataSet> setCollection = new ArrayList<>();
                 List<BarEntry> entries = new ArrayList<>();
-                BarDataSet set;
 
-                    // PCT
+
+
+
+
+                // PCT
                     pointDataSets.clear();
                     entries.clear();
 
                     for (int j = 0; j < globalDataSet.getUserStats().size(); j++) {
-                        pointDataSets.add(new PointDataSet((float) (j + 1), (float) globalDataSet.getUserStats().get(j).getPct())); //to make sure xValue sorted
+                        //pointDataSets.add(new PointDataSet((float) (j + 1), (float) globalDataSet.getUserStats().get(j).getPct())); //to make sure xValue sorted
+                        pointDataSets.add(new PointDataSet(j+1f,5f)); //to make sure xValue sorted
                     }
-                    Chart chart = new Chart(pointDataSets);
-                    collection.add(chart);
+                    //Chart chart = new Chart(pointDataSets);
+                    //collection.add(chart);
 
                     // turn your data into Entry objects
                     for (PointDataSet data: pointDataSets) {
                         entries.add(new BarEntry(data.getxValue(), data.getyValue()));
-                        set = new BarDataSet(entries, "PCT");
+                        BarDataSet set = new BarDataSet(entries, "PCT");
                         setCollection.add(set);
                     }
-
 
 
 
@@ -414,17 +482,20 @@ public class ArenaFragment extends Fragment {
                     entries.clear();
 
                     for (int j = 0; j < globalDataSet.getUserStats().size(); j++) {
-                        pointDataSets.add(new PointDataSet((float) (j + 1), (float) globalDataSet.getUserStats().get(j).getWin())); //to make sure xValue sorted
+                        //pointDataSets.add(new PointDataSet((float) (j + 1), (float) globalDataSet.getUserStats().get(j).getWin())); //to make sure xValue sorted
+                        pointDataSets.add(new PointDataSet(j+1f,1f*j+1)); //to make sure xValue sorted
+
                     }
-                    chart = new Chart(pointDataSets);
-                    collection.add(chart);
+                    //chart = new Chart(pointDataSets);
+                    //collection.add(chart);
 
                     // turn your data into Entry objects
                     for (PointDataSet data: pointDataSets) {
                         entries.add(new BarEntry(data.getxValue(), data.getyValue()));
-                        set = new BarDataSet(entries, "WIN");
+                        BarDataSet set = new BarDataSet(entries, "WIN");
                         setCollection.add(set);
                     }
+
 
 
 
@@ -436,13 +507,13 @@ public class ArenaFragment extends Fragment {
                     for (int j = 0; j < globalDataSet.getUserStats().size(); j++) {
                         pointDataSets.add(new PointDataSet((float) (j + 1), (float) globalDataSet.getUserStats().get(j).getLos())); //to make sure xValue sorted
                     }
-                    chart = new Chart(pointDataSets);
-                    collection.add(chart);
+                    //chart = new Chart(pointDataSets);
+                    //collection.add(chart);
 
                     // turn your data into Entry objects
                     for (PointDataSet data: pointDataSets) {
                         entries.add(new BarEntry(data.getxValue(), data.getyValue()));
-                        set = new BarDataSet(entries, "LOS");
+                        BarDataSet set = new BarDataSet(entries, "LOS");
                         setCollection.add(set);
                     }
 
@@ -456,13 +527,13 @@ public class ArenaFragment extends Fragment {
                     for (int j = 0; j < globalDataSet.getUserStats().size(); j++) {
                         pointDataSets.add(new PointDataSet((float) (j + 1), (float) globalDataSet.getUserStats().get(j).getDrw())); //to make sure xValue sorted
                     }
-                    chart = new Chart(pointDataSets);
-                    collection.add(chart);
+                    //chart = new Chart(pointDataSets);
+                    //collection.add(chart);
 
                     // turn your data into Entry objects
                     for (PointDataSet data: pointDataSets) {
                         entries.add(new BarEntry(data.getxValue(), data.getyValue()));
-                        set = new BarDataSet(entries, "DRW");
+                        BarDataSet set = new BarDataSet(entries, "DRW");
                         setCollection.add(set);
                     }
 
@@ -479,10 +550,11 @@ public class ArenaFragment extends Fragment {
 
             } else {
                 // matchup
+                ArrayList<PointDataSet> pointDataSets = new ArrayList<>();
                 ArrayList<Chart> collection = new ArrayList<>();
                 ArrayList<BarDataSet> setCollection = new ArrayList<>();
                 List<BarEntry> entries = new ArrayList<>();
-                BarDataSet set;
+
 
                 // PCT
                 pointDataSets.clear();
@@ -491,13 +563,13 @@ public class ArenaFragment extends Fragment {
                 for (int j = 0; j < 2; j++) {
                     pointDataSets.add(new PointDataSet((float) (j + 1), (float) individualMatchUpsDataSet.get(i-1).getPlayers().get(j).getPct())); //to make sure xValue sorted
                 }
-                Chart chart = new Chart(pointDataSets);
-                collection.add(chart);
+                //Chart chart = new Chart(pointDataSets);
+                //collection.add(chart);
 
                 // turn your data into Entry objects
                 for (PointDataSet data: pointDataSets) {
                     entries.add(new BarEntry(data.getxValue(), data.getyValue()));
-                    set = new BarDataSet(entries, "PCT");
+                    BarDataSet set = new BarDataSet(entries, "PCT");
                     setCollection.add(set);
                 }
 
@@ -511,13 +583,13 @@ public class ArenaFragment extends Fragment {
                 for (int j = 0; j < 2; j++) {
                     pointDataSets.add(new PointDataSet((float) (j + 1), (float) individualMatchUpsDataSet.get(i-1).getPlayers().get(j).getWin())); //to make sure xValue sorted
                 }
-                chart = new Chart(pointDataSets);
-                collection.add(chart);
+                //chart = new Chart(pointDataSets);
+                //collection.add(chart);
 
                 // turn your data into Entry objects
                 for (PointDataSet data: pointDataSets) {
                     entries.add(new BarEntry(data.getxValue(), data.getyValue()));
-                    set = new BarDataSet(entries, "WIN");
+                    BarDataSet set = new BarDataSet(entries, "WIN");
                     setCollection.add(set);
                 }
 
@@ -531,13 +603,13 @@ public class ArenaFragment extends Fragment {
                 for (int j = 0; j < 2; j++) {
                     pointDataSets.add(new PointDataSet((float) (j + 1), (float) individualMatchUpsDataSet.get(i-1).getPlayers().get(j).getLos())); //to make sure xValue sorted
                 }
-                chart = new Chart(pointDataSets);
-                collection.add(chart);
+                //chart = new Chart(pointDataSets);
+                //collection.add(chart);
 
                 // turn your data into Entry objects
                 for (PointDataSet data: pointDataSets) {
                     entries.add(new BarEntry(data.getxValue(), data.getyValue()));
-                    set = new BarDataSet(entries, "LOS");
+                    BarDataSet set = new BarDataSet(entries, "LOS");
                     setCollection.add(set);
                 }
 
@@ -551,13 +623,13 @@ public class ArenaFragment extends Fragment {
                 for (int j = 0; j < 2; j++) {
                     pointDataSets.add(new PointDataSet((float) (j + 1), (float) individualMatchUpsDataSet.get(i-1).getPlayers().get(j).getDrw())); //to make sure xValue sorted
                 }
-                chart = new Chart(pointDataSets);
-                collection.add(chart);
+                //chart = new Chart(pointDataSets);
+                //collection.add(chart);
 
                 // turn your data into Entry objects
                 for (PointDataSet data: pointDataSets) {
                     entries.add(new BarEntry(data.getxValue(), data.getyValue()));
-                    set = new BarDataSet(entries, "DRW");
+                    BarDataSet set = new BarDataSet(entries, "DRW");
                     setCollection.add(set);
                 }
 
