@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.AxisBase;
@@ -157,7 +158,7 @@ public class ArenaFragment extends Fragment {
             // which is another inner class in this activity.
             // The PlaceholderFragment object is responsiable to the content of the page section
             // how does he knows the page section, he get's it as an argument from the SectionsPagerAdapter
-            mSectionsPagerAdapter = new SectionsPagerAdapter(parentActivity.getSupportFragmentManager(), matchUpIndex, globalAndMatchUpsCharts);
+            mSectionsPagerAdapter = new SectionsPagerAdapter(getChildFragmentManager(), matchUpIndex, globalAndMatchUpsCharts);
 
             mViewPager = (ViewPager) view.findViewById(R.id.container);
             // Set up the ViewPager with the sections adapter.
@@ -178,18 +179,22 @@ public class ArenaFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         parentActivity = (NavDrawer) getActivity();
+
         if (context instanceof MatchUpsFragment.OnListFragmentInteractionListener) {
             mListener = (ArenaFragment.OnListFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnListFragmentInteractionListener");
         }
+
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
+
+
     }
 
     /**
