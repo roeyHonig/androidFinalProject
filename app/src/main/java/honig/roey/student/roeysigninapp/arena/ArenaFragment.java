@@ -381,7 +381,10 @@ public class ArenaFragment extends Fragment {
 
             // set an emphty ("") description in the right bottom corrner of the chart
             Description description = new Description();
-            description.setText(""+sectionNumber+" ** " + globalAndMatchUpsCharts.get(0).chartsCollection.get(2).chart.get(2).getyValue());
+            description.setText(""+sectionNumber+" ** " + globalAndMatchUpsCharts.get(0).chartsCollection.get(3).chart.get(0).getyValue()+ " " +
+                    globalAndMatchUpsCharts.get(0).chartsCollection.get(3).chart.get(1).getyValue()+ " " +
+                    globalAndMatchUpsCharts.get(0).chartsCollection.get(3).chart.get(2).getyValue()+ " " +
+                    globalAndMatchUpsCharts.get(0).chartsCollection.get(3).chart.get(3).getyValue());
             chart.setDescription(description);
 
 
@@ -450,56 +453,64 @@ public class ArenaFragment extends Fragment {
 
         globalAndMatchUpsCharts.clear();
         for (int i = 0; i < individualMatchUpsDataSet.size() + 1 ; i++) {
-
+            ArrayList<Chart> collection = new ArrayList<>(); //TODO: not hardcoded
            // ChartsCollection chartsCollection;
             if (i ==0){
                 //global
-                ArrayList<PointDataSet> pointDataSets = new ArrayList<>();
-                ArrayList<Chart> collection = new ArrayList<>();
 
 
-                  // PCT
-                    pointDataSets.clear();
+
+
+                    // PCT
+                    ArrayList<PointDataSet> pointDataSetsPct = new ArrayList<>();
+                    //pointDataSets.clear();
                     for (int j = 0; j < globalDataSet.getUserStats().size(); j++) {
-                        pointDataSets.add(new PointDataSet((float) (j + 1), (float) globalDataSet.getUserStats().get(j).getPct())); //to make sure xValue sorted
+                        pointDataSetsPct.add(new PointDataSet((float) (j + 1), (float) globalDataSet.getUserStats().get(j).getPct())); //to make sure xValue sorted
                     }
-                    Chart chart = new Chart(pointDataSets);
-                    collection.add(chart);
-
+                    Chart pct = new Chart(pointDataSetsPct);
+                    collection.add(pct);
+                    //collection.set(0,pct);
 
                     // #wins
-                    pointDataSets.clear();
+                ArrayList<PointDataSet> pointDataSetsWin = new ArrayList<>();
+                //pointDataSets.clear();
                     for (int j = 0; j < globalDataSet.getUserStats().size(); j++) {
-                        pointDataSets.add(new PointDataSet((float) (j + 1), (float) globalDataSet.getUserStats().get(j).getWin())); //to make sure xValue sorted
+                        pointDataSetsWin.add(new PointDataSet((float) (j + 1), (float) globalDataSet.getUserStats().get(j).getWin())); //to make sure xValue sorted
 
                     }
-                    chart = new Chart(pointDataSets);
-                    collection.add(chart);
+                    Chart wins = new Chart(pointDataSetsWin);
+                    collection.add(wins);
+                    //collection.set(1,wins);
 
                     // #loss
-                    pointDataSets.clear();
+                ArrayList<PointDataSet> pointDataSetsLos = new ArrayList<>();
+                //pointDataSets.clear();
                     for (int j = 0; j < globalDataSet.getUserStats().size(); j++) {
-                        pointDataSets.add(new PointDataSet((float) (j + 1), (float) globalDataSet.getUserStats().get(j).getLos())); //to make sure xValue sorted
+                        pointDataSetsLos.add(new PointDataSet((float) (j + 1), (float) globalDataSet.getUserStats().get(j).getLos())); //to make sure xValue sorted
                     }
-                    chart = new Chart(pointDataSets);
-                    collection.add(chart);
+                    Chart los = new Chart(pointDataSetsLos);
+                    collection.add(los);
+                    //collection.set(2,los);
 
                      // #drw
-                    pointDataSets.clear();
+                ArrayList<PointDataSet> pointDataSetsDrw = new ArrayList<>();
+               // pointDataSets.clear();
 
                     for (int j = 0; j < globalDataSet.getUserStats().size(); j++) {
-                        pointDataSets.add(new PointDataSet((float) (j + 1), (float) globalDataSet.getUserStats().get(j).getDrw())); //to make sure xValue sorted
+                        pointDataSetsDrw.add(new PointDataSet((float) (j + 1), (float) globalDataSet.getUserStats().get(j).getDrw())); //to make sure xValue sorted
                     }
-                    chart = new Chart(pointDataSets);
-                    collection.add(chart);
+                    Chart drw = new Chart(pointDataSetsDrw);
+                    collection.add(drw);
+
+                    //collection.set(3,drw);
 
 
 
-                ChartsCollection chartsCollection = new ChartsCollection(collection);
-                globalAndMatchUpsCharts.add(chartsCollection);
+
 
 
             } else {
+                /*
                 // matchup
                 ArrayList<PointDataSet> pointDataSets = new ArrayList<>();
                 ArrayList<Chart> collection = new ArrayList<>();
@@ -550,8 +561,13 @@ public class ArenaFragment extends Fragment {
                 ChartsCollection chartsCollection = new ChartsCollection(collection);
                 globalAndMatchUpsCharts.add(chartsCollection);
 
-
+                */
             }
+
+
+
+            ChartsCollection chartsCollection = new ChartsCollection(collection);
+            globalAndMatchUpsCharts.add(chartsCollection);
         }
 
     }
