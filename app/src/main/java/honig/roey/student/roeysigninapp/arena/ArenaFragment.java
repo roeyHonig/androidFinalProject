@@ -206,7 +206,7 @@ public class ArenaFragment extends Fragment {
 
 
     /**
-     * A placeholder fragment containing a simple view.
+     * A placeholder fragment containing a single chart
      * This Fragment represent a single page \ section of the tabbed area in the ArenaFragment
      */
     public static class PlaceholderFragment extends Fragment {
@@ -224,7 +224,7 @@ public class ArenaFragment extends Fragment {
 
 
 
-
+        //TODO: cancel this fab event
         public void setClicksOnFab(int matchUpIndex) {
             this.matchUpIndex = matchUpIndex;
         }
@@ -275,14 +275,7 @@ public class ArenaFragment extends Fragment {
 
             //chart.setVisibility(View.GONE);
 
-            // TODO: it's 0, meaning global, next step, all of the matchups as well
-            //TODO: right now: section 1 -> pct , section 2 -> win , section 3 -> los , section 4 -> drw
-            //BarDataSet set = globalAndMatchUpsBarChartsData.get(0).setCollection.get(sectionNumber-1);
-
-
-
-
-
+            /*
             if (sectionNumber == 1) {
                 pointDataSets.add(new PointDataSet(1f,1f));
                 pointDataSets.add(new PointDataSet(2f,3f));
@@ -294,7 +287,12 @@ public class ArenaFragment extends Fragment {
                 pointDataSets.add(new PointDataSet(3f,3f));
                 pointDataSets.add(new PointDataSet(4f,1f));
             }
+            */
 
+            //iterate over all players
+            for (int i = 0; i < names.length ; i++) {
+                pointDataSets.add(new PointDataSet(1f+i, globalAndMatchUpsCharts.get(this.matchUpIndex + 1).chartsCollection.get(this.sectionNumber-1).chart.get(i).getyValue()));
+            }
 
 
             for (PointDataSet data : pointDataSets) {
@@ -304,38 +302,14 @@ public class ArenaFragment extends Fragment {
 
             BarDataSet set = new BarDataSet(entries, "BarDataSet");
 
-            setset(chart,set, sectionNumber);
-
-            /*
-            switch (getArguments().getInt(ARG_SECTION_NUMBER)){
-                case 1:
-                    set = globalAndMatchUpsBarChartsData.get(0).setCollection.get(getArguments().getInt(ARG_SECTION_NUMBER)-1);
-                    setBarChart(set);
-                    break;
-                case 2:
-                    set = globalAndMatchUpsBarChartsData.get(0).setCollection.get(getArguments().getInt(ARG_SECTION_NUMBER)-1);
-                    setBarChart(set);
-                    break;
-                case 3:
-                    set = globalAndMatchUpsBarChartsData.get(0).setCollection.get(getArguments().getInt(ARG_SECTION_NUMBER)-1);
-                    setBarChart(set);
-                    break;
-                case 4:
-                    set = globalAndMatchUpsBarChartsData.get(0).setCollection.get(getArguments().getInt(ARG_SECTION_NUMBER)-1);
-                    setBarChart(set);
-                    break;
-            }
-            */
-
-
-
+            setSingleChart(chart,set, sectionNumber);
 
 
 
             return rootView;
         }
 
-        public void setset(BarChart chart, BarDataSet set, int sectionNumber) {
+        public void setSingleChart(BarChart chart, BarDataSet set, int sectionNumber) {
             BarData barData;
             barData = new BarData(set);
             barData.setBarWidth(0.9f); // set custom bar width
@@ -381,22 +355,13 @@ public class ArenaFragment extends Fragment {
 
             // set an emphty ("") description in the right bottom corrner of the chart
             Description description = new Description();
-            description.setText(""+sectionNumber+" ** " + globalAndMatchUpsCharts.get(0).chartsCollection.get(3).chart.get(0).getyValue()+ " " +
-                    globalAndMatchUpsCharts.get(0).chartsCollection.get(3).chart.get(1).getyValue()+ " " +
-                    globalAndMatchUpsCharts.get(0).chartsCollection.get(3).chart.get(2).getyValue()+ " " +
-                    globalAndMatchUpsCharts.get(0).chartsCollection.get(3).chart.get(3).getyValue());
+            description.setText(""+sectionNumber);
             chart.setDescription(description);
 
 
 
             chart.invalidate(); // refresh
         }
-
-
-        private void ssetBarChart(BarDataSet set) {
-
-        }
-
 
 
     }
