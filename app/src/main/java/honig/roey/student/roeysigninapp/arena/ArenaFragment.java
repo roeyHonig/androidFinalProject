@@ -41,24 +41,11 @@ import honig.roey.student.roeysigninapp.tables.UserStat;
  */
 public class ArenaFragment extends Fragment {
 
-    //private ArrayList<PointDataSet> pointDataSets = new ArrayList<>();
-
-
-    private static IAxisValueFormatter formatter;
-
 
     private static RingGlobal globalDataSet = new RingGlobal();
 
     private static ArrayList<MatchUp> individualMatchUpsDataSet = new ArrayList<>();
     private ArrayList<ChartsCollection> globalAndMatchUpsCharts = new ArrayList<>();     // retrived data from the DB
-    private static ArrayList<SetCollection> globalAndMatchUpsBarChartsData = new ArrayList<>(); // retrived data from the DB arranged in special class (BarData) for the mChart
-    // The type of data we present in chartView
-    private final int FOR_GLOBAL = 0;
-    private final int FOR_MATCHUP = 1;
-    private final int OF_TYPE_PCT = 0;
-    private final int OF_TYPE_NUM_WINS = 1;
-    private final int OF_TYPE_NUM_LOSS = 2;
-    private final int OF_TYPE_NUM_DRW = 3;
 
     public static final String ARG_COLUMN_COUNT = "column-count";
     private int mColumnCount = 1;
@@ -79,7 +66,7 @@ public class ArenaFragment extends Fragment {
      */
     private ViewPager mViewPager;
     private TabLayout tabLayout;
-    private int matchUpIndex = -1; // -1 is global arena data Set. 0 or positive number is an individual matchUP
+    private int matchUpIndex = 3; // -1 is global arena data Set. 0 or positive number is an individual matchUP
     private NavDrawer parentActivity;
 
 
@@ -226,7 +213,7 @@ public class ArenaFragment extends Fragment {
         private int sectionNumber;
         private ArrayList<ChartsCollection> globalAndMatchUpsCharts;
         private static String[] names;
-
+        private static IAxisValueFormatter formatter;
 
 
 
@@ -353,7 +340,12 @@ public class ArenaFragment extends Fragment {
             //chart.setFitBars(true); // make the x-axis fit \ or not exactly all bars
 
             // only 3 bars at the viewport
-            chart.setVisibleXRange(0,4);
+            if (this.matchUpIndex == -1) {
+                chart.setVisibleXRange(0,4);
+            } else {
+                chart.setVisibleXRange(0,2);
+            }
+
 
             // HighLight the Max Value
             //chart.highlightValue(4,0);
@@ -486,7 +478,7 @@ public class ArenaFragment extends Fragment {
                     // #wins
                     ArrayList<PointDataSet> pointDataSetsWin = new ArrayList<>();
                     for (int j = 0; j < 2; j++) {
-                        pointDataSetsWin.add(new PointDataSet((float) (j + 1), (float) individualMatchUpsDataSet.get(i-1).getPlayers().get(j).getPct())); //to make sure xValue sorted
+                        pointDataSetsWin.add(new PointDataSet((float) (j + 1), (float) individualMatchUpsDataSet.get(i-1).getPlayers().get(j).getWin())); //to make sure xValue sorted
 
                     }
                     Chart wins = new Chart(pointDataSetsWin);
@@ -495,7 +487,7 @@ public class ArenaFragment extends Fragment {
                     // #loss
                     ArrayList<PointDataSet> pointDataSetsLos = new ArrayList<>();
                     for (int j = 0; j < 2; j++) {
-                        pointDataSetsLos.add(new PointDataSet((float) (j + 1), (float) individualMatchUpsDataSet.get(i-1).getPlayers().get(j).getPct())); //to make sure xValue sorted
+                        pointDataSetsLos.add(new PointDataSet((float) (j + 1), (float) individualMatchUpsDataSet.get(i-1).getPlayers().get(j).getLos())); //to make sure xValue sorted
                     }
                     Chart los = new Chart(pointDataSetsLos);
                     collection.add(los);
@@ -503,7 +495,7 @@ public class ArenaFragment extends Fragment {
                     // #drw
                     ArrayList<PointDataSet> pointDataSetsDrw = new ArrayList<>();
                     for (int j = 0; j < 2; j++) {
-                        pointDataSetsDrw.add(new PointDataSet((float) (j + 1), (float) individualMatchUpsDataSet.get(i-1).getPlayers().get(j).getPct())); //to make sure xValue sorted
+                        pointDataSetsDrw.add(new PointDataSet((float) (j + 1), (float) individualMatchUpsDataSet.get(i-1).getPlayers().get(j).getDrw())); //to make sure xValue sorted
                     }
                     Chart drw = new Chart(pointDataSetsDrw);
                     collection.add(drw);
