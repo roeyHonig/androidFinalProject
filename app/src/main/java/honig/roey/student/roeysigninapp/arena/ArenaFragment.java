@@ -183,6 +183,11 @@ public class ArenaFragment extends Fragment {
 
     }
 
+
+    public void onMatchUpListInteraction(String MatchUpKey) {
+        Toast.makeText(parentActivity,MatchUpKey + " says hello, this time, from the Arena Fragment",Toast.LENGTH_LONG).show();
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction between the RecyclerView's List Items

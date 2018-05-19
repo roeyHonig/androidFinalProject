@@ -1083,6 +1083,8 @@ public class NavDrawer extends AppCompatActivity
     @Override
     public void onMatchUpListInteraction(String specific2PlayersMatchUpKey) {
         //TODO: present data relating to the specific2PlayersMatchUpKey
-        Toast.makeText(this,specific2PlayersMatchUpKey + " says hello from the main activity",Toast.LENGTH_LONG).show();
+        //Toast.makeText(this,specific2PlayersMatchUpKey + " says hello from the main activity",Toast.LENGTH_LONG).show();
+        ArenaFragment arenaFragment = (ArenaFragment) getSupportFragmentManager().findFragmentById(R.id.appFragContainer);
+        arenaFragment.onMatchUpListInteraction(specific2PlayersMatchUpKey);
     }
 }
