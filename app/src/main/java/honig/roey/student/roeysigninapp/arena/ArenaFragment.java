@@ -215,7 +215,9 @@ public class ArenaFragment extends Fragment {
         private static String[] names;
         private static IAxisValueFormatter formatter;
 
-
+        public void setMatchUpIndex(int matchUpIndex) {
+            this.matchUpIndex = matchUpIndex;
+        }
 
         //TODO: cancel this fab event
         public void setClicksOnFab(int matchUpIndex) {
