@@ -239,6 +239,14 @@ public class ArenaFragment extends Fragment {
             return fragment;
         }
 
+        @Override
+        public void onCreate(@Nullable Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            this.matchUpIndex = getArguments().getInt(ARG_MATCHUP_INDEX);
+            this.globalAndMatchUpsCharts = getArguments().getParcelableArrayList(ARG_GLOBAL_DATA);
+            this.sectionNumber = getArguments().getInt(ARG_SECTION_NUMBER) ;
+        }
+
         // since we're using an extenstion of FragmentPagerAdapter, the fragments -representing the pages - are created once and never destroyed.
         // but still when the user scroll them out of the screen, thier views are gone
         // we have to recreate thier respected view every time the user rescroll back to them
@@ -248,9 +256,7 @@ public class ArenaFragment extends Fragment {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
 
-            this.matchUpIndex = getArguments().getInt(ARG_MATCHUP_INDEX);
-            this.globalAndMatchUpsCharts = getArguments().getParcelableArrayList(ARG_GLOBAL_DATA);
-            this.sectionNumber = getArguments().getInt(ARG_SECTION_NUMBER) ;
+
 
             ArrayList<PointDataSet> pointDataSets = new ArrayList<>();
             List<BarEntry> entries = new ArrayList<>();
