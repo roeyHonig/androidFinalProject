@@ -66,7 +66,7 @@ public class ArenaFragment extends Fragment {
      */
     private ViewPager mViewPager;
     private TabLayout tabLayout;
-    private int matchUpIndex = 3; // -1 is global arena data Set. 0 or positive number is an individual matchUP
+    private int matchUpIndex = -1; // -1 is global arena data Set. 0 or positive number is an individual matchUP
     private NavDrawer parentActivity;
 
 
@@ -183,9 +183,57 @@ public class ArenaFragment extends Fragment {
 
     }
 
-
+    // This method is called by the Main Activity as a result of the OnListFragmentInteractionListener interface
+    // that is, when the user clicks on a matchup item from the list
     public void onMatchUpListInteraction(String MatchUpKey) {
-        Toast.makeText(parentActivity,MatchUpKey + " says hello, this time, from the Arena Fragment",Toast.LENGTH_LONG).show();
+        //TODO: change the chart to present the relevent data for the choosed MatchUp
+
+
+
+            // iterate over all matchups
+            for (int j = 0; j < individualMatchUpsDataSet.size() ; j++) {
+
+                // find the index of the selected MatchUp in the List
+                if (individualMatchUpsDataSet.get(j).getKey().equals(MatchUpKey)) {
+                    // set a field in the adapter, in case some fragments haven't been created yet
+                    // the adapter creates the fragments based on this field
+                    mSectionsPagerAdapter.setMatchUpIndex(j);
+
+                    for (int i = 0; i < mSectionsPagerAdapter.fragments.size(); i++) {
+                        // change a field in the fragments (pages), so when onCreateView is called (while we scroll them back into view) they will indeed reflect the changes
+                                 mSectionsPagerAdapter.fragments.get(i).setMatchUpIndex(j);
+
+                        // directlly change the page we're viewing (and also all the others (creted so far), but we don't see the others)
+                                ArrayList<PointDataSet> pointDataSets = new ArrayList<>();
+                                List<BarEntry> entries = new ArrayList<>();
+                                BarChart chart = mSectionsPagerAdapter.fragments.get(i).getChart();
+
+                                // MatchUps
+                                PlaceholderFragment.names = mSectionsPagerAdapter.fragments.get(i).setChartsXAxisLabels(individualMatchUpsDataSet.get(j).getPlayers());
+
+                                //iterate over all players
+                                for (int k = 0; k < PlaceholderFragment.names.length ; k++) {
+                                    pointDataSets.add(new PointDataSet(1f+k, globalAndMatchUpsCharts.get(mSectionsPagerAdapter.fragments.get(i).matchUpIndex + 1).chartsCollection.get(mSectionsPagerAdapter.fragments.get(i).sectionNumber-1).chart.get(k).getyValue()));
+                                }
+
+
+                                for (PointDataSet data : pointDataSets) {
+                                    // turn your data into Entry objects
+                                    entries.add(new BarEntry(data.getxValue(), data.getyValue()));
+                                }
+
+                                BarDataSet set = new BarDataSet(entries, "BarDataSet");
+                                mSectionsPagerAdapter.fragments.get(i).setSingleChart(chart,set, mSectionsPagerAdapter.fragments.get(i).getSectionNumber(), mSectionsPagerAdapter.fragments.get(i).matchUpIndex, mSectionsPagerAdapter.fragments.get(i).formatter);
+
+                    }
+
+                }
+            }
+
+
+
+
+
     }
 
     /**
@@ -218,10 +266,19 @@ public class ArenaFragment extends Fragment {
         private int sectionNumber;
         private ArrayList<ChartsCollection> globalAndMatchUpsCharts;
         private static String[] names;
-        private static IAxisValueFormatter formatter;
+        public static IAxisValueFormatter formatter;
+        private BarChart chart;
 
         public void setMatchUpIndex(int matchUpIndex) {
             this.matchUpIndex = matchUpIndex;
+        }
+
+        public BarChart getChart() {
+            return chart;
+        }
+
+        public int getSectionNumber() {
+            return sectionNumber;
         }
 
         //TODO: cancel this fab event
@@ -271,7 +328,7 @@ public class ArenaFragment extends Fragment {
             View rootView = inflater.inflate(R.layout.stat_page, container, false);
             //TODO: if no arguments came, set something insted of the chart
             //textView = (TextView) rootView.findViewById(R.id.section_label);
-            BarChart chart =  rootView.findViewById(R.id.chart);
+            chart =  rootView.findViewById(R.id.chart);
 
             if (this.matchUpIndex == -1) {
                 // Global
@@ -307,14 +364,14 @@ public class ArenaFragment extends Fragment {
 
             BarDataSet set = new BarDataSet(entries, "BarDataSet");
 
-            setSingleChart(chart,set, sectionNumber);
+            setSingleChart(chart,set, sectionNumber, this.matchUpIndex, formatter);
 
 
 
             return rootView;
         }
 
-        public void setSingleChart(BarChart chart, BarDataSet set, int sectionNumber) {
+        public void setSingleChart(BarChart chart, BarDataSet set, int sectionNumber, int matchUpIndex, IAxisValueFormatter formatter) {
             BarData barData;
             barData = new BarData(set);
             barData.setBarWidth(0.9f); // set custom bar width
@@ -353,7 +410,7 @@ public class ArenaFragment extends Fragment {
             //chart.setFitBars(true); // make the x-axis fit \ or not exactly all bars
 
             // only 3 bars at the viewport
-            if (this.matchUpIndex == -1) {
+            if (matchUpIndex == -1) {
                 chart.setVisibleXRange(0,4);
             } else {
                 chart.setVisibleXRange(0,2);
@@ -373,7 +430,7 @@ public class ArenaFragment extends Fragment {
             chart.invalidate(); // refresh
         }
         // set the names of the players as the X-Axis labels for all charts
-        private static String[] setChartsXAxisLabels(ArrayList<UserStat> userStats){
+        public static String[] setChartsXAxisLabels(ArrayList<UserStat> userStats){
             String[] names = new String[userStats.size()]; // BarChart XAxis Labels - names of the players
             for (int i = 0; i < userStats.size(); i++) {
                 names[i] = userStats.get(i).getFullName();
