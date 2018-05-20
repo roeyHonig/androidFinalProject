@@ -327,6 +327,7 @@ public class ArenaFragment extends Fragment {
             View rootView = inflater.inflate(R.layout.stat_page, container, false);
 
             FloatingActionButton addMatchResultFAB = rootView.findViewById(R.id.addMatchResult);
+            /*
             SeekBar xAxisSeekBar = rootView.findViewById(R.id.xAxisSeekBar);
             xAxisSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
@@ -344,7 +345,7 @@ public class ArenaFragment extends Fragment {
 
                 }
             });
-
+            */
 
 
 
@@ -402,6 +403,17 @@ public class ArenaFragment extends Fragment {
             barData = new BarData(set);
             barData.setBarWidth(0.9f); // set custom bar width
             chart.setData(barData);
+            // find max value to
+            int tmpIndex = 0;
+            for (int i = 0; i < set.getEntryCount(); i++) {
+                if (set.getEntryForIndex(i).getY() > set.getEntryForIndex(tmpIndex).getY()) {
+                    tmpIndex = i;
+                }
+            }
+            // HighLight the Max Value
+            chart.highlightValue(set.getEntryForIndex(tmpIndex).getX(),0);
+
+
 
 
             // .. and more styling options
@@ -411,6 +423,7 @@ public class ArenaFragment extends Fragment {
             // disable highlight of values by the user's gestures
             chart.setHighlightPerDragEnabled(false);
             chart.setHighlightPerTapEnabled(false);
+
 
             XAxis xAxis = chart.getXAxis();
 
@@ -427,8 +440,8 @@ public class ArenaFragment extends Fragment {
 
             chart.getAxisLeft().setAxisMinimum(0f);
             chart.getAxisRight().setAxisMinimum(0f);
-            chart.getAxisLeft().setAxisMaximum(10f);
-            chart.getAxisRight().setAxisMaximum(10f);
+            chart.getAxisLeft().setAxisMaximum(set.getEntryForIndex(tmpIndex).getY()*1.1f);
+            chart.getAxisRight().setAxisMaximum(set.getEntryForIndex(tmpIndex).getY()*1.1f);
 
             // Sets the Legend enabled or disabled
             chart.getLegend().setEnabled(true);
@@ -437,11 +450,10 @@ public class ArenaFragment extends Fragment {
 
 
             if (matchUpIndex == -1) {
-                // only 3 bars at the viewport
-                chart.setVisibleXRange(0,CHART_VISIABLE_XRANGE);
+                chart.setVisibleXRangeMaximum(CHART_VISIABLE_XRANGE);
             } else {
                 // only 2 bars at the viewport
-                chart.setVisibleXRange(0,2);
+                chart.setVisibleXRangeMaximum(2);
             }
 
 
