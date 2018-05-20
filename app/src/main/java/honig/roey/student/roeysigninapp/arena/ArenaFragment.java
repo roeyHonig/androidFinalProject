@@ -4,6 +4,7 @@ package honig.roey.student.roeysigninapp.arena;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -15,6 +16,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -264,6 +266,7 @@ public class ArenaFragment extends Fragment {
         public static IAxisValueFormatter formatter;
         private BarChart chart;
         private  static final float CHART_VISIABLE_XRANGE = 3f;
+        private float chartXAxisBottomLeftValue;
 
         public void setMatchUpIndex(int matchUpIndex) {
             this.matchUpIndex = matchUpIndex;
@@ -322,6 +325,31 @@ public class ArenaFragment extends Fragment {
             List<BarEntry> entries = new ArrayList<>();
 
             View rootView = inflater.inflate(R.layout.stat_page, container, false);
+
+            FloatingActionButton addMatchResultFAB = rootView.findViewById(R.id.addMatchResult);
+            SeekBar xAxisSeekBar = rootView.findViewById(R.id.xAxisSeekBar);
+            xAxisSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                    chart.moveViewToX(i/100f * chartXAxisBottomLeftValue);
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+
+                }
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+
+                }
+            });
+
+
+
+
+
+
             //TODO: if no arguments came, set something insted of the chart
             //textView = (TextView) rootView.findViewById(R.id.section_label);
             chart =  rootView.findViewById(R.id.chart);
@@ -333,6 +361,8 @@ public class ArenaFragment extends Fragment {
                 // MatchUps
                 names = setChartsXAxisLabels(individualMatchUpsDataSet.get(this.matchUpIndex).getPlayers());
             }
+            chartXAxisBottomLeftValue = names.length - CHART_VISIABLE_XRANGE + 1f ;
+
 
             formatter = new IAxisValueFormatter() {
                 @Override
