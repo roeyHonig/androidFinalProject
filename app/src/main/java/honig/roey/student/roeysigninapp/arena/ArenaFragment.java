@@ -245,9 +245,7 @@ public class ArenaFragment extends Fragment {
     public interface OnListFragmentInteractionListener {
         void onMatchUpListInteraction(String MatchUpKey);
     }
-
-
-
+    
 
     /**
      * A placeholder fragment containing a single chart
