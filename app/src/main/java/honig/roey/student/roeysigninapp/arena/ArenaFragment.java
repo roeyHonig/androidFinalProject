@@ -2,6 +2,7 @@ package honig.roey.student.roeysigninapp.arena;
 
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -23,7 +24,9 @@ import android.widget.Toast;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
@@ -418,6 +421,9 @@ public class ArenaFragment extends Fragment {
 
 
             XAxis xAxis = chart.getXAxis();
+            YAxis yAxisLeft = chart.getAxisLeft();
+            YAxis yAxisRight = chart.getAxisRight();
+
 
         /*
         This will prevent the formatter from drawing duplicate axis labels (caused by axis intervals < 1).
@@ -433,10 +439,11 @@ public class ArenaFragment extends Fragment {
             // max #values
             xAxis.setLabelCount(6);
 
-            chart.getAxisLeft().setAxisMinimum(0f);
-            chart.getAxisRight().setAxisMinimum(0f);
-            chart.getAxisLeft().setAxisMaximum(set.getEntryForIndex(tmpIndex).getY()*1.1f);
-            chart.getAxisRight().setAxisMaximum(set.getEntryForIndex(tmpIndex).getY()*1.1f);
+            yAxisLeft.setAxisMinimum(0f);
+            yAxisRight.setAxisMinimum(0f);
+            yAxisLeft.setAxisMaximum(set.getEntryForIndex(tmpIndex).getY()*1.1f);
+            yAxisRight.setAxisMaximum(set.getEntryForIndex(tmpIndex).getY()*1.1f);
+
 
             // Sets the Legend enabled or disabled
             chart.getLegend().setEnabled(true);
@@ -450,6 +457,29 @@ public class ArenaFragment extends Fragment {
             Description description = new Description();
             description.setText(""+sectionNumber);
             chart.setDescription(description);
+
+            // Limit Lines
+            // this is just an example, in this exampl i want to add a limit line to the last section , which was section #4 at the time
+            if (sectionNumber == 4) {
+                // add limit line
+                float limit = 4; //TODO: needs to come from the set itself
+                LimitLine ll = new LimitLine(limit, "All Time Record Score: " + limit);
+                ll.setLabelPosition(LimitLine.LimitLabelPosition.LEFT_TOP);
+                ll.setLineColor(Color.RED);
+                ll.setLineWidth(0.1f);
+                ll.setTextColor(Color.BLACK);
+                ll.setTextSize(1f);
+                yAxisLeft.addLimitLine(ll);
+                yAxisRight.addLimitLine(ll);
+                if (limit > set.getEntryForIndex(tmpIndex).getY()) {
+                    yAxisLeft.setAxisMaximum(limit * 1.1f);
+                    yAxisRight.setAxisMaximum(limit * 1.1f);
+                }
+
+
+            }
+
+
 
             chart.invalidate(); // refresh
         }
