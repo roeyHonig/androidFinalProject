@@ -450,12 +450,9 @@ public class ArenaFragment extends Fragment {
             // make the x-axis fit \ or not exactly all bars
             chart.setFitBars(true);
 
-            // HighLight the Max Value
-            //chart.highlightValue(4,0);
-
             // set an emphty ("") description in the right bottom corrner of the chart
             Description description = new Description();
-            description.setText(""+sectionNumber);
+            description.setText("");
             chart.setDescription(description);
 
             // Limit Lines
@@ -561,15 +558,6 @@ public class ArenaFragment extends Fragment {
                     Chart pct = new Chart(pointDataSetsPct);
                     collection.add(pct);
 
-                    // #wins
-                    ArrayList<PointDataSet> pointDataSetsWin = new ArrayList<>();
-                    for (int j = 0; j < globalDataSet.getUserStats().size(); j++) {
-                        pointDataSetsWin.add(new PointDataSet((float) (j + 1), (float) globalDataSet.getUserStats().get(j).getWin())); //to make sure xValue sorted
-
-                    }
-                    Chart wins = new Chart(pointDataSetsWin);
-                    collection.add(wins);
-
                     // #loss
                     ArrayList<PointDataSet> pointDataSetsLos = new ArrayList<>();
                     for (int j = 0; j < globalDataSet.getUserStats().size(); j++) {
@@ -586,43 +574,148 @@ public class ArenaFragment extends Fragment {
                     Chart drw = new Chart(pointDataSetsDrw);
                     collection.add(drw);
 
+                    // #wins
+                    ArrayList<PointDataSet> pointDataSetsWin = new ArrayList<>();
+                    for (int j = 0; j < globalDataSet.getUserStats().size(); j++) {
+                        pointDataSetsWin.add(new PointDataSet((float) (j + 1), (float) globalDataSet.getUserStats().get(j).getWin())); //to make sure xValue sorted
+                    }
+                    Chart wins = new Chart(pointDataSetsWin);
+                    collection.add(wins);
+
+                    // #Games
+                    ArrayList<PointDataSet> pointDataSetsGames = new ArrayList<>();
+                    for (int j = 0; j < globalDataSet.getUserStats().size(); j++) {
+                        pointDataSetsGames.add(new PointDataSet((float) (j + 1), (float) globalDataSet.getUserStats().get(j).getNumGames())); //to make sure xValue sorted
+                    }
+                    Chart numGames = new Chart(pointDataSetsGames);
+                    collection.add(numGames);
+
+                    // #GoalsFor
+                    ArrayList<PointDataSet> pointDataSetsGoalsFor = new ArrayList<>();
+                    for (int j = 0; j < globalDataSet.getUserStats().size(); j++) {
+                        pointDataSetsGoalsFor.add(new PointDataSet((float) (j + 1), (float) globalDataSet.getUserStats().get(j).getGoalsFor())); //to make sure xValue sorted
+                    }
+                    Chart goalsFor = new Chart(pointDataSetsGoalsFor);
+                    collection.add(goalsFor);
+
+                    // #GoalsAgainst
+                    ArrayList<PointDataSet> pointDataSetsGoalsAgainst = new ArrayList<>();
+                    for (int j = 0; j < globalDataSet.getUserStats().size(); j++) {
+                        pointDataSetsGoalsAgainst.add(new PointDataSet((float) (j + 1), (float) globalDataSet.getUserStats().get(j).getGoalsAgainst())); //to make sure xValue sorted
+                    }
+                    Chart goalsAgainst = new Chart(pointDataSetsGoalsAgainst);
+                    collection.add(goalsAgainst);
+
+                    // #GoalsForAverage
+                    ArrayList<PointDataSet> pointDataSetsGoalsForAvaerage = new ArrayList<>();
+                    for (int j = 0; j < globalDataSet.getUserStats().size(); j++) {
+                        pointDataSetsGoalsForAvaerage.add(new PointDataSet((float) (j + 1), (float) globalDataSet.getUserStats().get(j).getGoalsForAverage())); //to make sure xValue sorted
+                    }
+                    Chart goalsForAvarage = new Chart(pointDataSetsGoalsForAvaerage);
+                    collection.add(goalsForAvarage);
+
+                    // #GoalsAgainstAverage
+                    ArrayList<PointDataSet> pointDataSetsGoalsAgainstAvaerage = new ArrayList<>();
+                    for (int j = 0; j < globalDataSet.getUserStats().size(); j++) {
+                        pointDataSetsGoalsAgainstAvaerage.add(new PointDataSet((float) (j + 1), (float) globalDataSet.getUserStats().get(j).getGoalsAgainstAverage())); //to make sure xValue sorted
+                    }
+                    Chart goalsAgainstAvarage = new Chart(pointDataSetsGoalsAgainstAvaerage);
+                    collection.add(goalsAgainstAvarage);
+
+                    // #WiningStrike
+                    ArrayList<PointDataSet> pointDataSetsWiningStrike = new ArrayList<>();
+                    for (int j = 0; j < globalDataSet.getUserStats().size(); j++) {
+                        pointDataSetsWiningStrike.add(new PointDataSet((float) (j + 1), (float) globalDataSet.getUserStats().get(j).getWinningStrike())); //to make sure xValue sorted
+                    }
+                    Chart winingStrike = new Chart(pointDataSetsWiningStrike);
+                    collection.add(winingStrike);
+
 
 
             } else {
                 //individual Matchup
 
                     // PCT
-                    ArrayList<PointDataSet> pointDataSetsPct = new ArrayList<>();
-                    for (int j = 0; j < 2; j++) {
-                        pointDataSetsPct.add(new PointDataSet((float) (j + 1), (float) individualMatchUpsDataSet.get(i-1).getPlayers().get(j).getPct())); //to make sure xValue sorted
-                    }
-                    Chart pct = new Chart(pointDataSetsPct);
-                    collection.add(pct);
+                ArrayList<PointDataSet> pointDataSetsPct = new ArrayList<>();
+                //pointDataSets.clear();
+                for (int j = 0; j < 2; j++) {
+                    pointDataSetsPct.add(new PointDataSet((float) (j + 1), (float) individualMatchUpsDataSet.get(i-1).getPlayers().get(j).getPct())); //to make sure xValue sorted
+                }
+                Chart pct = new Chart(pointDataSetsPct);
+                collection.add(pct);
 
-                    // #wins
-                    ArrayList<PointDataSet> pointDataSetsWin = new ArrayList<>();
-                    for (int j = 0; j < 2; j++) {
-                        pointDataSetsWin.add(new PointDataSet((float) (j + 1), (float) individualMatchUpsDataSet.get(i-1).getPlayers().get(j).getWin())); //to make sure xValue sorted
+                // #loss
+                ArrayList<PointDataSet> pointDataSetsLos = new ArrayList<>();
+                for (int j = 0; j < 2; j++) {
+                    pointDataSetsLos.add(new PointDataSet((float) (j + 1), (float) individualMatchUpsDataSet.get(i-1).getPlayers().get(j).getLos())); //to make sure xValue sorted
+                }
+                Chart los = new Chart(pointDataSetsLos);
+                collection.add(los);
 
-                    }
-                    Chart wins = new Chart(pointDataSetsWin);
-                    collection.add(wins);
+                // #drw
+                ArrayList<PointDataSet> pointDataSetsDrw = new ArrayList<>();
+                for (int j = 0; j < 2; j++) {
+                    pointDataSetsDrw.add(new PointDataSet((float) (j + 1), (float) individualMatchUpsDataSet.get(i-1).getPlayers().get(j).getDrw())); //to make sure xValue sorted
+                }
+                Chart drw = new Chart(pointDataSetsDrw);
+                collection.add(drw);
 
-                    // #loss
-                    ArrayList<PointDataSet> pointDataSetsLos = new ArrayList<>();
-                    for (int j = 0; j < 2; j++) {
-                        pointDataSetsLos.add(new PointDataSet((float) (j + 1), (float) individualMatchUpsDataSet.get(i-1).getPlayers().get(j).getLos())); //to make sure xValue sorted
-                    }
-                    Chart los = new Chart(pointDataSetsLos);
-                    collection.add(los);
+                // #wins
+                ArrayList<PointDataSet> pointDataSetsWin = new ArrayList<>();
+                for (int j = 0; j < 2; j++) {
+                    pointDataSetsWin.add(new PointDataSet((float) (j + 1), (float) individualMatchUpsDataSet.get(i-1).getPlayers().get(j).getWin())); //to make sure xValue sorted
+                }
+                Chart wins = new Chart(pointDataSetsWin);
+                collection.add(wins);
 
-                    // #drw
-                    ArrayList<PointDataSet> pointDataSetsDrw = new ArrayList<>();
-                    for (int j = 0; j < 2; j++) {
-                        pointDataSetsDrw.add(new PointDataSet((float) (j + 1), (float) individualMatchUpsDataSet.get(i-1).getPlayers().get(j).getDrw())); //to make sure xValue sorted
-                    }
-                    Chart drw = new Chart(pointDataSetsDrw);
-                    collection.add(drw);
+                // #Games
+                ArrayList<PointDataSet> pointDataSetsGames = new ArrayList<>();
+                for (int j = 0; j < 2; j++) {
+                    pointDataSetsGames.add(new PointDataSet((float) (j + 1), (float) individualMatchUpsDataSet.get(i-1).getPlayers().get(j).getNumGames())); //to make sure xValue sorted
+                }
+                Chart numGames = new Chart(pointDataSetsGames);
+                collection.add(numGames);
+
+                // #GoalsFor
+                ArrayList<PointDataSet> pointDataSetsGoalsFor = new ArrayList<>();
+                for (int j = 0; j < 2; j++) {
+                    pointDataSetsGoalsFor.add(new PointDataSet((float) (j + 1), (float) individualMatchUpsDataSet.get(i-1).getPlayers().get(j).getGoalsFor())); //to make sure xValue sorted
+                }
+                Chart goalsFor = new Chart(pointDataSetsGoalsFor);
+                collection.add(goalsFor);
+
+                // #GoalsAgainst
+                ArrayList<PointDataSet> pointDataSetsGoalsAgainst = new ArrayList<>();
+                for (int j = 0; j < 2; j++) {
+                    pointDataSetsGoalsAgainst.add(new PointDataSet((float) (j + 1), (float) individualMatchUpsDataSet.get(i-1).getPlayers().get(j).getGoalsAgainst())); //to make sure xValue sorted
+                }
+                Chart goalsAgainst = new Chart(pointDataSetsGoalsAgainst);
+                collection.add(goalsAgainst);
+
+                // #GoalsForAverage
+                ArrayList<PointDataSet> pointDataSetsGoalsForAvaerage = new ArrayList<>();
+                for (int j = 0; j < 2; j++) {
+                    pointDataSetsGoalsForAvaerage.add(new PointDataSet((float) (j + 1), (float) individualMatchUpsDataSet.get(i-1).getPlayers().get(j).getGoalsForAverage())); //to make sure xValue sorted
+                }
+                Chart goalsForAvarage = new Chart(pointDataSetsGoalsForAvaerage);
+                collection.add(goalsForAvarage);
+
+                // #GoalsAgainstAverage
+                ArrayList<PointDataSet> pointDataSetsGoalsAgainstAvaerage = new ArrayList<>();
+                for (int j = 0; j < 2; j++) {
+                    pointDataSetsGoalsAgainstAvaerage.add(new PointDataSet((float) (j + 1), (float) individualMatchUpsDataSet.get(i-1).getPlayers().get(j).getGoalsAgainstAverage())); //to make sure xValue sorted
+                }
+                Chart goalsAgainstAvarage = new Chart(pointDataSetsGoalsAgainstAvaerage);
+                collection.add(goalsAgainstAvarage);
+
+                // #WiningStrike
+                ArrayList<PointDataSet> pointDataSetsWiningStrike = new ArrayList<>();
+                for (int j = 0; j < 2; j++) {
+                    pointDataSetsWiningStrike.add(new PointDataSet((float) (j + 1), (float) individualMatchUpsDataSet.get(i-1).getPlayers().get(j).getWinningStrike())); //to make sure xValue sorted
+                }
+                Chart winingStrike = new Chart(pointDataSetsWiningStrike);
+                collection.add(winingStrike);
+
             }
 
 
