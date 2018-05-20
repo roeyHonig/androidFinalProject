@@ -412,13 +412,8 @@ public class ArenaFragment extends Fragment {
             }
             // HighLight the Max Value
             chart.highlightValue(set.getEntryForIndex(tmpIndex).getX(),0);
-
-
-
-
-            // .. and more styling options
-            //chart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
-            chart.setPinchZoom(true); // zooming X & Y Axis at one gesture
+            
+            //chart.setPinchZoom(true); // zooming X & Y Axis at one gesture
 
             // disable highlight of values by the user's gestures
             chart.setHighlightPerDragEnabled(false);
@@ -436,7 +431,10 @@ public class ArenaFragment extends Fragment {
             xAxis.setValueFormatter(formatter);
             xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
             //xAxis.setTextSize();
-
+            // set an angle for the xAxis Labels
+            xAxis.setLabelRotationAngle(22.5f);
+            // max #values
+            xAxis.setLabelCount(6);
 
             chart.getAxisLeft().setAxisMinimum(0f);
             chart.getAxisRight().setAxisMinimum(0f);
@@ -445,17 +443,8 @@ public class ArenaFragment extends Fragment {
 
             // Sets the Legend enabled or disabled
             chart.getLegend().setEnabled(true);
-
-            //chart.setFitBars(true); // make the x-axis fit \ or not exactly all bars
-
-
-            if (matchUpIndex == -1) {
-                chart.setVisibleXRangeMaximum(CHART_VISIABLE_XRANGE);
-            } else {
-                // only 2 bars at the viewport
-                chart.setVisibleXRangeMaximum(2);
-            }
-
+            // make the x-axis fit \ or not exactly all bars
+            chart.setFitBars(true);
 
             // HighLight the Max Value
             //chart.highlightValue(4,0);
@@ -464,8 +453,6 @@ public class ArenaFragment extends Fragment {
             Description description = new Description();
             description.setText(""+sectionNumber);
             chart.setDescription(description);
-
-
 
             chart.invalidate(); // refresh
         }
