@@ -557,6 +557,7 @@ public class NavDrawer extends AppCompatActivity
                 //pushAndSetNewChildAtRequestsTable(new Request("1", "RRe3GGpTI6SeMb82413bJ4NPoA52","Roey Honig", "eCRG8HIaoFf4Z9D4v4OscRhV1JC3" ,"Roey Regev","fifa with friends","-LActIbj-cgoOI3_Zr-m" ,1));
                 //openDialogToChangeInviteOrRequestStatus();
 
+
             }
         });
 
@@ -744,9 +745,6 @@ public class NavDrawer extends AppCompatActivity
         fragmentTransaction.replace(id,fragment).commit();
     }
 
-
-    //TODO: item is the ID of the Arena the user clicked on, in the RingFragment
-    //TODO: insted of the current shit, switch to the newlly improved MatchUpsFragment !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     @Override
     // Do When pressing an Item from the Arenas list
     public void onListFragmentInteraction(String item) {
@@ -956,7 +954,7 @@ public class NavDrawer extends AppCompatActivity
 
     }
 
-
+    //TODO: delete
     @Override
     public void onListFragmentInteraction(DummyContent.DummyItem item) {
         // this is clickable from the Arena fragment (PlayerStatFragment)

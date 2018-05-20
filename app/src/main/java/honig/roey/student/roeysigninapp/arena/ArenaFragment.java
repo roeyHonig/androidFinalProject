@@ -111,20 +111,6 @@ public class ArenaFragment extends Fragment {
 
         // get Arguments
         if (globalDataSet != null && individualMatchUpsDataSet != null){
-            /*
-            String tmpConcatation = "";
-
-            for (int i = 0; i < individualMatchUpsDataSet.size(); i++) {
-                tmpConcatation += individualMatchUpsDataSet.get(i).getPlayers().get(0).toString();
-                tmpConcatation += "* Vs *";
-                tmpConcatation += individualMatchUpsDataSet.get(i).getPlayers().get(1).toString();
-                tmpConcatation += "//////";
-            }
-
-            // just a Test TextView To see i got the arguments out
-            TextView tvBuffer =  view.findViewById(R.id.tvBuffer);
-            tvBuffer.setText(globalDataSet.toShortString() + tmpConcatation);
-            */
 
             // Set the adapter for the matchUps List RecyclerView
             RecyclerView matchUpRecyclerView = view.findViewById(R.id.matchUplist);
@@ -157,6 +143,15 @@ public class ArenaFragment extends Fragment {
 
         }
 
+        //TODO: just a test, not the actual purpose, demonstrates hoe to reload this fragment
+        TextView tvBuffer = view.findViewById(R.id.tvBuffer);
+        tvBuffer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Reload The Page
+                parentActivity.onListFragmentInteraction(globalDataSet.getKey());
+            }
+        });
 
         return view;
     }
@@ -245,7 +240,7 @@ public class ArenaFragment extends Fragment {
     public interface OnListFragmentInteractionListener {
         void onMatchUpListInteraction(String MatchUpKey);
     }
-    
+
 
     /**
      * A placeholder fragment containing a single chart
