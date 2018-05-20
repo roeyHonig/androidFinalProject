@@ -144,6 +144,8 @@ public class ArenaFragment extends Fragment {
         }
 
         //TODO: just a test, not the actual purpose, demonstrates hoe to reload this fragment
+        //TODO: i've even made this TextView (in the fragment_arena) visibility as GONE
+        // TODO: please delete the TextView and remove this OnClickListener
         TextView tvBuffer = view.findViewById(R.id.tvBuffer);
         tvBuffer.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -218,7 +220,7 @@ public class ArenaFragment extends Fragment {
                                 }
 
                                 BarDataSet set = new BarDataSet(entries, "BarDataSet");
-                                mSectionsPagerAdapter.fragments.get(i).setSingleChart(chart,set, mSectionsPagerAdapter.fragments.get(i).getSectionNumber(), mSectionsPagerAdapter.fragments.get(i).matchUpIndex, mSectionsPagerAdapter.fragments.get(i).formatter);
+                                mSectionsPagerAdapter.fragments.get(i).setSingleChart(chart,set, mSectionsPagerAdapter.fragments.get(i).getSectionNumber(), mSectionsPagerAdapter.fragments.get(i).matchUpIndex, mSectionsPagerAdapter.fragments.get(i).formatter, mSectionsPagerAdapter.fragments.get(i).CHART_VISIABLE_XRANGE);
 
                     }
 
@@ -261,6 +263,7 @@ public class ArenaFragment extends Fragment {
         private static String[] names;
         public static IAxisValueFormatter formatter;
         private BarChart chart;
+        private  static final float CHART_VISIABLE_XRANGE = 3f;
 
         public void setMatchUpIndex(int matchUpIndex) {
             this.matchUpIndex = matchUpIndex;
@@ -357,14 +360,14 @@ public class ArenaFragment extends Fragment {
 
             BarDataSet set = new BarDataSet(entries, "BarDataSet");
 
-            setSingleChart(chart,set, sectionNumber, this.matchUpIndex, formatter);
+            setSingleChart(chart,set, sectionNumber, this.matchUpIndex, formatter, CHART_VISIABLE_XRANGE);
 
 
 
             return rootView;
         }
 
-        public void setSingleChart(BarChart chart, BarDataSet set, int sectionNumber, int matchUpIndex, IAxisValueFormatter formatter) {
+        public void setSingleChart(BarChart chart, BarDataSet set, int sectionNumber, int matchUpIndex, IAxisValueFormatter formatter, float CHART_VISIABLE_XRANGE) {
             BarData barData;
             barData = new BarData(set);
             barData.setBarWidth(0.9f); // set custom bar width
@@ -402,10 +405,12 @@ public class ArenaFragment extends Fragment {
 
             //chart.setFitBars(true); // make the x-axis fit \ or not exactly all bars
 
-            // only 3 bars at the viewport
+
             if (matchUpIndex == -1) {
-                chart.setVisibleXRange(0,4);
+                // only 3 bars at the viewport
+                chart.setVisibleXRange(0,CHART_VISIABLE_XRANGE);
             } else {
+                // only 2 bars at the viewport
                 chart.setVisibleXRange(0,2);
             }
 
