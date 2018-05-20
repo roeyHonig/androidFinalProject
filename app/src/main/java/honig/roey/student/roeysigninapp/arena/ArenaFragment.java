@@ -222,7 +222,7 @@ public class ArenaFragment extends Fragment {
                                 }
 
                                 BarDataSet set = new BarDataSet(entries, "BarDataSet");
-                                mSectionsPagerAdapter.fragments.get(i).setSingleChart(chart,set, mSectionsPagerAdapter.fragments.get(i).getSectionNumber(), mSectionsPagerAdapter.fragments.get(i).matchUpIndex, mSectionsPagerAdapter.fragments.get(i).formatter, mSectionsPagerAdapter.fragments.get(i).CHART_VISIABLE_XRANGE);
+                                mSectionsPagerAdapter.fragments.get(i).setSingleChart(chart,set, mSectionsPagerAdapter.fragments.get(i).getSectionNumber(), mSectionsPagerAdapter.fragments.get(i).matchUpIndex, mSectionsPagerAdapter.fragments.get(i).formatter);
 
                     }
 
@@ -265,8 +265,6 @@ public class ArenaFragment extends Fragment {
         private static String[] names;
         public static IAxisValueFormatter formatter;
         private BarChart chart;
-        private  static final float CHART_VISIABLE_XRANGE = 3f;
-        private float chartXAxisBottomLeftValue;
 
         public void setMatchUpIndex(int matchUpIndex) {
             this.matchUpIndex = matchUpIndex;
@@ -362,7 +360,6 @@ public class ArenaFragment extends Fragment {
                 // MatchUps
                 names = setChartsXAxisLabels(individualMatchUpsDataSet.get(this.matchUpIndex).getPlayers());
             }
-            chartXAxisBottomLeftValue = names.length - CHART_VISIABLE_XRANGE + 1f ;
 
 
             formatter = new IAxisValueFormatter() {
@@ -391,14 +388,14 @@ public class ArenaFragment extends Fragment {
 
             BarDataSet set = new BarDataSet(entries, "BarDataSet");
 
-            setSingleChart(chart,set, sectionNumber, this.matchUpIndex, formatter, CHART_VISIABLE_XRANGE);
+            setSingleChart(chart,set, sectionNumber, this.matchUpIndex, formatter);
 
 
 
             return rootView;
         }
 
-        public void setSingleChart(BarChart chart, BarDataSet set, int sectionNumber, int matchUpIndex, IAxisValueFormatter formatter, float CHART_VISIABLE_XRANGE) {
+        public void setSingleChart(BarChart chart, BarDataSet set, int sectionNumber, int matchUpIndex, IAxisValueFormatter formatter) {
             BarData barData;
             barData = new BarData(set);
             barData.setBarWidth(0.9f); // set custom bar width
@@ -412,7 +409,7 @@ public class ArenaFragment extends Fragment {
             }
             // HighLight the Max Value
             chart.highlightValue(set.getEntryForIndex(tmpIndex).getX(),0);
-            
+
             //chart.setPinchZoom(true); // zooming X & Y Axis at one gesture
 
             // disable highlight of values by the user's gestures
