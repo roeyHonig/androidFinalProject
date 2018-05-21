@@ -663,6 +663,8 @@ public class ArenaFragment extends Fragment {
             set4.setColor(getResources().getColor(R.color.colorPrimaryDark));
 
 
+
+
             BarData barData;
             barData = new BarData(set1, set2, set3, set4);
             barData.setBarWidth(barWidth); // set custom bar width
@@ -730,6 +732,13 @@ public class ArenaFragment extends Fragment {
             yAxisRight.setAxisMinimum(0f);
             yAxisLeft.setAxisMaximum(leftYAxisMaxValue*1.1f);
             yAxisRight.setAxisMaximum(leftYAxisMaxValue*1.1f);
+
+            if (sectionNumber == 3) {
+                // goals
+                set3.setAxisDependency(YAxis.AxisDependency.RIGHT);
+                set4.setAxisDependency(YAxis.AxisDependency.RIGHT);
+                yAxisRight.setAxisMaximum(4f); // TODO: not hardcoded
+            }
 
 
             // Sets the Legend enabled or disabled
