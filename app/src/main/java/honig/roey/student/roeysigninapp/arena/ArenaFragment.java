@@ -4,6 +4,7 @@ package honig.roey.student.roeysigninapp.arena;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.ColorRes;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
@@ -225,7 +226,8 @@ public class ArenaFragment extends Fragment {
                                 }
 
                                 BarDataSet set = new BarDataSet(entries, "BarDataSet");
-                                mSectionsPagerAdapter.fragments.get(i).setSingleChart(chart,set, mSectionsPagerAdapter.fragments.get(i).getSectionNumber(), mSectionsPagerAdapter.fragments.get(i).matchUpIndex, mSectionsPagerAdapter.fragments.get(i).formatter);
+                                // TODO: edit thus all thing
+                               // mSectionsPagerAdapter.fragments.get(i).setSingleChart(chart,set, mSectionsPagerAdapter.fragments.get(i).getSectionNumber(), mSectionsPagerAdapter.fragments.get(i).matchUpIndex, mSectionsPagerAdapter.fragments.get(i).formatter);
 
                     }
 
@@ -400,6 +402,7 @@ public class ArenaFragment extends Fragment {
             switch (getArguments().getInt(ARG_SECTION_NUMBER)){
                 case 1:
                     // Success%
+                    winingStrikeRecord = 0f;
                     for (int i = 0; i < names.length ; i++) {
                         pointDataSets.add(new PointDataSet(1f+i, globalAndMatchUpsCharts.get(this.matchUpIndex + 1).chartsCollection.get(0).chart.get(i).getyValue()));
                     }
@@ -410,7 +413,7 @@ public class ArenaFragment extends Fragment {
                     }
 
                     set = new BarDataSet(entries, "Success%");
-                    setSingleChart(chart,set, sectionNumber, this.matchUpIndex, formatter);
+                    setSingleChart(chart,set, sectionNumber, this.matchUpIndex, formatter, winingStrikeRecord);
 
                     break;
                 case 2:
@@ -425,7 +428,7 @@ public class ArenaFragment extends Fragment {
                             entries1.add(new BarEntry(data.getxValue(), data.getyValue()));
                         }
 
-                       set1 = new BarDataSet(entries, "Loss");
+                       set1 = new BarDataSet(entries1, "Loss");
 
 
                         // Draw
@@ -438,7 +441,7 @@ public class ArenaFragment extends Fragment {
                             entries2.add(new BarEntry(data.getxValue(), data.getyValue()));
                         }
 
-                        set2 = new BarDataSet(entries, "Draws");
+                        set2 = new BarDataSet(entries2, "Draws");
 
 
 
@@ -452,7 +455,7 @@ public class ArenaFragment extends Fragment {
                             entries3.add(new BarEntry(data.getxValue(), data.getyValue()));
                         }
 
-                        set3 = new BarDataSet(entries, "Win");
+                        set3 = new BarDataSet(entries3, "Win");
 
 
                         // #games
@@ -465,15 +468,74 @@ public class ArenaFragment extends Fragment {
                             entries4.add(new BarEntry(data.getxValue(), data.getyValue()));
                         }
 
-                        set4 = new BarDataSet(entries, "Games");
+                        set4 = new BarDataSet(entries4, "Games");
+
+
+                      setSingleGroupedBarChart(chart,set1, set2, set3, set4, sectionNumber, this.matchUpIndex, formatter);
 
                     break;
                 case 3:
                     // Goals
 
+                        // Goals For
+                        for (int i = 0; i < names.length ; i++) {
+                            pointDataSets1.add(new PointDataSet(1f+i, globalAndMatchUpsCharts.get(this.matchUpIndex + 1).chartsCollection.get(5).chart.get(i).getyValue()));
+                        }
+
+                        for (PointDataSet data : pointDataSets1) {
+                            // turn your data into Entry objects
+                            entries1.add(new BarEntry(data.getxValue(), data.getyValue()));
+                        }
+
+                        set1 = new BarDataSet(entries1, "Goals For");
+
+
+                        // Goals Against
+                        for (int i = 0; i < names.length ; i++) {
+                            pointDataSets2.add(new PointDataSet(1f+i, globalAndMatchUpsCharts.get(this.matchUpIndex + 1).chartsCollection.get(6).chart.get(i).getyValue()));
+                        }
+
+                        for (PointDataSet data : pointDataSets2) {
+                            // turn your data into Entry objects
+                            entries2.add(new BarEntry(data.getxValue(), data.getyValue()));
+                        }
+
+                        set2 = new BarDataSet(entries2, "Goals Against");
+
+
+
+                        // Goals For Avarge
+                        for (int i = 0; i < names.length ; i++) {
+                            pointDataSets3.add(new PointDataSet(1f+i, globalAndMatchUpsCharts.get(this.matchUpIndex + 1).chartsCollection.get(7).chart.get(i).getyValue()));
+                        }
+
+                        for (PointDataSet data : pointDataSets3) {
+                            // turn your data into Entry objects
+                            entries3.add(new BarEntry(data.getxValue(), data.getyValue()));
+                        }
+
+                        set3 = new BarDataSet(entries3, "Goals For Avarge");
+
+
+                        // Goals Against Avarge
+                        for (int i = 0; i < names.length ; i++) {
+                            pointDataSets4.add(new PointDataSet(1f+i, globalAndMatchUpsCharts.get(this.matchUpIndex + 1).chartsCollection.get(8).chart.get(i).getyValue()));
+                        }
+
+                        for (PointDataSet data : pointDataSets4) {
+                            // turn your data into Entry objects
+                            entries4.add(new BarEntry(data.getxValue(), data.getyValue()));
+                        }
+
+                        set4 = new BarDataSet(entries4, "Goals Against Avarge");
+
+
+                        setSingleGroupedBarChart(chart,set1, set2, set3, set4, sectionNumber, this.matchUpIndex, formatter);
+
                     break;
                 case 4:
                    // Wining Strike
+                    winingStrikeRecord = 0f;
                     for (int i = 0; i < names.length ; i++) {
                         float fullValue = globalAndMatchUpsCharts.get(this.matchUpIndex + 1).chartsCollection.get(9).chart.get(i).getyValue();
                         float reminderValue = fullValue % 1000000f;
@@ -489,7 +551,7 @@ public class ArenaFragment extends Fragment {
                     }
 
                     set = new BarDataSet(entries, "Wining Strike");
-                    setSingleChart(chart,set, sectionNumber, this.matchUpIndex, formatter);
+                    setSingleChart(chart,set, sectionNumber, this.matchUpIndex, formatter, winingStrikeRecord);
 
                     break;
             }
@@ -498,18 +560,10 @@ public class ArenaFragment extends Fragment {
 
 
 
-
-
-
-
-
-
-
-
             return rootView;
         }
 
-        public void setSingleChart(BarChart chart, BarDataSet set, int sectionNumber, int matchUpIndex, IAxisValueFormatter formatter) {
+        public void setSingleChart(BarChart chart, BarDataSet set, int sectionNumber, int matchUpIndex, IAxisValueFormatter formatter, float winingStrikeRecord) {
             BarData barData;
             barData = new BarData(set);
             barData.setBarWidth(0.9f); // set custom bar width
@@ -570,7 +624,7 @@ public class ArenaFragment extends Fragment {
             // this is just an example, in this exampl i want to add a limit line to the last section , which was section #4 at the time
             if (sectionNumber == 4) {
                 // add limit line
-                float limit = 4; //TODO: needs to come from the set itself
+                float limit = winingStrikeRecord;
                 LimitLine ll = new LimitLine(limit, "All Time Record Score: " + limit);
                 ll.setLabelPosition(LimitLine.LimitLabelPosition.LEFT_TOP);
                 ll.setLineColor(Color.RED);
@@ -599,19 +653,27 @@ public class ArenaFragment extends Fragment {
             float barWidth = 0.225f; // x4 dataset
             // (0.01 + 0.225) * 4 + 0.06 = 1.00 -> interval per "group"
 
+            set1.setColor(getResources().getColor(R.color.colorAccent));
+            set2.setColor(getResources().getColor(R.color.colorGreen));
+            set3.setColor(getResources().getColor(R.color.colorYellow));
+            set4.setColor(getResources().getColor(R.color.colorPrimaryDark));
+
+
             BarData barData;
             barData = new BarData(set1, set2, set3, set4);
             barData.setBarWidth(barWidth); // set custom bar width
             chart.setData(barData);
+            chart.groupBars(0f, groupSpace, barSpace); // perform the "explicit" grouping
+
             // find max value to
             int tmpIndex = 0;
-            for (int i = 0; i < set.getEntryCount(); i++) {
-                if (set.getEntryForIndex(i).getY() > set.getEntryForIndex(tmpIndex).getY()) {
+            for (int i = 0; i < set4.getEntryCount(); i++) {
+                if (set4.getEntryForIndex(i).getY() > set4.getEntryForIndex(tmpIndex).getY()) {
                     tmpIndex = i;
                 }
             }
             // HighLight the Max Value
-            chart.highlightValue(set.getEntryForIndex(tmpIndex).getX(),0);
+            //chart.highlightValue(set.getEntryForIndex(tmpIndex).getX(),0);
 
             //chart.setPinchZoom(true); // zooming X & Y Axis at one gesture
 
@@ -641,8 +703,8 @@ public class ArenaFragment extends Fragment {
 
             yAxisLeft.setAxisMinimum(0f);
             yAxisRight.setAxisMinimum(0f);
-            yAxisLeft.setAxisMaximum(set.getEntryForIndex(tmpIndex).getY()*1.1f);
-            yAxisRight.setAxisMaximum(set.getEntryForIndex(tmpIndex).getY()*1.1f);
+            yAxisLeft.setAxisMaximum(set4.getEntryForIndex(tmpIndex).getY()*1.1f);
+            yAxisRight.setAxisMaximum(set4.getEntryForIndex(tmpIndex).getY()*1.1f);
 
 
             // Sets the Legend enabled or disabled
@@ -654,29 +716,6 @@ public class ArenaFragment extends Fragment {
             Description description = new Description();
             description.setText("");
             chart.setDescription(description);
-
-            // Limit Lines
-            // this is just an example, in this exampl i want to add a limit line to the last section , which was section #4 at the time
-            if (sectionNumber == 4) {
-                // add limit line
-                float limit = 4; //TODO: needs to come from the set itself
-                LimitLine ll = new LimitLine(limit, "All Time Record Score: " + limit);
-                ll.setLabelPosition(LimitLine.LimitLabelPosition.LEFT_TOP);
-                ll.setLineColor(Color.RED);
-                ll.setLineWidth(0.1f);
-                ll.setTextColor(Color.BLACK);
-                ll.setTextSize(1f);
-                yAxisLeft.addLimitLine(ll);
-                yAxisRight.addLimitLine(ll);
-                if (limit > set.getEntryForIndex(tmpIndex).getY()) {
-                    yAxisLeft.setAxisMaximum(limit * 1.1f);
-                    yAxisRight.setAxisMaximum(limit * 1.1f);
-                }
-
-
-            }
-
-
 
             chart.invalidate(); // refresh
         }
