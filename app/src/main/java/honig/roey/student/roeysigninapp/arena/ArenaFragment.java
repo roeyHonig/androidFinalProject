@@ -538,10 +538,13 @@ public class ArenaFragment extends Fragment {
                     winingStrikeRecord = 0f;
                     for (int i = 0; i < names.length ; i++) {
                         float fullValue = globalAndMatchUpsCharts.get(this.matchUpIndex + 1).chartsCollection.get(9).chart.get(i).getyValue();
-                        float reminderValue = fullValue % 1000000f;
-                        float secondReminder = fullValue % 1000000000000f;
+                        float reminderValue = fullValue % 1000f;
                         float currentWiningStrike = reminderValue;
-                        winingStrikeRecord = (secondReminder - currentWiningStrike) / 1000000f;
+                        float tmpWiningStrikeRecord = (fullValue - reminderValue) / 1000;
+                        if (tmpWiningStrikeRecord > winingStrikeRecord){
+                            winingStrikeRecord = tmpWiningStrikeRecord;
+                        }
+
                         pointDataSets.add(new PointDataSet(1f+i, currentWiningStrike));
                     }
 
@@ -622,6 +625,7 @@ public class ArenaFragment extends Fragment {
 
             // Limit Lines
             // this is just an example, in this exampl i want to add a limit line to the last section , which was section #4 at the time
+
             if (sectionNumber == 4) {
                 // add limit line
                 float limit = winingStrikeRecord;
