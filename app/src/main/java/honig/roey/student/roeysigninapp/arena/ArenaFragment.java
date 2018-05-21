@@ -689,20 +689,25 @@ public class ArenaFragment extends Fragment {
                 leftYAxisMaxValue = 1;
             }
 
-            /*
-            // find max value to
-            int tmpIndex = 0;
-            for (int i = 0; i < set4.getEntryCount(); i++) {
-                if (set4.getEntryForIndex(i).getY() > set4.getEntryForIndex(tmpIndex).getY()) {
-                    tmpIndex = i;
+            // only to be used in Section 3 (2 Yaxis dependecny)
+            float rightYAxisMaxValue=0;
+            BarDataSet[] rightSets = new BarDataSet[]{set3, set4};
+            for (int j = 0; j < rightSets.length; j++) {
+                int tmpIndex = 0;
+                for (int i = 0; i < rightSets[j].getEntryCount(); i++) {
+                    if (rightSets[j].getEntryForIndex(i).getY() > rightSets[j].getEntryForIndex(tmpIndex).getY()) {
+                        tmpIndex = i;
+                    }
                 }
+
+                rightYAxisMaxValue = (rightSets[j].getEntryForIndex(tmpIndex).getY() > rightYAxisMaxValue ) ?  rightSets[j].getEntryForIndex(tmpIndex).getY()  : rightYAxisMaxValue;
+
             }
-            */
 
-            // HighLight the Max Value
-            //chart.highlightValue(set.getEntryForIndex(tmpIndex).getX(),0);
+            if (rightYAxisMaxValue == 0) {
+                rightYAxisMaxValue = 1;
+            }
 
-            //chart.setPinchZoom(true); // zooming X & Y Axis at one gesture
 
             // disable highlight of values by the user's gestures
             chart.setHighlightPerDragEnabled(false);
@@ -737,7 +742,7 @@ public class ArenaFragment extends Fragment {
                 // goals
                 set3.setAxisDependency(YAxis.AxisDependency.RIGHT);
                 set4.setAxisDependency(YAxis.AxisDependency.RIGHT);
-                yAxisRight.setAxisMaximum(4f); // TODO: not hardcoded
+                yAxisRight.setAxisMaximum(rightYAxisMaxValue*1.1f);
             }
 
 
