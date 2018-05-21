@@ -321,9 +321,26 @@ public class ArenaFragment extends Fragment {
                                  Bundle savedInstanceState) {
 
 
-
+            // standard Bar Chart
             ArrayList<PointDataSet> pointDataSets = new ArrayList<>();
             List<BarEntry> entries = new ArrayList<>();
+            BarDataSet set;
+
+            // Grouped Bar Chart
+            ArrayList<PointDataSet> pointDataSets1 = new ArrayList<>();
+            ArrayList<PointDataSet> pointDataSets2 = new ArrayList<>();
+            ArrayList<PointDataSet> pointDataSets3 = new ArrayList<>();
+            ArrayList<PointDataSet> pointDataSets4 = new ArrayList<>();
+            List<BarEntry> entries1 = new ArrayList<>();
+            List<BarEntry> entries2 = new ArrayList<>();
+            List<BarEntry> entries3 = new ArrayList<>();
+            List<BarEntry> entries4 = new ArrayList<>();
+            BarDataSet set1;
+            BarDataSet set2;
+            BarDataSet set3;
+            BarDataSet set4;
+
+
 
             View rootView = inflater.inflate(R.layout.stat_page, container, false);
 
@@ -378,20 +395,114 @@ public class ArenaFragment extends Fragment {
             };
 
 
+            float winingStrikeRecord;
             //iterate over all players
-            for (int i = 0; i < names.length ; i++) {
-                pointDataSets.add(new PointDataSet(1f+i, globalAndMatchUpsCharts.get(this.matchUpIndex + 1).chartsCollection.get(this.sectionNumber-1).chart.get(i).getyValue()));
+            switch (getArguments().getInt(ARG_SECTION_NUMBER)){
+                case 1:
+                    // Success%
+                    for (int i = 0; i < names.length ; i++) {
+                        pointDataSets.add(new PointDataSet(1f+i, globalAndMatchUpsCharts.get(this.matchUpIndex + 1).chartsCollection.get(0).chart.get(i).getyValue()));
+                    }
+
+                    for (PointDataSet data : pointDataSets) {
+                        // turn your data into Entry objects
+                        entries.add(new BarEntry(data.getxValue(), data.getyValue()));
+                    }
+
+                    set = new BarDataSet(entries, "Success%");
+                    setSingleChart(chart,set, sectionNumber, this.matchUpIndex, formatter);
+
+                    break;
+                case 2:
+                   // Games
+                        // Loss
+                        for (int i = 0; i < names.length ; i++) {
+                            pointDataSets1.add(new PointDataSet(1f+i, globalAndMatchUpsCharts.get(this.matchUpIndex + 1).chartsCollection.get(1).chart.get(i).getyValue()));
+                        }
+
+                        for (PointDataSet data : pointDataSets1) {
+                            // turn your data into Entry objects
+                            entries1.add(new BarEntry(data.getxValue(), data.getyValue()));
+                        }
+
+                       set1 = new BarDataSet(entries, "Loss");
+
+
+                        // Draw
+                        for (int i = 0; i < names.length ; i++) {
+                            pointDataSets2.add(new PointDataSet(1f+i, globalAndMatchUpsCharts.get(this.matchUpIndex + 1).chartsCollection.get(2).chart.get(i).getyValue()));
+                        }
+
+                        for (PointDataSet data : pointDataSets2) {
+                            // turn your data into Entry objects
+                            entries2.add(new BarEntry(data.getxValue(), data.getyValue()));
+                        }
+
+                        set2 = new BarDataSet(entries, "Draws");
+
+
+
+                        // Win
+                        for (int i = 0; i < names.length ; i++) {
+                            pointDataSets3.add(new PointDataSet(1f+i, globalAndMatchUpsCharts.get(this.matchUpIndex + 1).chartsCollection.get(3).chart.get(i).getyValue()));
+                        }
+
+                        for (PointDataSet data : pointDataSets3) {
+                            // turn your data into Entry objects
+                            entries3.add(new BarEntry(data.getxValue(), data.getyValue()));
+                        }
+
+                        set3 = new BarDataSet(entries, "Win");
+
+
+                        // #games
+                        for (int i = 0; i < names.length ; i++) {
+                            pointDataSets4.add(new PointDataSet(1f+i, globalAndMatchUpsCharts.get(this.matchUpIndex + 1).chartsCollection.get(4).chart.get(i).getyValue()));
+                        }
+
+                        for (PointDataSet data : pointDataSets4) {
+                            // turn your data into Entry objects
+                            entries4.add(new BarEntry(data.getxValue(), data.getyValue()));
+                        }
+
+                        set4 = new BarDataSet(entries, "Games");
+
+                    break;
+                case 3:
+                    // Goals
+
+                    break;
+                case 4:
+                   // Wining Strike
+                    for (int i = 0; i < names.length ; i++) {
+                        float fullValue = globalAndMatchUpsCharts.get(this.matchUpIndex + 1).chartsCollection.get(9).chart.get(i).getyValue();
+                        float reminderValue = fullValue % 1000000f;
+                        float secondReminder = fullValue % 1000000000000f;
+                        float currentWiningStrike = reminderValue;
+                        winingStrikeRecord = (secondReminder - currentWiningStrike) / 1000000f;
+                        pointDataSets.add(new PointDataSet(1f+i, currentWiningStrike));
+                    }
+
+                    for (PointDataSet data : pointDataSets) {
+                        // turn your data into Entry objects
+                        entries.add(new BarEntry(data.getxValue(), data.getyValue()));
+                    }
+
+                    set = new BarDataSet(entries, "Wining Strike");
+                    setSingleChart(chart,set, sectionNumber, this.matchUpIndex, formatter);
+
+                    break;
             }
 
 
-            for (PointDataSet data : pointDataSets) {
-                // turn your data into Entry objects
-                entries.add(new BarEntry(data.getxValue(), data.getyValue()));
-            }
 
-            BarDataSet set = new BarDataSet(entries, "BarDataSet");
 
-            setSingleChart(chart,set, sectionNumber, this.matchUpIndex, formatter);
+
+
+
+
+
+
 
 
 
@@ -480,6 +591,96 @@ public class ArenaFragment extends Fragment {
 
             chart.invalidate(); // refresh
         }
+
+
+        public void setSingleGroupedBarChart(BarChart chart, BarDataSet set1, BarDataSet set2 , BarDataSet set3, BarDataSet set4 , int sectionNumber, int matchUpIndex, IAxisValueFormatter formatter) {
+            float groupSpace = 0.06f;
+            float barSpace = 0.01f; // x4 dataset
+            float barWidth = 0.225f; // x4 dataset
+            // (0.01 + 0.225) * 4 + 0.06 = 1.00 -> interval per "group"
+
+            BarData barData;
+            barData = new BarData(set1, set2, set3, set4);
+            barData.setBarWidth(barWidth); // set custom bar width
+            chart.setData(barData);
+            // find max value to
+            int tmpIndex = 0;
+            for (int i = 0; i < set.getEntryCount(); i++) {
+                if (set.getEntryForIndex(i).getY() > set.getEntryForIndex(tmpIndex).getY()) {
+                    tmpIndex = i;
+                }
+            }
+            // HighLight the Max Value
+            chart.highlightValue(set.getEntryForIndex(tmpIndex).getX(),0);
+
+            //chart.setPinchZoom(true); // zooming X & Y Axis at one gesture
+
+            // disable highlight of values by the user's gestures
+            chart.setHighlightPerDragEnabled(false);
+            chart.setHighlightPerTapEnabled(false);
+
+
+            XAxis xAxis = chart.getXAxis();
+            YAxis yAxisLeft = chart.getAxisLeft();
+            YAxis yAxisRight = chart.getAxisRight();
+
+
+        /*
+        This will prevent the formatter from drawing duplicate axis labels (caused by axis intervals < 1).
+        As soon as the "zoom level" of the chart is high enough, it will stop recalculating smaller intervals.
+         */
+            xAxis.setGranularity(1f); // minimum axis-step (interval) is 1
+
+            xAxis.setValueFormatter(formatter);
+            xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+            //xAxis.setTextSize();
+            // set an angle for the xAxis Labels
+            xAxis.setLabelRotationAngle(22.5f);
+            // max #values
+            xAxis.setLabelCount(6);
+
+            yAxisLeft.setAxisMinimum(0f);
+            yAxisRight.setAxisMinimum(0f);
+            yAxisLeft.setAxisMaximum(set.getEntryForIndex(tmpIndex).getY()*1.1f);
+            yAxisRight.setAxisMaximum(set.getEntryForIndex(tmpIndex).getY()*1.1f);
+
+
+            // Sets the Legend enabled or disabled
+            chart.getLegend().setEnabled(true);
+            // make the x-axis fit \ or not exactly all bars
+            chart.setFitBars(true);
+
+            // set an emphty ("") description in the right bottom corrner of the chart
+            Description description = new Description();
+            description.setText("");
+            chart.setDescription(description);
+
+            // Limit Lines
+            // this is just an example, in this exampl i want to add a limit line to the last section , which was section #4 at the time
+            if (sectionNumber == 4) {
+                // add limit line
+                float limit = 4; //TODO: needs to come from the set itself
+                LimitLine ll = new LimitLine(limit, "All Time Record Score: " + limit);
+                ll.setLabelPosition(LimitLine.LimitLabelPosition.LEFT_TOP);
+                ll.setLineColor(Color.RED);
+                ll.setLineWidth(0.1f);
+                ll.setTextColor(Color.BLACK);
+                ll.setTextSize(1f);
+                yAxisLeft.addLimitLine(ll);
+                yAxisRight.addLimitLine(ll);
+                if (limit > set.getEntryForIndex(tmpIndex).getY()) {
+                    yAxisLeft.setAxisMaximum(limit * 1.1f);
+                    yAxisRight.setAxisMaximum(limit * 1.1f);
+                }
+
+
+            }
+
+
+
+            chart.invalidate(); // refresh
+        }
+
         // set the names of the players as the X-Axis labels for all charts
         public static String[] setChartsXAxisLabels(ArrayList<UserStat> userStats){
             String[] names = new String[userStats.size()]; // BarChart XAxis Labels - names of the players
