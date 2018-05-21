@@ -663,8 +663,27 @@ public class ArenaFragment extends Fragment {
             barData = new BarData(set1, set2, set3, set4);
             barData.setBarWidth(barWidth); // set custom bar width
             chart.setData(barData);
-            chart.groupBars(0f, groupSpace, barSpace); // perform the "explicit" grouping
+            chart.groupBars(0.5f, groupSpace, barSpace); // perform the "explicit" grouping
 
+            float leftYAxisMaxValue=0;
+            BarDataSet[] sets = new BarDataSet[]{set1, set2, set3, set4};
+            for (int j = 0; j < sets.length; j++) {
+                int tmpIndex = 0;
+                for (int i = 0; i < sets[j].getEntryCount(); i++) {
+                    if (sets[j].getEntryForIndex(i).getY() > sets[j].getEntryForIndex(tmpIndex).getY()) {
+                        tmpIndex = i;
+                    }
+                }
+
+                leftYAxisMaxValue = (sets[j].getEntryForIndex(tmpIndex).getY() > leftYAxisMaxValue ) ?  sets[j].getEntryForIndex(tmpIndex).getY()  : leftYAxisMaxValue;
+
+            }
+
+            if (leftYAxisMaxValue == 0) {
+                leftYAxisMaxValue = 1;
+            }
+
+            /*
             // find max value to
             int tmpIndex = 0;
             for (int i = 0; i < set4.getEntryCount(); i++) {
@@ -672,6 +691,8 @@ public class ArenaFragment extends Fragment {
                     tmpIndex = i;
                 }
             }
+            */
+
             // HighLight the Max Value
             //chart.highlightValue(set.getEntryForIndex(tmpIndex).getX(),0);
 
@@ -703,8 +724,8 @@ public class ArenaFragment extends Fragment {
 
             yAxisLeft.setAxisMinimum(0f);
             yAxisRight.setAxisMinimum(0f);
-            yAxisLeft.setAxisMaximum(set4.getEntryForIndex(tmpIndex).getY()*1.1f);
-            yAxisRight.setAxisMaximum(set4.getEntryForIndex(tmpIndex).getY()*1.1f);
+            yAxisLeft.setAxisMaximum(leftYAxisMaxValue*1.1f);
+            yAxisRight.setAxisMaximum(leftYAxisMaxValue*1.1f);
 
 
             // Sets the Legend enabled or disabled
