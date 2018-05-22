@@ -775,7 +775,7 @@ public class ArenaFragment extends Fragment {
             set4.setColor(getResources().getColor(R.color.colorPrimaryDark));
 
 
-
+            
 
             BarData barData;
             barData = new BarData(set1, set2, set3, set4);
