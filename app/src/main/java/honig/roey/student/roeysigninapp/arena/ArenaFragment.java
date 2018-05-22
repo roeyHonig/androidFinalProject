@@ -498,11 +498,15 @@ public class ArenaFragment extends Fragment {
 
 
             float winingStrikeRecord;
+            int winingStrikeRecordIndex;
+            String winingStrikeRecordHolderFullName;
             //iterate over all players
             switch (getArguments().getInt(ARG_SECTION_NUMBER)){
                 case 1:
                     // Success%
                     winingStrikeRecord = 0f;
+                    winingStrikeRecordIndex = 0;
+                    winingStrikeRecordHolderFullName = "";
                     for (int i = 0; i < names.length ; i++) {
                         pointDataSets.add(new PointDataSet(1f+i, globalAndMatchUpsCharts.get(this.matchUpIndex + 1).chartsCollection.get(0).chart.get(i).getyValue()));
                     }
@@ -513,7 +517,7 @@ public class ArenaFragment extends Fragment {
                     }
 
                     set = new BarDataSet(entries, "Success%");
-                    setSingleChart(chart,set, sectionNumber, this.matchUpIndex, formatter, winingStrikeRecord);
+                    setSingleChart(chart,set, sectionNumber, this.matchUpIndex, formatter, winingStrikeRecord, winingStrikeRecordHolderFullName);
 
                     break;
                 case 2:
@@ -636,6 +640,8 @@ public class ArenaFragment extends Fragment {
                 case 4:
                    // Wining Strike
                     winingStrikeRecord = 0f;
+                    winingStrikeRecordIndex = 0;
+                    winingStrikeRecordHolderFullName = "";
                     for (int i = 0; i < names.length ; i++) {
                         float fullValue = globalAndMatchUpsCharts.get(this.matchUpIndex + 1).chartsCollection.get(9).chart.get(i).getyValue();
                         float reminderValue = fullValue % 1000f;
@@ -643,6 +649,7 @@ public class ArenaFragment extends Fragment {
                         float tmpWiningStrikeRecord = (fullValue - reminderValue) / 1000;
                         if (tmpWiningStrikeRecord > winingStrikeRecord){
                             winingStrikeRecord = tmpWiningStrikeRecord;
+                            winingStrikeRecordIndex = i;
                         }
 
                         pointDataSets.add(new PointDataSet(1f+i, currentWiningStrike));
@@ -653,8 +660,10 @@ public class ArenaFragment extends Fragment {
                         entries.add(new BarEntry(data.getxValue(), data.getyValue()));
                     }
 
+                    winingStrikeRecordHolderFullName = names[winingStrikeRecordIndex];
+
                     set = new BarDataSet(entries, "Wining Strike");
-                    setSingleChart(chart,set, sectionNumber, this.matchUpIndex, formatter, winingStrikeRecord);
+                    setSingleChart(chart,set, sectionNumber, this.matchUpIndex, formatter, winingStrikeRecord, winingStrikeRecordHolderFullName);
 
                     break;
             }
@@ -666,7 +675,7 @@ public class ArenaFragment extends Fragment {
             return rootView;
         }
 
-        public void setSingleChart(BarChart chart, BarDataSet set, int sectionNumber, int matchUpIndex, IAxisValueFormatter formatter, float winingStrikeRecord) {
+        public void setSingleChart(BarChart chart, BarDataSet set, int sectionNumber, int matchUpIndex, IAxisValueFormatter formatter, float winingStrikeRecord, String winingStrikeRecordHolderFullName) {
             BarData barData;
             barData = new BarData(set);
             barData.setBarWidth(0.9f); // set custom bar width
@@ -729,7 +738,7 @@ public class ArenaFragment extends Fragment {
             if (sectionNumber == 4) {
                 // add limit line
                 float limit = winingStrikeRecord;
-                LimitLine ll = new LimitLine(limit, "All Time Record Score: " + limit);
+                LimitLine ll = new LimitLine(limit, "All Time Record Score: " + limit + " (" + winingStrikeRecordHolderFullName + ")");
                 ll.setLabelPosition(LimitLine.LimitLabelPosition.LEFT_TOP);
                 ll.setLineColor(Color.RED);
                 ll.setLineWidth(0.1f);
