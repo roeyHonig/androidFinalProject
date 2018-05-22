@@ -391,10 +391,7 @@ public class ArenaFragment extends Fragment {
 
                 @Override
                 public void onChartGestureEnd(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
-                    if (names != null){
-                        float range = names.length+1f - 1.5f;
-                        xAxisSeekBar.setProgress((int)(((range+1.5)-chart.getVisibleXRange())*100/range));
-                    }
+
                    // chart.getVisibleXRange()
                 }
 
@@ -420,6 +417,10 @@ public class ArenaFragment extends Fragment {
 
                 @Override
                 public void onChartScale(MotionEvent me, float scaleX, float scaleY) {
+                    if (names != null){
+                        float range = names.length+1f - 1.5f;
+                        xAxisSeekBar.setProgress((int)(((range+1.5)-chart.getVisibleXRange())*100/range));
+                    }
 
                 }
 
@@ -705,6 +706,8 @@ public class ArenaFragment extends Fragment {
             }
 
 
+
+
             chart.setVisibleXRangeMaximum(names.length+1f);
             chart.setVisibleXRangeMinimum(1.5f); // If this is e.g. set to 10, it is not possible to zoom in further than 10 values on the x-axis.
             chart.invalidate(); // refresh
@@ -815,6 +818,21 @@ public class ArenaFragment extends Fragment {
             Description description = new Description();
             description.setText("");
             chart.setDescription(description);
+
+            
+
+            // add limit lines
+            for (int i = 0; i < names.length-1; i++) {
+                float limit = 1.5f + i;
+                LimitLine ll = new LimitLine(limit, "");
+                ll.setLabelPosition(LimitLine.LimitLabelPosition.LEFT_TOP);
+                ll.setLineColor(Color.RED);
+                ll.setLineWidth(0.5f);
+                ll.setTextColor(Color.TRANSPARENT);
+                ll.setTextSize(1f);
+                xAxis.addLimitLine(ll);
+            }
+
 
             chart.setVisibleXRangeMaximum(names.length+1f);
             chart.setVisibleXRangeMinimum(1.5f); // If this is e.g. set to 10, it is not possible to zoom in further than 10 values on the x-axis.
