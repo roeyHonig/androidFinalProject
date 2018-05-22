@@ -16,6 +16,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SeekBar;
@@ -32,6 +33,8 @@ import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+import com.github.mikephil.charting.listener.ChartTouchListener;
+import com.github.mikephil.charting.listener.OnChartGestureListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -346,17 +349,21 @@ public class ArenaFragment extends Fragment {
 
             View rootView = inflater.inflate(R.layout.stat_page, container, false);
 
+            //TODO: if no arguments came, set something insted of the chart
+            //textView = (TextView) rootView.findViewById(R.id.section_label);
+            chart =  rootView.findViewById(R.id.chart);
+
             FloatingActionButton addMatchResultFAB = rootView.findViewById(R.id.addMatchResult);
 
             SeekBar xAxisSeekBar = rootView.findViewById(R.id.xAxisSeekBar);
             xAxisSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                    float scale = chart.getXChartMax() / 1.5f;
+                    float range = names.length+1f - 1.5f;
 
                     if (b) {
                         // initated by the usert
-                        chart.setVisibleXRange(0,4.5f-3f*i/100f);
+                        chart.setVisibleXRange(1.5f,(range + 1.5f)-range*i/100f);
                         chart.invalidate();
                     }
 
@@ -369,10 +376,55 @@ public class ArenaFragment extends Fragment {
 
                 @Override
                 public void onStopTrackingTouch(SeekBar seekBar) {
-                    chart.setVisibleXRangeMaximum(4.5f);
-                    chart.setVisibleXRangeMinimum(1.5f);
-                    //chart.invalidate();
+                    chart.setVisibleXRangeMaximum(names.length+1f);
+                    chart.setVisibleXRangeMinimum(1.5f); // If this is e.g. set to 10, it is not possible to zoom in further than 10 values on the x-axis.
 
+
+                }
+            });
+
+            chart.setOnChartGestureListener(new OnChartGestureListener() {
+                @Override
+                public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
+
+                }
+
+                @Override
+                public void onChartGestureEnd(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
+                    if (names != null){
+                        float range = names.length+1f - 1.5f;
+                        xAxisSeekBar.setProgress((int)(((range+1.5)-chart.getVisibleXRange())*100/range));
+                    }
+                   // chart.getVisibleXRange()
+                }
+
+                @Override
+                public void onChartLongPressed(MotionEvent me) {
+
+                }
+
+                @Override
+                public void onChartDoubleTapped(MotionEvent me) {
+
+                }
+
+                @Override
+                public void onChartSingleTapped(MotionEvent me) {
+
+                }
+
+                @Override
+                public void onChartFling(MotionEvent me1, MotionEvent me2, float velocityX, float velocityY) {
+
+                }
+
+                @Override
+                public void onChartScale(MotionEvent me, float scaleX, float scaleY) {
+
+                }
+
+                @Override
+                public void onChartTranslate(MotionEvent me, float dX, float dY) {
 
                 }
             });
@@ -381,10 +433,6 @@ public class ArenaFragment extends Fragment {
 
 
 
-
-            //TODO: if no arguments came, set something insted of the chart
-            //textView = (TextView) rootView.findViewById(R.id.section_label);
-            chart =  rootView.findViewById(R.id.chart);
 
             if (this.matchUpIndex == -1) {
                 // Global
@@ -657,7 +705,7 @@ public class ArenaFragment extends Fragment {
             }
 
 
-
+            chart.setVisibleXRangeMaximum(names.length+1f);
             chart.setVisibleXRangeMinimum(1.5f); // If this is e.g. set to 10, it is not possible to zoom in further than 10 values on the x-axis.
             chart.invalidate(); // refresh
         }
@@ -768,6 +816,7 @@ public class ArenaFragment extends Fragment {
             description.setText("");
             chart.setDescription(description);
 
+            chart.setVisibleXRangeMaximum(names.length+1f);
             chart.setVisibleXRangeMinimum(1.5f); // If this is e.g. set to 10, it is not possible to zoom in further than 10 values on the x-axis.
             chart.invalidate(); // refresh
         }
