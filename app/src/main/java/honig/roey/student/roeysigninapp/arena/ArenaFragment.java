@@ -347,12 +347,19 @@ public class ArenaFragment extends Fragment {
             View rootView = inflater.inflate(R.layout.stat_page, container, false);
 
             FloatingActionButton addMatchResultFAB = rootView.findViewById(R.id.addMatchResult);
-            /*
+
             SeekBar xAxisSeekBar = rootView.findViewById(R.id.xAxisSeekBar);
             xAxisSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                    chart.moveViewToX(i/100f * chartXAxisBottomLeftValue);
+                    float scale = chart.getXChartMax() / 1.5f;
+                    //chart.resetZoom();
+                    //chart.zoom(scale * i / 100,1, 0f,0f);
+
+                    //chart.zoom(3f,1, 0f,0f);
+
+                    chart.setVisibleXRange(0,4.5f-3f*i/100f);
+                    chart.invalidate();
                 }
 
                 @Override
@@ -365,7 +372,7 @@ public class ArenaFragment extends Fragment {
 
                 }
             });
-            */
+
 
 
 
@@ -644,6 +651,7 @@ public class ArenaFragment extends Fragment {
 
 
             }
+
 
 
             chart.setVisibleXRangeMinimum(1.5f); // If this is e.g. set to 10, it is not possible to zoom in further than 10 values on the x-axis.
