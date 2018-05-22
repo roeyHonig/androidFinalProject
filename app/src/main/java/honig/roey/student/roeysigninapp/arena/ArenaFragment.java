@@ -353,13 +353,13 @@ public class ArenaFragment extends Fragment {
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                     float scale = chart.getXChartMax() / 1.5f;
-                    //chart.resetZoom();
-                    //chart.zoom(scale * i / 100,1, 0f,0f);
 
-                    //chart.zoom(3f,1, 0f,0f);
+                    if (b) {
+                        // initated by the usert
+                        chart.setVisibleXRange(0,4.5f-3f*i/100f);
+                        chart.invalidate();
+                    }
 
-                    chart.setVisibleXRange(0,4.5f-3f*i/100f);
-                    chart.invalidate();
                 }
 
                 @Override
@@ -369,6 +369,10 @@ public class ArenaFragment extends Fragment {
 
                 @Override
                 public void onStopTrackingTouch(SeekBar seekBar) {
+                    chart.setVisibleXRangeMaximum(4.5f);
+                    chart.setVisibleXRangeMinimum(1.5f);
+                    //chart.invalidate();
+
 
                 }
             });
