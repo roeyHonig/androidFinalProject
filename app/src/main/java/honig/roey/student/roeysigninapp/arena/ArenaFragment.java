@@ -646,7 +646,7 @@ public class ArenaFragment extends Fragment {
             }
 
 
-
+            chart.setVisibleXRangeMinimum(1.5f); // If this is e.g. set to 10, it is not possible to zoom in further than 10 values on the x-axis.
             chart.invalidate(); // refresh
         }
 
@@ -756,6 +756,7 @@ public class ArenaFragment extends Fragment {
             description.setText("");
             chart.setDescription(description);
 
+            chart.setVisibleXRangeMinimum(1.5f); // If this is e.g. set to 10, it is not possible to zoom in further than 10 values on the x-axis.
             chart.invalidate(); // refresh
         }
 
