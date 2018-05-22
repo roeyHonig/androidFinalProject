@@ -359,7 +359,17 @@ public class ArenaFragment extends Fragment {
             xAxisSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                    float range = names.length+1f - 1.5f;
+
+                    float xMax;
+                    float range;
+
+                    if (sectionNumber == 2 || sectionNumber == 3){
+                        xMax = (float) names.length + 0.25f;
+                    } else {
+                        xMax = names.length+1f;
+                    }
+
+                    range = xMax - 1.5f;
 
                     if (b) {
                         // initated by the usert
@@ -376,7 +386,16 @@ public class ArenaFragment extends Fragment {
 
                 @Override
                 public void onStopTrackingTouch(SeekBar seekBar) {
-                    chart.setVisibleXRangeMaximum(names.length+1f);
+
+                    float xMax;
+
+                    if (sectionNumber == 2 || sectionNumber == 3){
+                        xMax = (float) names.length + 0.25f;
+                    } else {
+                        xMax = names.length+1f;
+                    }
+
+                    chart.setVisibleXRangeMaximum(xMax);
                     chart.setVisibleXRangeMinimum(1.5f); // If this is e.g. set to 10, it is not possible to zoom in further than 10 values on the x-axis.
 
 
@@ -392,7 +411,16 @@ public class ArenaFragment extends Fragment {
                 @Override
                 public void onChartGestureEnd(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
                     if (names != null){
-                        float range = names.length+1f - 1.5f;
+
+                        float xMax;
+
+                        if (sectionNumber == 2 || sectionNumber == 3){
+                            xMax = (float) names.length + 0.25f;
+                        } else {
+                            xMax = names.length+1f;
+                        }
+
+                        float range = xMax - 1.5f;
                         xAxisSeekBar.setProgress((int)(((range+1.5)-chart.getVisibleXRange())*100/range));
                     }
 
@@ -421,7 +449,16 @@ public class ArenaFragment extends Fragment {
                 @Override
                 public void onChartScale(MotionEvent me, float scaleX, float scaleY) {
                     if (names != null){
-                        float range = names.length+1f - 1.5f;
+
+                        float xMax;
+
+                        if (sectionNumber == 2 || sectionNumber == 3){
+                            xMax = (float) names.length + 0.25f;
+                        } else {
+                            xMax = names.length+1f;
+                        }
+
+                        float range = xMax - 1.5f;
                         xAxisSeekBar.setProgress((int)(((range+1.5)-chart.getVisibleXRange())*100/range));
                     }
 
