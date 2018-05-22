@@ -391,8 +391,11 @@ public class ArenaFragment extends Fragment {
 
                 @Override
                 public void onChartGestureEnd(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
+                    if (names != null){
+                        float range = names.length+1f - 1.5f;
+                        xAxisSeekBar.setProgress((int)(((range+1.5)-chart.getVisibleXRange())*100/range));
+                    }
 
-                   // chart.getVisibleXRange()
                 }
 
                 @Override
@@ -819,7 +822,7 @@ public class ArenaFragment extends Fragment {
             description.setText("");
             chart.setDescription(description);
 
-            
+
 
             // add limit lines
             for (int i = 0; i < names.length-1; i++) {
