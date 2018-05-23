@@ -232,6 +232,9 @@ public class ArenaFragment extends Fragment {
                             List<BarEntry> entries = new ArrayList<>();
                             BarDataSet set;
 
+                            chart.getAxisLeft().removeAllLimitLines();
+                            chart.getAxisRight().removeAllLimitLines();
+
                             // Grouped Bar Chart
                             ArrayList<PointDataSet> pointDataSets1 = new ArrayList<>();
                             ArrayList<PointDataSet> pointDataSets2 = new ArrayList<>();
