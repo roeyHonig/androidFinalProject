@@ -2,6 +2,7 @@ package honig.roey.student.roeysigninapp.arena;
 
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.ColorRes;
@@ -12,6 +13,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,10 +21,13 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Description;
@@ -43,6 +48,7 @@ import java.util.List;
 import honig.roey.student.roeysigninapp.NavDrawer;
 import honig.roey.student.roeysigninapp.R;
 import honig.roey.student.roeysigninapp.tables.MatchUp;
+import honig.roey.student.roeysigninapp.tables.Request;
 import honig.roey.student.roeysigninapp.tables.RingGlobal;
 import honig.roey.student.roeysigninapp.tables.UserStat;
 
@@ -73,7 +79,7 @@ public class ArenaFragment extends Fragment {
     private ViewPager mViewPager;
     private TabLayout tabLayout;
     private int matchUpIndex = -1; // -1 is global arena data Set. 0 or positive number is an individual matchUP
-    private NavDrawer parentActivity;
+    private static NavDrawer parentActivity;
 
 
 
@@ -219,6 +225,7 @@ public class ArenaFragment extends Fragment {
 
                         PlaceholderFragment fragment = mSectionsPagerAdapter.fragments.get(k) ;
                         BarChart chart = mSectionsPagerAdapter.fragments.get(k).getChart();
+                        FloatingActionButton addMatchResultFAB = mSectionsPagerAdapter.fragments.get(k).getAddMatchResultFAB();
                         SeekBar xAxisSeekBar = mSectionsPagerAdapter.fragments.get(k).getxAxisSeekBar();
                         int matchUpIndex = mSectionsPagerAdapter.fragments.get(k).getMatchUpIndex();
                         int sectionNumber = mSectionsPagerAdapter.fragments.get(k).getSectionNumber();
@@ -248,6 +255,25 @@ public class ArenaFragment extends Fragment {
                             BarDataSet set2;
                             BarDataSet set3;
                             BarDataSet set4;
+
+
+                            if (matchUpIndex >= 0) {
+                                addMatchResultFAB.setVisibility(View.VISIBLE);
+                            } else {
+                                addMatchResultFAB.setVisibility(View.INVISIBLE);
+                            }
+                            addMatchResultFAB.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    if (matchUpIndex >= 0){
+                                        String p1Name = individualMatchUpsDataSet.get(matchUpIndex).getPlayers().get(0).getFullName();
+                                        String p2Name = individualMatchUpsDataSet.get(matchUpIndex).getPlayers().get(1).getFullName();
+                                        PlaceholderFragment.openDialogBox(p1Name,p2Name);
+                                    }
+
+                                }
+
+                            });
 
                             if (matchUpIndex == -1) {
                                 // Global
@@ -612,6 +638,11 @@ public class ArenaFragment extends Fragment {
         public static IAxisValueFormatter formatter;
         private BarChart chart;
         private SeekBar xAxisSeekBar;
+        private FloatingActionButton addMatchResultFAB;
+
+        public FloatingActionButton getAddMatchResultFAB() {
+            return addMatchResultFAB;
+        }
 
         public int getMatchUpIndex() {
             return matchUpIndex;
@@ -700,7 +731,25 @@ public class ArenaFragment extends Fragment {
             //textView = (TextView) rootView.findViewById(R.id.section_label);
             chart =  rootView.findViewById(R.id.chart);
 
-            FloatingActionButton addMatchResultFAB = rootView.findViewById(R.id.addMatchResult);
+            addMatchResultFAB = rootView.findViewById(R.id.addMatchResult);
+
+            if (matchUpIndex >= 0) {
+                addMatchResultFAB.setVisibility(View.VISIBLE);
+            } else {
+                addMatchResultFAB.setVisibility(View.INVISIBLE);
+            }
+            addMatchResultFAB.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (matchUpIndex >= 0){
+                        String p1Name = individualMatchUpsDataSet.get(matchUpIndex).getPlayers().get(0).getFullName();
+                        String p2Name = individualMatchUpsDataSet.get(matchUpIndex).getPlayers().get(1).getFullName();
+                        openDialogBox(p1Name,p2Name);
+                    }
+
+                }
+
+            });
 
             xAxisSeekBar = rootView.findViewById(R.id.xAxisSeekBar);
             xAxisSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -1242,6 +1291,46 @@ public class ArenaFragment extends Fragment {
                 names[i] = userStats.get(i).getFullName();
             }
             return names;
+        }
+
+        public static void openDialogBox(String p1Name, String p2Name) {
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(parentActivity);
+            View dialogView = parentActivity.getLayoutInflater().inflate(R.layout.match_score_dialog,null);
+            final TextView p1NmaeTextView = dialogView.findViewById(R.id.p1Name);
+            final TextView p2NmaeTextView = dialogView.findViewById(R.id.p2Name);
+            p1NmaeTextView.setText(p1Name);
+            p2NmaeTextView.setText(p2Name);
+            builder.setPositiveButton("OK", null)
+                    .setNegativeButton("Abourt", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            Toast.makeText(parentActivity,"Later then...",Toast.LENGTH_LONG).show();
+                        }
+                    });
+
+            builder.setView(dialogView);
+            AlertDialog myDialog = builder.create();
+
+            myDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                @Override
+                public void onShow(DialogInterface dialogInterface) {
+                    Button btPositive = ((AlertDialog) myDialog).getButton(AlertDialog.BUTTON_POSITIVE);
+                    // enable clicking the button (realese the button lock)
+                    btPositive.setClickable(true);
+                    btPositive.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            //Lock the Button
+                            btPositive.setClickable(false);
+                            //TODO: cheack if scores are valid long
+                            //TODO: write to the Global Arena DB
+                            // TODO: write to the individual Arena DB
+
+                        }
+                    });
+                }
+            });
+            myDialog.show();
         }
 
 
