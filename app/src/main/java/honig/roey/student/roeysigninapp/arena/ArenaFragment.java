@@ -1407,6 +1407,69 @@ public class ArenaFragment extends Fragment {
                                 myRef.child("likeSomeArena").child("likeP2").setValue(newPlayer2Data);
 
                                 //TODO: write to the Global Arena DB
+                                UserStat p1 = null;
+                                UserStat p2 = null;
+                                for (UserStat player: ringGlobal.getUserStats()) {
+                                    if (player.getUid().equals(matchUp.getPlayers().get(0).getUid())) {
+                                        p1 = player;
+                                    }else if (player.getUid().equals(matchUp.getPlayers().get(1).getUid())) {
+                                        p2 = player;
+                                    }
+                                }
+
+
+                                uid1 = p1.getUid();
+                                fullName1 = p1.getFullName();
+                                profileImage1 = p1.getProfileImage();
+                                los1 = p1.getLos();
+                                drw1 = p1.getDrw();
+                                win1 = p1.getWin() +1;
+                                goalsFor1 = p1.getGoalsFor() + p1FinalScore;
+                                goalsAgainst1 = p1.getGoalsAgainst() + p2FinalScore;
+
+
+                                currentWiningStrike1 = p1.getWinningStrike() % 1000;
+                                currentRecord1 = (p1.getWinningStrike() - currentWiningStrike1) / 1000;
+                                newWiningStrike1 = currentWiningStrike1 + 1;
+
+
+                                if (newWiningStrike1 > currentRecord1) {
+                                    currentRecord1 = newWiningStrike1;
+                                    winingStrike1 = currentRecord1 * 1000 + newWiningStrike1;
+                                } else {
+                                    winingStrike1 = currentRecord1 * 1000 + newWiningStrike1;
+                                }
+
+
+
+
+                                uid2 = p2.getUid();
+                                fullName2 = p2.getFullName();
+                                profileImage2 = p2.getProfileImage();
+                                los2 = p2.getLos() + 1;
+                                drw2 = p2.getDrw();
+                                win2 = p2.getWin();
+                                goalsFor2 = p2.getGoalsFor() + p2FinalScore;
+                                goalsAgainst2 = p2.getGoalsAgainst() + p1FinalScore;
+
+
+                                currentWiningStrike2 = p2.getWinningStrike() % 1000;
+                                currentRecord2 = (p2.getWinningStrike() - currentWiningStrike2) / 1000;
+
+                                winingStrike2 = currentRecord2 * 1000;
+
+
+                                newPlayer1Data = new UserStat(uid1,fullName1,profileImage1,los1, drw1, win1, goalsFor1, goalsAgainst1, winingStrike1);
+                                newPlayer2Data = new UserStat(uid2,fullName2,profileImage2,los2, drw2, win2, goalsFor2, goalsAgainst2, winingStrike2);
+
+
+
+                                database = FirebaseDatabase.getInstance();
+                                myRef = database.getReference("likeGArenes");
+                                myRef.child("likesomearena").child("uid1").setValue(newPlayer1Data);
+                                myRef.child("likesomearena").child("uid2").setValue(newPlayer2Data);
+
+
 
                                 myDialog.dismiss();
 
@@ -1463,9 +1526,81 @@ public class ArenaFragment extends Fragment {
                                 DatabaseReference myRef = database.getReference("likeArenas");
                                 myRef.child("likeSomeArena").child("likeP1").setValue(newPlayer1Data);
                                 myRef.child("likeSomeArena").child("likeP2").setValue(newPlayer2Data);
-                                // TODO: write to the individual Arena DB
+
+
+                                // TODO: write to the Global Arena DB
+
+                                UserStat p1 = null;
+                                UserStat p2 = null;
+                                for (UserStat player: ringGlobal.getUserStats()) {
+                                    if (player.getUid().equals(matchUp.getPlayers().get(0).getUid())) {
+                                        p1 = player;
+                                    }else if (player.getUid().equals(matchUp.getPlayers().get(1).getUid())) {
+                                        p2 = player;
+                                    }
+                                }
+
+
+                                uid1 = p1.getUid();
+                                fullName1 = p1.getFullName();
+                                profileImage1 = p1.getProfileImage();
+                                los1 = p1.getLos() + 1;
+                                drw1 = p1.getDrw();
+                                win1 = p1.getWin();
+                                goalsFor1 = p1.getGoalsFor() + p1FinalScore;
+                                goalsAgainst1 = p1.getGoalsAgainst() + p2FinalScore;
+
+
+                                currentWiningStrike1 = p1.getWinningStrike() % 1000;
+                                currentRecord1 = (p1.getWinningStrike() - currentWiningStrike1) / 1000;
+
+                                winingStrike1 = currentRecord1 * 1000;
+
+
+
+
+
+
+
+                                uid2 = p2.getUid();
+                                fullName2 = p2.getFullName();
+                                profileImage2 = p2.getProfileImage();
+                                los2 = p2.getLos();
+                                drw2 = p2.getDrw();
+                                win2 = p2.getWin() + 1;
+                                goalsFor2 = p2.getGoalsFor() + p2FinalScore;
+                                goalsAgainst2 = p2.getGoalsAgainst() + p1FinalScore;
+
+
+                                currentWiningStrike2 = p2.getWinningStrike() % 1000;
+                                currentRecord2 = (p2.getWinningStrike() - currentWiningStrike2) / 1000;
+                                newWiningStrike2 = currentWiningStrike2 + 1;
+
+
+                                if (newWiningStrike2 > currentRecord2) {
+                                    currentRecord2 = newWiningStrike2;
+                                    winingStrike2 = currentRecord2 * 1000 + newWiningStrike2;
+                                } else {
+                                    winingStrike2 = currentRecord2 * 1000 + newWiningStrike2;
+                                }
+
+
+                                newPlayer1Data = new UserStat(uid1,fullName1,profileImage1,los1, drw1, win1, goalsFor1, goalsAgainst1, winingStrike1);
+                                newPlayer2Data = new UserStat(uid2,fullName2,profileImage2,los2, drw2, win2, goalsFor2, goalsAgainst2, winingStrike2);
+
+
+
+                                database = FirebaseDatabase.getInstance();
+                                myRef = database.getReference("likeGArenes");
+                                myRef.child("likesomearena").child("uid1").setValue(newPlayer1Data);
+                                myRef.child("likesomearena").child("uid2").setValue(newPlayer2Data);
+
+
+
 
                                 myDialog.dismiss();
+
+
                             } else {
                                 // draw
 
@@ -1512,7 +1647,65 @@ public class ArenaFragment extends Fragment {
                                 DatabaseReference myRef = database.getReference("likeArenas");
                                 myRef.child("likeSomeArena").child("likeP1").setValue(newPlayer1Data);
                                 myRef.child("likeSomeArena").child("likeP2").setValue(newPlayer2Data);
-                                // TODO: write to the individual Arena DB
+
+
+                                // TODO: write to the Global Arena DB
+
+                                UserStat p1 = null;
+                                UserStat p2 = null;
+                                for (UserStat player: ringGlobal.getUserStats()) {
+                                    if (player.getUid().equals(matchUp.getPlayers().get(0).getUid())) {
+                                        p1 = player;
+                                    }else if (player.getUid().equals(matchUp.getPlayers().get(1).getUid())) {
+                                        p2 = player;
+                                    }
+                                }
+
+
+                                uid1 = p1.getUid();
+                                fullName1 = p1.getFullName();
+                                profileImage1 = p1.getProfileImage();
+                                los1 = p1.getLos();
+                                drw1 = p1.getDrw() + 1;
+                                win1 = p1.getWin();
+                                goalsFor1 = p1.getGoalsFor() + p1FinalScore;
+                                goalsAgainst1 = p1.getGoalsAgainst() + p2FinalScore;
+
+
+                                currentWiningStrike1 = p1.getWinningStrike() % 1000;
+                                currentRecord1 = (p1.getWinningStrike() - currentWiningStrike1) / 1000;
+
+                                winingStrike1 = currentRecord1 * 1000;
+
+
+
+
+                                uid2 = p2.getUid();
+                                fullName2 = p2.getFullName();
+                                profileImage2 = p2.getProfileImage();
+                                los2 = p2.getLos();
+                                drw2 = p2.getDrw() + 1;
+                                win2 = p2.getWin();
+                                goalsFor2 = p2.getGoalsFor() + p2FinalScore;
+                                goalsAgainst2 = p2.getGoalsAgainst() + p1FinalScore;
+
+
+                                currentWiningStrike2 = p2.getWinningStrike() % 1000;
+                                currentRecord2 = (p2.getWinningStrike() - currentWiningStrike2) / 1000;
+
+                                winingStrike2 = currentRecord2 * 1000;
+
+
+                                newPlayer1Data = new UserStat(uid1,fullName1,profileImage1,los1, drw1, win1, goalsFor1, goalsAgainst1, winingStrike1);
+                                newPlayer2Data = new UserStat(uid2,fullName2,profileImage2,los2, drw2, win2, goalsFor2, goalsAgainst2, winingStrike2);
+
+
+
+                                database = FirebaseDatabase.getInstance();
+                                myRef = database.getReference("likeGArenes");
+                                myRef.child("likesomearena").child("uid1").setValue(newPlayer1Data);
+                                myRef.child("likesomearena").child("uid2").setValue(newPlayer2Data);
+
 
 
                             }
