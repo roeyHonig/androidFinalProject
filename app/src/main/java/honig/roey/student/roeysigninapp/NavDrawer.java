@@ -892,6 +892,7 @@ public class NavDrawer extends AppCompatActivity
                     arenaMatchUps.onDataListenerSuccess(dataSnapshot,dataSnapshot.getChildrenCount());
                 } else {
                     // No Matchups - update UI accordinglly
+                    // TODO: i don't think we need to switch to anything if there's no matchups in this arena
                     arenaFragment.setArguments(null);
                     if (active /*Is Activty active*/) {
                         switchToFragment(R.id.appFragContainer, arenaFragment);

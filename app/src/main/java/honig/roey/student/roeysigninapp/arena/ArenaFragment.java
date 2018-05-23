@@ -1402,9 +1402,9 @@ public class ArenaFragment extends Fragment {
                                 // TODO: write to the individual Arena DB
 
                                 FirebaseDatabase database = FirebaseDatabase.getInstance();
-                                DatabaseReference myRef = database.getReference("likeArenas");
-                                myRef.child("likeSomeArena").child("likeP1").setValue(newPlayer1Data);
-                                myRef.child("likeSomeArena").child("likeP2").setValue(newPlayer2Data);
+                                DatabaseReference myRef = database.getReference("IndividualArenas");
+                                myRef.child(globalArenaId).child(indvidualMatchUpId).child(uid1).setValue(newPlayer1Data);
+                                myRef.child(globalArenaId).child(indvidualMatchUpId).child(uid2).setValue(newPlayer2Data);
 
                                 //TODO: write to the Global Arena DB
                                 UserStat p1 = null;
@@ -1465,9 +1465,9 @@ public class ArenaFragment extends Fragment {
 
 
                                 database = FirebaseDatabase.getInstance();
-                                myRef = database.getReference("likeGArenes");
-                                myRef.child("likesomearena").child("uid1").setValue(newPlayer1Data);
-                                myRef.child("likesomearena").child("uid2").setValue(newPlayer2Data);
+                                myRef = database.getReference("Arenas");
+                                myRef.child(globalArenaId).child(uid1).setValue(newPlayer1Data);
+                                myRef.child(globalArenaId).child(uid2).setValue(newPlayer2Data);
 
 
 
@@ -1523,9 +1523,9 @@ public class ArenaFragment extends Fragment {
                                 // TODO: write to the individual Arena DB
 
                                 FirebaseDatabase database = FirebaseDatabase.getInstance();
-                                DatabaseReference myRef = database.getReference("likeArenas");
-                                myRef.child("likeSomeArena").child("likeP1").setValue(newPlayer1Data);
-                                myRef.child("likeSomeArena").child("likeP2").setValue(newPlayer2Data);
+                                DatabaseReference myRef = database.getReference("IndividualArenas");
+                                myRef.child(globalArenaId).child(indvidualMatchUpId).child(uid1).setValue(newPlayer1Data);
+                                myRef.child(globalArenaId).child(indvidualMatchUpId).child(uid2).setValue(newPlayer2Data);
 
 
                                 // TODO: write to the Global Arena DB
@@ -1591,9 +1591,9 @@ public class ArenaFragment extends Fragment {
 
 
                                 database = FirebaseDatabase.getInstance();
-                                myRef = database.getReference("likeGArenes");
-                                myRef.child("likesomearena").child("uid1").setValue(newPlayer1Data);
-                                myRef.child("likesomearena").child("uid2").setValue(newPlayer2Data);
+                                myRef = database.getReference("Arenas");
+                                myRef.child(globalArenaId).child(uid1).setValue(newPlayer1Data);
+                                myRef.child(globalArenaId).child(uid2).setValue(newPlayer2Data);
 
 
 
@@ -1644,9 +1644,9 @@ public class ArenaFragment extends Fragment {
                                 // TODO: write to the individual Arena DB
 
                                 FirebaseDatabase database = FirebaseDatabase.getInstance();
-                                DatabaseReference myRef = database.getReference("likeArenas");
-                                myRef.child("likeSomeArena").child("likeP1").setValue(newPlayer1Data);
-                                myRef.child("likeSomeArena").child("likeP2").setValue(newPlayer2Data);
+                                DatabaseReference myRef = database.getReference("IndividualArenas");
+                                myRef.child(globalArenaId).child(indvidualMatchUpId).child(uid1).setValue(newPlayer1Data);
+                                myRef.child(globalArenaId).child(indvidualMatchUpId).child(uid2).setValue(newPlayer2Data);
 
 
                                 // TODO: write to the Global Arena DB
@@ -1702,9 +1702,9 @@ public class ArenaFragment extends Fragment {
 
 
                                 database = FirebaseDatabase.getInstance();
-                                myRef = database.getReference("likeGArenes");
-                                myRef.child("likesomearena").child("uid1").setValue(newPlayer1Data);
-                                myRef.child("likesomearena").child("uid2").setValue(newPlayer2Data);
+                                myRef = database.getReference("Arenas");
+                                myRef.child(globalArenaId).child(uid1).setValue(newPlayer1Data);
+                                myRef.child(globalArenaId).child(uid2).setValue(newPlayer2Data);
 
 
 
@@ -1716,6 +1716,8 @@ public class ArenaFragment extends Fragment {
 
 
                             myDialog.dismiss();
+                            // reload the page
+                            parentActivity.onListFragmentInteraction(globalDataSet.getKey());
 
                         }
                     });
