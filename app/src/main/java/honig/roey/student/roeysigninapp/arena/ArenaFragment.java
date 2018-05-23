@@ -40,6 +40,8 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.nio.channels.SeekableByteChannel;
 import java.util.ArrayList;
@@ -1328,10 +1330,13 @@ public class ArenaFragment extends Fragment {
                         public void onClick(View view) {
                             //Lock the Button
                             btPositive.setClickable(false);
-                            //TODO: cheack if scores are valid long
+
+                            long p1FinalScore = 0;
+                            long p2FinalScore = 0;
 
                             try {
                                 long p1ReportedScore = Long.valueOf(p1Goals.getText().toString());
+                                p1FinalScore = p1ReportedScore;
                             } catch (NumberFormatException e) {
                                 Toast.makeText(parentActivity,"Score is Invalid",Toast.LENGTH_LONG).show();
                                 myDialog.dismiss();
@@ -1339,6 +1344,7 @@ public class ArenaFragment extends Fragment {
 
                             try {
                                 long p2ReportedScore = Long.valueOf(p2Goals.getText().toString());
+                                p2FinalScore = p2ReportedScore;
                             } catch (NumberFormatException e) {
                                 Toast.makeText(parentActivity,"Score is Invalid",Toast.LENGTH_LONG).show();
                                 myDialog.dismiss();
@@ -1346,27 +1352,78 @@ public class ArenaFragment extends Fragment {
 
 
 
-                            /*
-                            if (p1Goals.getText().toString().equals("") || p2Goals.getText().toString().equals("")) {
 
-                            } else {
-                                //Text Was entered
-                                Long p1ReportedScore = Long.valueOf(p1Goals.getText().toString());
-                                Long p2ReportedScore = Long.valueOf(p2Goals.getText().toString());
-                                if (p1ReportedScore != null && p2ReportedScore != null) {
-                                    // numbers were entered
-                                    long p1FinalScore = p1ReportedScore;
-                                    long p2FinalScore = p2ReportedScore;
-                                    if (p1ReportedScore >= 0 && p2ReportedScore >= 0) {
-                                        Toast.makeText(parentActivity,"good score, in matchup: " + indvidualMatchUpId,Toast.LENGTH_LONG).show();
-                                        //TODO: write to the Global Arena DB
-                                        // TODO: write to the individual Arena DB
-                                    }
+                            if (p1FinalScore > p2FinalScore) {
+                                //p1  wins
+                                String uid1 = matchUp.getPlayers().get(0).getUid();
+                                String fullName1 = matchUp.getPlayers().get(0).getFullName();
+                                String profileImage1 = matchUp.getPlayers().get(0).getProfileImage();
+                                long los1 = matchUp.getPlayers().get(0).getLos();
+                                long drw1 = matchUp.getPlayers().get(0).getDrw();
+                                long win1 = matchUp.getPlayers().get(0).getWin() +1;
+                                long goalsFor1 = matchUp.getPlayers().get(0).getGoalsFor() + p1FinalScore;
+                                long goalsAgainst1 = matchUp.getPlayers().get(0).getGoalsAgainst() + p2FinalScore;
+                                long winingStrike1;
+
+                                long currentWiningStrike1 = matchUp.getPlayers().get(0).getWinningStrike() % 1000;
+                                long currentRecord1 = (matchUp.getPlayers().get(0).getWinningStrike() - currentWiningStrike1) / 1000;
+                                long newWiningStrike1 = currentWiningStrike1 + 1;
+
+
+                                if (newWiningStrike1 > currentRecord1) {
+                                    currentRecord1 = newWiningStrike1;
+                                    winingStrike1 = currentRecord1 * 1000 + newWiningStrike1;
+                                } else {
+                                    winingStrike1 = currentRecord1 * 1000 + newWiningStrike1;
                                 }
 
 
+
+
+                                String uid2 = matchUp.getPlayers().get(1).getUid();
+                                String fullName2 = matchUp.getPlayers().get(1).getFullName();
+                                String profileImage2 = matchUp.getPlayers().get(1).getProfileImage();
+                                long los2 = matchUp.getPlayers().get(1).getLos() + 1;
+                                long drw2 = matchUp.getPlayers().get(1).getDrw();
+                                long win2 = matchUp.getPlayers().get(1).getWin();
+                                long goalsFor2 = matchUp.getPlayers().get(1).getGoalsFor() + p2FinalScore;
+                                long goalsAgainst2 = matchUp.getPlayers().get(1).getGoalsAgainst() + p1FinalScore;
+                                long winingStrike2;
+
+                                long currentWiningStrike2 = matchUp.getPlayers().get(1).getWinningStrike() % 1000;
+                                long currentRecord2 = (matchUp.getPlayers().get(1).getWinningStrike() - currentWiningStrike2) / 1000;
+
+                                winingStrike2 = currentRecord2 * 1000;
+
+
+                                UserStat newPlayer1Data = new UserStat(uid1,fullName1,profileImage1,los1, drw1, win1, goalsFor1, goalsAgainst1, winingStrike1);
+                                UserStat newPlayer2Data = new UserStat(uid2,fullName2,profileImage2,los2, drw2, win2, goalsFor2, goalsAgainst2, winingStrike2);
+                                //TODO: write to the Global Arena DB
+                                // TODO: write to the individual Arena DB
+
+                                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                                DatabaseReference myRef = database.getReference("likeArenas");
+                                myRef.child("likeSomeArena").child("likeP1").setValue(newPlayer1Data);
+                                myRef.child("likeSomeArena").child("likeP2").setValue(newPlayer2Data);
+
+
+                                myDialog.dismiss();
+
+                            } else if (p1FinalScore < p2FinalScore){
+                                // p2 wins
+
+                                myDialog.dismiss();
+                            } else {
+                                // draw
+
+
+
+
                             }
-                            */
+
+
+
+
 
 
                             myDialog.dismiss();
@@ -1613,6 +1670,9 @@ public class ArenaFragment extends Fragment {
         }
 
     }
+
+
+
 
 
 
