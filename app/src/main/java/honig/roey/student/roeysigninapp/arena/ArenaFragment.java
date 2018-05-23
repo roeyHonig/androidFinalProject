@@ -36,6 +36,7 @@ import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
 
+import java.nio.channels.SeekableByteChannel;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,14 +53,11 @@ public class ArenaFragment extends Fragment {
 
 
     private static RingGlobal globalDataSet = new RingGlobal();
-
     private static ArrayList<MatchUp> individualMatchUpsDataSet = new ArrayList<>();
     private ArrayList<ChartsCollection> globalAndMatchUpsCharts = new ArrayList<>();     // retrived data from the DB
-
     public static final String ARG_COLUMN_COUNT = "column-count";
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
-
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
      * fragments for each of the sections. We use a
@@ -69,7 +67,6 @@ public class ArenaFragment extends Fragment {
      * {@link android.support.v4.app.FragmentStatePagerAdapter}.
      */
     private SectionsPagerAdapter mSectionsPagerAdapter;
-
     /**
      * The {@link ViewPager} that will host the section contents.
      */
@@ -201,36 +198,374 @@ public class ArenaFragment extends Fragment {
 
                 // find the index of the selected MatchUp in the List
                 if (individualMatchUpsDataSet.get(j).getKey().equals(MatchUpKey)) {
-                    // set a field in the adapter, in case some fragments haven't been created yet
+                    // set a field in the adapter, in case some fragments (placeHolder Fragment) haven't been created yet
                     // the adapter creates the fragments based on this field
+                    // this field tells the fragment whter to retrive global data (-1) or individual matchUps data (0 and abouve)
+                    // as you ca see, j is 0 or abouve (depends on the matchUp selected)
                     mSectionsPagerAdapter.setMatchUpIndex(j);
 
-                    for (int i = 0; i < mSectionsPagerAdapter.fragments.size(); i++) {
+                    // itearate over fragments allready created
+                    for (int k = 0; k < mSectionsPagerAdapter.fragments.size(); k++) {
                         // change a field in the fragments (pages), so when onCreateView is called (while we scroll them back into view) they will indeed reflect the changes
-                                 mSectionsPagerAdapter.fragments.get(i).setMatchUpIndex(j);
+                                 mSectionsPagerAdapter.fragments.get(k).setMatchUpIndex(j);
 
                         // directlly change the page we're viewing (and also all the others (creted so far), but we don't see the others)
-                                ArrayList<PointDataSet> pointDataSets = new ArrayList<>();
+                        // this code strongelly reambels the code of the OnCreateView method of the Fragment
+                        /*
+                        ArrayList<PointDataSet> pointDataSets = new ArrayList<>();
                                 List<BarEntry> entries = new ArrayList<>();
                                 BarChart chart = mSectionsPagerAdapter.fragments.get(i).getChart();
+                        */
 
+                        PlaceholderFragment fragment = mSectionsPagerAdapter.fragments.get(k) ;
+                        BarChart chart = mSectionsPagerAdapter.fragments.get(k).getChart();
+                        SeekBar xAxisSeekBar = mSectionsPagerAdapter.fragments.get(k).getxAxisSeekBar();
+                        int matchUpIndex = mSectionsPagerAdapter.fragments.get(k).getMatchUpIndex();
+                        int sectionNumber = mSectionsPagerAdapter.fragments.get(k).getSectionNumber();
+
+                        // cheack that chart exsists, that is, on createView was called atleast once
+                        // if not, then there's no need to do anything cause on OncreateView is called naturelly it will create the
+                        // correct fragment, because we've channged the setMatchUpIndex abouve
+                        if (chart != null) {
+                            // standard Bar Chart
+                            ArrayList<PointDataSet> pointDataSets = new ArrayList<>();
+                            List<BarEntry> entries = new ArrayList<>();
+                            BarDataSet set;
+
+                            // Grouped Bar Chart
+                            ArrayList<PointDataSet> pointDataSets1 = new ArrayList<>();
+                            ArrayList<PointDataSet> pointDataSets2 = new ArrayList<>();
+                            ArrayList<PointDataSet> pointDataSets3 = new ArrayList<>();
+                            ArrayList<PointDataSet> pointDataSets4 = new ArrayList<>();
+                            List<BarEntry> entries1 = new ArrayList<>();
+                            List<BarEntry> entries2 = new ArrayList<>();
+                            List<BarEntry> entries3 = new ArrayList<>();
+                            List<BarEntry> entries4 = new ArrayList<>();
+                            BarDataSet set1;
+                            BarDataSet set2;
+                            BarDataSet set3;
+                            BarDataSet set4;
+
+                            if (matchUpIndex == -1) {
+                                // Global
+                                PlaceholderFragment.names = PlaceholderFragment.setChartsXAxisLabels(globalDataSet.getUserStats());
+                            } else {
                                 // MatchUps
-                                PlaceholderFragment.names = mSectionsPagerAdapter.fragments.get(i).setChartsXAxisLabels(individualMatchUpsDataSet.get(j).getPlayers());
+                                PlaceholderFragment.names = PlaceholderFragment.setChartsXAxisLabels(individualMatchUpsDataSet.get(matchUpIndex).getPlayers());
+                            }
 
-                                //iterate over all players
-                                for (int k = 0; k < PlaceholderFragment.names.length ; k++) {
-                                    pointDataSets.add(new PointDataSet(1f+k, globalAndMatchUpsCharts.get(mSectionsPagerAdapter.fragments.get(i).matchUpIndex + 1).chartsCollection.get(mSectionsPagerAdapter.fragments.get(i).sectionNumber-1).chart.get(k).getyValue()));
+
+                            PlaceholderFragment.formatter = new IAxisValueFormatter() {
+                                @Override
+                                public String getFormattedValue(float value, AxisBase axis) {
+                                    if (value <= PlaceholderFragment.names.length) {
+                                        return PlaceholderFragment.names[(int) (value-1)];
+                                    } else {
+                                        return "";
+                                    }
+
+                                }
+                            };
+                            xAxisSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                                @Override
+                                public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+
+                                    float xMax;
+                                    float range;
+
+                                    if (sectionNumber == 2 || sectionNumber == 3){
+                                        xMax = (float) PlaceholderFragment.names.length + 0.25f;
+                                    } else {
+                                        xMax = PlaceholderFragment.names.length+1f;
+                                    }
+
+                                    range = xMax - 1.5f;
+
+                                    if (b) {
+                                        // initated by the usert
+                                        chart.setVisibleXRange(1.5f,(range + 1.5f)-range*i/100f);
+                                        chart.invalidate();
+                                    }
+
                                 }
 
+                                @Override
+                                public void onStartTrackingTouch(SeekBar seekBar) {
 
-                                for (PointDataSet data : pointDataSets) {
-                                    // turn your data into Entry objects
-                                    entries.add(new BarEntry(data.getxValue(), data.getyValue()));
                                 }
 
-                                BarDataSet set = new BarDataSet(entries, "BarDataSet");
-                                // TODO: edit thus all thing
-                               // mSectionsPagerAdapter.fragments.get(i).setSingleChart(chart,set, mSectionsPagerAdapter.fragments.get(i).getSectionNumber(), mSectionsPagerAdapter.fragments.get(i).matchUpIndex, mSectionsPagerAdapter.fragments.get(i).formatter);
+                                @Override
+                                public void onStopTrackingTouch(SeekBar seekBar) {
+
+                                    float xMax;
+
+                                    if (sectionNumber == 2 || sectionNumber == 3){
+                                        xMax = (float) PlaceholderFragment.names.length + 0.25f;
+                                    } else {
+                                        xMax = PlaceholderFragment.names.length+1f;
+                                    }
+
+                                    chart.setVisibleXRangeMaximum(xMax);
+                                    chart.setVisibleXRangeMinimum(1.5f); // If this is e.g. set to 10, it is not possible to zoom in further than 10 values on the x-axis.
+
+
+                                }
+                            });
+                            chart.setOnChartGestureListener(new OnChartGestureListener() {
+                                @Override
+                                public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
+
+                                }
+
+                                @Override
+                                public void onChartGestureEnd(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
+                                    if (PlaceholderFragment.names != null){
+
+                                        float xMax;
+
+                                        if (sectionNumber == 2 || sectionNumber == 3){
+                                            xMax = (float) PlaceholderFragment.names.length + 0.25f;
+                                        } else {
+                                            xMax = PlaceholderFragment.names.length+1f;
+                                        }
+
+                                        float range = xMax - 1.5f;
+                                        xAxisSeekBar.setProgress((int)(((range+1.5)-chart.getVisibleXRange())*100/range));
+                                    }
+
+                                }
+
+                                @Override
+                                public void onChartLongPressed(MotionEvent me) {
+
+                                }
+
+                                @Override
+                                public void onChartDoubleTapped(MotionEvent me) {
+
+                                }
+
+                                @Override
+                                public void onChartSingleTapped(MotionEvent me) {
+
+                                }
+
+                                @Override
+                                public void onChartFling(MotionEvent me1, MotionEvent me2, float velocityX, float velocityY) {
+
+                                }
+
+                                @Override
+                                public void onChartScale(MotionEvent me, float scaleX, float scaleY) {
+                                    if (PlaceholderFragment.names != null){
+
+                                        float xMax;
+
+                                        if (sectionNumber == 2 || sectionNumber == 3){
+                                            xMax = (float) PlaceholderFragment.names.length + 0.25f;
+                                        } else {
+                                            xMax = PlaceholderFragment.names.length+1f;
+                                        }
+
+                                        float range = xMax - 1.5f;
+                                        xAxisSeekBar.setProgress((int)(((range+1.5)-chart.getVisibleXRange())*100/range));
+                                    }
+
+                                }
+
+                                @Override
+                                public void onChartTranslate(MotionEvent me, float dX, float dY) {
+
+                                }
+                            });
+
+
+                            float winingStrikeRecord;
+                            int winingStrikeRecordIndex;
+                            String winingStrikeRecordHolderFullName;
+                            //iterate over all players
+                            switch (sectionNumber){
+                                case 1:
+                                    // Success%
+                                    winingStrikeRecord = 0f;
+                                    winingStrikeRecordIndex = 0;
+                                    winingStrikeRecordHolderFullName = "";
+                                    for (int i = 0; i < PlaceholderFragment.names.length ; i++) {
+                                        pointDataSets.add(new PointDataSet(1f+i, globalAndMatchUpsCharts.get(matchUpIndex + 1).chartsCollection.get(0).chart.get(i).getyValue()));
+                                    }
+
+                                    for (PointDataSet data : pointDataSets) {
+                                        // turn your data into Entry objects
+                                        entries.add(new BarEntry(data.getxValue(), data.getyValue()));
+                                    }
+
+                                    set = new BarDataSet(entries, "Success%");
+                                    fragment.setSingleChart(chart,set, sectionNumber, matchUpIndex, PlaceholderFragment.formatter, winingStrikeRecord, winingStrikeRecordHolderFullName);
+
+                                    break;
+                                case 2:
+                                    // Games
+                                    // Loss
+                                    for (int i = 0; i < PlaceholderFragment.names.length ; i++) {
+                                        pointDataSets1.add(new PointDataSet(1f+i, globalAndMatchUpsCharts.get(matchUpIndex + 1).chartsCollection.get(1).chart.get(i).getyValue()));
+                                    }
+
+                                    for (PointDataSet data : pointDataSets1) {
+                                        // turn your data into Entry objects
+                                        entries1.add(new BarEntry(data.getxValue(), data.getyValue()));
+                                    }
+
+                                    set1 = new BarDataSet(entries1, "Loss");
+
+
+                                    // Draw
+                                    for (int i = 0; i < PlaceholderFragment.names.length ; i++) {
+                                        pointDataSets2.add(new PointDataSet(1f+i, globalAndMatchUpsCharts.get(matchUpIndex + 1).chartsCollection.get(2).chart.get(i).getyValue()));
+                                    }
+
+                                    for (PointDataSet data : pointDataSets2) {
+                                        // turn your data into Entry objects
+                                        entries2.add(new BarEntry(data.getxValue(), data.getyValue()));
+                                    }
+
+                                    set2 = new BarDataSet(entries2, "Draws");
+
+
+
+                                    // Win
+                                    for (int i = 0; i < PlaceholderFragment.names.length ; i++) {
+                                        pointDataSets3.add(new PointDataSet(1f+i, globalAndMatchUpsCharts.get(matchUpIndex + 1).chartsCollection.get(3).chart.get(i).getyValue()));
+                                    }
+
+                                    for (PointDataSet data : pointDataSets3) {
+                                        // turn your data into Entry objects
+                                        entries3.add(new BarEntry(data.getxValue(), data.getyValue()));
+                                    }
+
+                                    set3 = new BarDataSet(entries3, "Win");
+
+
+                                    // #games
+                                    for (int i = 0; i < PlaceholderFragment.names.length ; i++) {
+                                        pointDataSets4.add(new PointDataSet(1f+i, globalAndMatchUpsCharts.get(matchUpIndex + 1).chartsCollection.get(4).chart.get(i).getyValue()));
+                                    }
+
+                                    for (PointDataSet data : pointDataSets4) {
+                                        // turn your data into Entry objects
+                                        entries4.add(new BarEntry(data.getxValue(), data.getyValue()));
+                                    }
+
+                                    set4 = new BarDataSet(entries4, "Games");
+
+
+                                    fragment.setSingleGroupedBarChart(chart,set1, set2, set3, set4, sectionNumber, matchUpIndex, PlaceholderFragment.formatter);
+
+                                    break;
+                                case 3:
+                                    // Goals
+
+                                    // Goals For
+                                    for (int i = 0; i < PlaceholderFragment.names.length ; i++) {
+                                        pointDataSets1.add(new PointDataSet(1f+i, globalAndMatchUpsCharts.get(matchUpIndex + 1).chartsCollection.get(5).chart.get(i).getyValue()));
+                                    }
+
+                                    for (PointDataSet data : pointDataSets1) {
+                                        // turn your data into Entry objects
+                                        entries1.add(new BarEntry(data.getxValue(), data.getyValue()));
+                                    }
+
+                                    set1 = new BarDataSet(entries1, "Goals For");
+
+
+                                    // Goals Against
+                                    for (int i = 0; i < PlaceholderFragment.names.length ; i++) {
+                                        pointDataSets2.add(new PointDataSet(1f+i, globalAndMatchUpsCharts.get(matchUpIndex + 1).chartsCollection.get(6).chart.get(i).getyValue()));
+                                    }
+
+                                    for (PointDataSet data : pointDataSets2) {
+                                        // turn your data into Entry objects
+                                        entries2.add(new BarEntry(data.getxValue(), data.getyValue()));
+                                    }
+
+                                    set2 = new BarDataSet(entries2, "Goals Against");
+
+
+
+                                    // Goals For Avarge
+                                    for (int i = 0; i < PlaceholderFragment.names.length ; i++) {
+                                        pointDataSets3.add(new PointDataSet(1f+i, globalAndMatchUpsCharts.get(matchUpIndex + 1).chartsCollection.get(7).chart.get(i).getyValue()));
+                                    }
+
+                                    for (PointDataSet data : pointDataSets3) {
+                                        // turn your data into Entry objects
+                                        entries3.add(new BarEntry(data.getxValue(), data.getyValue()));
+                                    }
+
+                                    set3 = new BarDataSet(entries3, "Goals For Avarge");
+
+
+                                    // Goals Against Avarge
+                                    for (int i = 0; i < PlaceholderFragment.names.length ; i++) {
+                                        pointDataSets4.add(new PointDataSet(1f+i, globalAndMatchUpsCharts.get(matchUpIndex + 1).chartsCollection.get(8).chart.get(i).getyValue()));
+                                    }
+
+                                    for (PointDataSet data : pointDataSets4) {
+                                        // turn your data into Entry objects
+                                        entries4.add(new BarEntry(data.getxValue(), data.getyValue()));
+                                    }
+
+                                    set4 = new BarDataSet(entries4, "Goals Against Avarge");
+
+
+                                    fragment.setSingleGroupedBarChart(chart,set1, set2, set3, set4, sectionNumber, matchUpIndex, PlaceholderFragment.formatter);
+
+                                    break;
+                                case 4:
+                                    // Wining Strike
+                                    winingStrikeRecord = 0f;
+                                    winingStrikeRecordIndex = 0;
+                                    winingStrikeRecordHolderFullName = "";
+                                    for (int i = 0; i < PlaceholderFragment.names.length ; i++) {
+                                        float fullValue = globalAndMatchUpsCharts.get(matchUpIndex + 1).chartsCollection.get(9).chart.get(i).getyValue();
+                                        float reminderValue = fullValue % 1000f;
+                                        float currentWiningStrike = reminderValue;
+                                        float tmpWiningStrikeRecord = (fullValue - reminderValue) / 1000;
+                                        if (tmpWiningStrikeRecord > winingStrikeRecord){
+                                            winingStrikeRecord = tmpWiningStrikeRecord;
+                                            winingStrikeRecordIndex = i;
+                                        }
+
+                                        pointDataSets.add(new PointDataSet(1f+i, currentWiningStrike));
+                                    }
+
+                                    for (PointDataSet data : pointDataSets) {
+                                        // turn your data into Entry objects
+                                        entries.add(new BarEntry(data.getxValue(), data.getyValue()));
+                                    }
+
+                                    winingStrikeRecordHolderFullName = PlaceholderFragment.names[winingStrikeRecordIndex];
+
+                                    set = new BarDataSet(entries, "Wining Strike");
+                                    fragment.setSingleChart(chart,set, sectionNumber, matchUpIndex, PlaceholderFragment.formatter, winingStrikeRecord, winingStrikeRecordHolderFullName);
+
+                                    break;
+                            }
+
+
+
+
+
+
+
+                            // End If Statment
+                        }
+
+
+
+
+
+
+                        // End of For Loop
 
                     }
 
@@ -273,6 +608,11 @@ public class ArenaFragment extends Fragment {
         private static String[] names;
         public static IAxisValueFormatter formatter;
         private BarChart chart;
+        private SeekBar xAxisSeekBar;
+
+        public int getMatchUpIndex() {
+            return matchUpIndex;
+        }
 
         public void setMatchUpIndex(int matchUpIndex) {
             this.matchUpIndex = matchUpIndex;
@@ -280,6 +620,10 @@ public class ArenaFragment extends Fragment {
 
         public BarChart getChart() {
             return chart;
+        }
+
+        public SeekBar getxAxisSeekBar() {
+            return xAxisSeekBar;
         }
 
         public int getSectionNumber() {
@@ -355,7 +699,7 @@ public class ArenaFragment extends Fragment {
 
             FloatingActionButton addMatchResultFAB = rootView.findViewById(R.id.addMatchResult);
 
-            SeekBar xAxisSeekBar = rootView.findViewById(R.id.xAxisSeekBar);
+            xAxisSeekBar = rootView.findViewById(R.id.xAxisSeekBar);
             xAxisSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
@@ -775,7 +1119,7 @@ public class ArenaFragment extends Fragment {
             set4.setColor(getResources().getColor(R.color.colorPrimaryDark));
 
 
-            
+
 
             BarData barData;
             barData = new BarData(set1, set2, set3, set4);
