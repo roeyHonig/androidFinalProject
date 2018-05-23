@@ -341,7 +341,6 @@ public class RequestFragment extends Fragment {
                 // we've iterated over all the user requests
                 if (isValidRequest){
                     Toast.makeText(getActivity(),"All is OK",Toast.LENGTH_LONG).show();
-                    //TODO: Append the newRequest Object to the Request Table in the DB
                     parentActivity.pushAndSetNewChildAtRequestsTable(newRequest);
                     myDialog.dismiss();
                     //parentActivity.autoStartWithAnItemFromNavDrawer(parentActivity.getNavigationView(),R.id.nav_requests);

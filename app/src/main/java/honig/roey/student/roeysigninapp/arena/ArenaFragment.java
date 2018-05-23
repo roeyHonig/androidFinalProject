@@ -190,6 +190,7 @@ public class ArenaFragment extends Fragment {
         mListener = null;
 
 
+
     }
 
     // This method is called by the Main Activity as a result of the OnListFragmentInteractionListener interface
@@ -268,7 +269,7 @@ public class ArenaFragment extends Fragment {
                                     if (matchUpIndex >= 0){
                                         String p1Name = individualMatchUpsDataSet.get(matchUpIndex).getPlayers().get(0).getFullName();
                                         String p2Name = individualMatchUpsDataSet.get(matchUpIndex).getPlayers().get(1).getFullName();
-                                        PlaceholderFragment.openDialogBox(p1Name,p2Name);
+                                        PlaceholderFragment.openDialogBox(p1Name,p2Name, globalDataSet, individualMatchUpsDataSet.get(matchUpIndex));
                                     }
 
                                 }
@@ -744,7 +745,7 @@ public class ArenaFragment extends Fragment {
                     if (matchUpIndex >= 0){
                         String p1Name = individualMatchUpsDataSet.get(matchUpIndex).getPlayers().get(0).getFullName();
                         String p2Name = individualMatchUpsDataSet.get(matchUpIndex).getPlayers().get(1).getFullName();
-                        openDialogBox(p1Name,p2Name);
+                        openDialogBox(p1Name,p2Name, globalDataSet, individualMatchUpsDataSet.get(matchUpIndex));
                     }
 
                 }
@@ -1293,12 +1294,17 @@ public class ArenaFragment extends Fragment {
             return names;
         }
 
-        public static void openDialogBox(String p1Name, String p2Name) {
+        public static void openDialogBox(String p1Name, String p2Name, RingGlobal ringGlobal, MatchUp matchUp) {
+            String globalArenaId = ringGlobal.getKey();
+            String indvidualMatchUpId = matchUp.getKey();
 
             AlertDialog.Builder builder = new AlertDialog.Builder(parentActivity);
             View dialogView = parentActivity.getLayoutInflater().inflate(R.layout.match_score_dialog,null);
             final TextView p1NmaeTextView = dialogView.findViewById(R.id.p1Name);
             final TextView p2NmaeTextView = dialogView.findViewById(R.id.p2Name);
+            EditText p1Goals = dialogView.findViewById(R.id.p1Goals);
+            EditText p2Goals = dialogView.findViewById(R.id.p2Goals);
+
             p1NmaeTextView.setText(p1Name);
             p2NmaeTextView.setText(p2Name);
             builder.setPositiveButton("OK", null)
@@ -1323,8 +1329,47 @@ public class ArenaFragment extends Fragment {
                             //Lock the Button
                             btPositive.setClickable(false);
                             //TODO: cheack if scores are valid long
-                            //TODO: write to the Global Arena DB
-                            // TODO: write to the individual Arena DB
+
+                            try {
+                                long p1ReportedScore = Long.valueOf(p1Goals.getText().toString());
+                            } catch (NumberFormatException e) {
+                                Toast.makeText(parentActivity,"Score is Invalid",Toast.LENGTH_LONG).show();
+                                myDialog.dismiss();
+                            }
+
+                            try {
+                                long p2ReportedScore = Long.valueOf(p2Goals.getText().toString());
+                            } catch (NumberFormatException e) {
+                                Toast.makeText(parentActivity,"Score is Invalid",Toast.LENGTH_LONG).show();
+                                myDialog.dismiss();
+                            }
+
+
+
+                            /*
+                            if (p1Goals.getText().toString().equals("") || p2Goals.getText().toString().equals("")) {
+
+                            } else {
+                                //Text Was entered
+                                Long p1ReportedScore = Long.valueOf(p1Goals.getText().toString());
+                                Long p2ReportedScore = Long.valueOf(p2Goals.getText().toString());
+                                if (p1ReportedScore != null && p2ReportedScore != null) {
+                                    // numbers were entered
+                                    long p1FinalScore = p1ReportedScore;
+                                    long p2FinalScore = p2ReportedScore;
+                                    if (p1ReportedScore >= 0 && p2ReportedScore >= 0) {
+                                        Toast.makeText(parentActivity,"good score, in matchup: " + indvidualMatchUpId,Toast.LENGTH_LONG).show();
+                                        //TODO: write to the Global Arena DB
+                                        // TODO: write to the individual Arena DB
+                                    }
+                                }
+
+
+                            }
+                            */
+
+
+                            myDialog.dismiss();
 
                         }
                     });
