@@ -1469,7 +1469,49 @@ public class ArenaFragment extends Fragment {
                             } else {
                                 // draw
 
-                                //TODO: write to the Global Arena DB
+                                String uid1 = matchUp.getPlayers().get(0).getUid();
+                                String fullName1 = matchUp.getPlayers().get(0).getFullName();
+                                String profileImage1 = matchUp.getPlayers().get(0).getProfileImage();
+                                long los1 = matchUp.getPlayers().get(0).getLos();
+                                long drw1 = matchUp.getPlayers().get(0).getDrw() + 1;
+                                long win1 = matchUp.getPlayers().get(0).getWin();
+                                long goalsFor1 = matchUp.getPlayers().get(0).getGoalsFor() + p1FinalScore;
+                                long goalsAgainst1 = matchUp.getPlayers().get(0).getGoalsAgainst() + p2FinalScore;
+                                long winingStrike1;
+
+                                long currentWiningStrike1 = matchUp.getPlayers().get(0).getWinningStrike() % 1000;
+                                long currentRecord1 = (matchUp.getPlayers().get(0).getWinningStrike() - currentWiningStrike1) / 1000;
+
+                                winingStrike1 = currentRecord1 * 1000;
+
+
+
+
+                                String uid2 = matchUp.getPlayers().get(1).getUid();
+                                String fullName2 = matchUp.getPlayers().get(1).getFullName();
+                                String profileImage2 = matchUp.getPlayers().get(1).getProfileImage();
+                                long los2 = matchUp.getPlayers().get(1).getLos();
+                                long drw2 = matchUp.getPlayers().get(1).getDrw() + 1;
+                                long win2 = matchUp.getPlayers().get(1).getWin();
+                                long goalsFor2 = matchUp.getPlayers().get(1).getGoalsFor() + p2FinalScore;
+                                long goalsAgainst2 = matchUp.getPlayers().get(1).getGoalsAgainst() + p1FinalScore;
+                                long winingStrike2;
+
+                                long currentWiningStrike2 = matchUp.getPlayers().get(1).getWinningStrike() % 1000;
+                                long currentRecord2 = (matchUp.getPlayers().get(1).getWinningStrike() - currentWiningStrike2) / 1000;
+
+                                winingStrike2 = currentRecord2 * 1000;
+
+
+                                UserStat newPlayer1Data = new UserStat(uid1,fullName1,profileImage1,los1, drw1, win1, goalsFor1, goalsAgainst1, winingStrike1);
+                                UserStat newPlayer2Data = new UserStat(uid2,fullName2,profileImage2,los2, drw2, win2, goalsFor2, goalsAgainst2, winingStrike2);
+
+                                // TODO: write to the individual Arena DB
+
+                                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                                DatabaseReference myRef = database.getReference("likeArenas");
+                                myRef.child("likeSomeArena").child("likeP1").setValue(newPlayer1Data);
+                                myRef.child("likeSomeArena").child("likeP2").setValue(newPlayer2Data);
                                 // TODO: write to the individual Arena DB
 
 
