@@ -243,25 +243,36 @@ public class ArenaFragment extends Fragment {
             for (int j = 0; j < individualMatchUpsDataSet.size() ; j++) {
 
                 // find the index of the selected MatchUp in the List
-                if (individualMatchUpsDataSet.get(j).getKey().equals(MatchUpKey)) {
+                if (individualMatchUpsDataSet.get(j).getKey().equals(MatchUpKey) || MatchUpKey.equals("")) {
                     // set a field in the adapter, in case some fragments (placeHolder Fragment) haven't been created yet
                     // the adapter creates the fragments based on this field
                     // this field tells the fragment whter to retrive global data (-1) or individual matchUps data (0 and abouve)
                     // as you ca see, j is 0 or abouve (depends on the matchUp selected)
-                    mSectionsPagerAdapter.setMatchUpIndex(j);
+                    if (MatchUpKey.equals("")) {
+                        // back to global
+                        mSectionsPagerAdapter.setMatchUpIndex(-1);
+                    } else {
+                        // a matchup item was selected
+                        mSectionsPagerAdapter.setMatchUpIndex(j);
+                    }
+
 
                     // itearate over fragments allready created
                     for (int k = 0; k < mSectionsPagerAdapter.fragments.size(); k++) {
                         // change a field in the fragments (pages), so when onCreateView is called (while we scroll them back into view) they will indeed reflect the changes
-                                 mSectionsPagerAdapter.fragments.get(k).setMatchUpIndex(j);
+                        if (MatchUpKey.equals("")) {
+                            // back to global
+                            mSectionsPagerAdapter.fragments.get(k).setMatchUpIndex(-1);
+                        } else {
+                            // a matchup item was selected
+                            mSectionsPagerAdapter.fragments.get(k).setMatchUpIndex(j);
+                        }
+
+
 
                         // directlly change the page we're viewing (and also all the others (creted so far), but we don't see the others)
                         // this code strongelly reambels the code of the OnCreateView method of the Fragment
-                        /*
-                        ArrayList<PointDataSet> pointDataSets = new ArrayList<>();
-                                List<BarEntry> entries = new ArrayList<>();
-                                BarChart chart = mSectionsPagerAdapter.fragments.get(i).getChart();
-                        */
+
 
                         PlaceholderFragment fragment = mSectionsPagerAdapter.fragments.get(k) ;
                         BarChart chart = mSectionsPagerAdapter.fragments.get(k).getChart();
