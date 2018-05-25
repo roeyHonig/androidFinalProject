@@ -23,6 +23,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.SeekBar;
@@ -85,6 +86,8 @@ public class ArenaFragment extends Fragment {
     private TabLayout tabLayout;
     private int matchUpIndex = -1; // -1 is global arena data Set. 0 or positive number is an individual matchUP
     private static NavDrawer parentActivity;
+    private boolean userPressedOnMatchUpList = false; // when the page loads, the OnItemSelected of the Matchup Spinner gets called, this is to prevent excuation
+
 
 
 
@@ -186,6 +189,21 @@ public class ArenaFragment extends Fragment {
             Spinner matchupSpinner = view.findViewById(R.id.matchupSpinner);
             SpinnerMatchUpAdapter adapter = new SpinnerMatchUpAdapter(data,parentActivity);
             matchupSpinner.setAdapter(adapter);
+            matchupSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                    if (userPressedOnMatchUpList) {
+                        SpinnerMatchUp spinnerMatchUpSelected = (SpinnerMatchUp) adapterView.getItemAtPosition(i);
+                        onMatchUpListInteraction(spinnerMatchUpSelected.getMatchupid());
+                    }
+                    userPressedOnMatchUpList = true;
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> adapterView) {
+
+                }
+            });
 
 
         }
@@ -221,10 +239,6 @@ public class ArenaFragment extends Fragment {
     // This method is called by the Main Activity as a result of the OnListFragmentInteractionListener interface
     // that is, when the user clicks on a matchup item from the list
     public void onMatchUpListInteraction(String MatchUpKey) {
-        //TODO: change the chart to present the relevent data for the choosed MatchUp
-
-
-
             // iterate over all matchups
             for (int j = 0; j < individualMatchUpsDataSet.size() ; j++) {
 
