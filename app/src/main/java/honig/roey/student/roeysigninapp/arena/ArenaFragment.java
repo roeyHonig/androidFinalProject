@@ -4,8 +4,10 @@ package honig.roey.student.roeysigninapp.arena;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.ColorRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
@@ -154,6 +156,8 @@ public class ArenaFragment extends Fragment {
 
             mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
             tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
+
+
 
         }
 
@@ -1070,9 +1074,10 @@ public class ArenaFragment extends Fragment {
 
 
 
-
             return rootView;
         }
+
+
 
         public void setSingleChart(BarChart chart, BarDataSet set, int sectionNumber, int matchUpIndex, IAxisValueFormatter formatter, float winingStrikeRecord, String winingStrikeRecordHolderFullName) {
             BarData barData;
@@ -1159,6 +1164,7 @@ public class ArenaFragment extends Fragment {
             chart.setVisibleXRangeMaximum(names.length+1f);
             chart.setVisibleXRangeMinimum(1.5f); // If this is e.g. set to 10, it is not possible to zoom in further than 10 values on the x-axis.
             chart.invalidate(); // refresh
+            chart.animateY(2000);
         }
 
 
@@ -1285,6 +1291,8 @@ public class ArenaFragment extends Fragment {
             chart.setVisibleXRangeMaximum(names.length+1f);
             chart.setVisibleXRangeMinimum(1.5f); // If this is e.g. set to 10, it is not possible to zoom in further than 10 values on the x-axis.
             chart.invalidate(); // refresh
+            chart.animateY(2000);
+
         }
 
         // set the names of the players as the X-Axis labels for all charts
@@ -1725,7 +1733,6 @@ public class ArenaFragment extends Fragment {
             });
             myDialog.show();
         }
-
 
 
     }
