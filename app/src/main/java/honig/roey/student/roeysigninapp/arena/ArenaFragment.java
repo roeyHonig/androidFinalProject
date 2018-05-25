@@ -26,6 +26,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.SeekBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -112,8 +113,6 @@ public class ArenaFragment extends Fragment {
             globalDataSet.setUserStats(getArguments().getParcelableArrayList("argUserStatArrayList"));
             globalDataSet.setNumPlayers(getArguments().getInt("argNumPlayers"));
             individualMatchUpsDataSet = getArguments().getParcelableArrayList("argMatchUpsDataArrayList");
-
-
             setCharts();
 
         }
@@ -157,6 +156,36 @@ public class ArenaFragment extends Fragment {
             mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
             tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
 
+
+            // prepere data for spinner
+            ArrayList<SpinnerMatchUp> data = new ArrayList<>();
+
+            for (int i = 0; i < individualMatchUpsDataSet.size() + 1 ; i++) {
+
+                 String matchupid="";
+                 String p1Name="";
+                 String p2Name="";
+                 String p1ImageUrl="";
+                 String p2ImageUrl="";
+
+                if (i == 0 ) {
+                    // special case - the first spinner record should simply says Global
+
+                } else {
+                    matchupid = individualMatchUpsDataSet.get(i-1).getKey();
+                    p1Name = individualMatchUpsDataSet.get(i-1).getPlayers().get(0).getFullName();
+                    p1ImageUrl = individualMatchUpsDataSet.get(i-1).getPlayers().get(0).getProfileImage();
+                    p2Name = individualMatchUpsDataSet.get(i-1).getPlayers().get(1).getFullName();
+                    p2ImageUrl = individualMatchUpsDataSet.get(i-1).getPlayers().get(1).getProfileImage();
+
+                }
+                data.add(new SpinnerMatchUp(matchupid,p1Name,p2Name,p1ImageUrl,p2ImageUrl));
+            }
+
+            // setup the spinner of matchups
+            Spinner matchupSpinner = view.findViewById(R.id.matchupSpinner);
+            SpinnerMatchUpAdapter adapter = new SpinnerMatchUpAdapter(data,parentActivity);
+            matchupSpinner.setAdapter(adapter);
 
 
         }
