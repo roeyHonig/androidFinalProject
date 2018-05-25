@@ -1825,7 +1825,10 @@ public class ArenaFragment extends Fragment {
                     ArrayList<PointDataSet> pointDataSetsPct = new ArrayList<>();
                     //pointDataSets.clear();
                     for (int j = 0; j < globalDataSet.getUserStats().size(); j++) {
-                        pointDataSetsPct.add(new PointDataSet((float) (j + 1), (float) globalDataSet.getUserStats().get(j).getPct())); //to make sure xValue sorted
+                        float pctInDecimalTimes1000 = (float) globalDataSet.getUserStats().get(j).getPct() * 10000f;
+                        int pctInDecimalTimes1000IntForm = (int) pctInDecimalTimes1000;
+                        float successRateInPercent = pctInDecimalTimes1000IntForm / 100f;
+                        pointDataSetsPct.add(new PointDataSet((float) (j + 1), successRateInPercent)); //to make sure xValue sorted
                     }
                     Chart pct = new Chart(pointDataSetsPct);
                     collection.add(pct);
@@ -1911,7 +1914,10 @@ public class ArenaFragment extends Fragment {
                 ArrayList<PointDataSet> pointDataSetsPct = new ArrayList<>();
                 //pointDataSets.clear();
                 for (int j = 0; j < 2; j++) {
-                    pointDataSetsPct.add(new PointDataSet((float) (j + 1), (float) individualMatchUpsDataSet.get(i-1).getPlayers().get(j).getPct())); //to make sure xValue sorted
+                    float pctInDecimalTimes1000 = (float) individualMatchUpsDataSet.get(i-1).getPlayers().get(j).getPct() * 10000f;
+                    int pctInDecimalTimes1000IntForm = (int) pctInDecimalTimes1000;
+                    float successRateInPercent = pctInDecimalTimes1000IntForm / 100f;
+                    pointDataSetsPct.add(new PointDataSet((float) (j + 1), successRateInPercent)); //to make sure xValue sorted
                 }
                 Chart pct = new Chart(pointDataSetsPct);
                 collection.add(pct);
