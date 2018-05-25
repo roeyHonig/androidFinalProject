@@ -75,15 +75,13 @@
                     app:srcCompat="@drawable/ic_add_circle_black_24dp" />
 
                 <SeekBar
-                    android:id="@+id/xAxisSeekBar"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-
+                    android:layout_height="40dp"
+                    android:minHeight="40dp"
+                    android:maxHeight="40dp"
+                    android:id="@+id/xAxisSeekBar"
                     android:min="0"
                     android:max="100"
-
-
-
                     />
 
             </LinearLayout>
