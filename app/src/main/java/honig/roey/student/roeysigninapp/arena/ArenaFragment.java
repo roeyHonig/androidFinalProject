@@ -1146,6 +1146,9 @@ public class ArenaFragment extends Fragment {
 
 
             // Sets the Legend enabled or disabled
+            // seems wired, right? , we're setting uo the legend to enabled but with transperent color and size 0, why?
+            // we want it there, because it prevents the x Axis labels from being cliped
+            // but for this type of Bar (single as oppesed to grouped) we don't really want to show anything
             chart.getLegend().setEnabled(true);
             chart.getLegend().setTextColor(Color.TRANSPARENT);
             chart.getLegend().setFormSize(0f);
