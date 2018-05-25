@@ -1127,7 +1127,7 @@ public class ArenaFragment extends Fragment {
 
 
             // Sets the Legend enabled or disabled
-            chart.getLegend().setEnabled(true);
+            chart.getLegend().setEnabled(false);
             // make the x-axis fit \ or not exactly all bars
             chart.setFitBars(true);
 
@@ -1148,8 +1148,11 @@ public class ArenaFragment extends Fragment {
                 ll.setLineWidth(0.1f);
                 ll.setTextColor(Color.BLACK);
                 ll.setTextSize(1f);
-                yAxisLeft.addLimitLine(ll);
-                yAxisRight.addLimitLine(ll);
+                if (limit > 1){
+                    yAxisLeft.addLimitLine(ll);
+                    yAxisRight.addLimitLine(ll);
+                }
+
                 if (limit > set.getEntryForIndex(tmpIndex).getY()) {
                     yAxisLeft.setAxisMaximum(limit * 1.1f);
                     yAxisRight.setAxisMaximum(limit * 1.1f);
