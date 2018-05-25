@@ -734,6 +734,10 @@ public class ArenaFragment extends Fragment {
 
             View rootView = inflater.inflate(R.layout.stat_page, container, false);
 
+            TextView tvLeftYAxis = rootView.findViewById(R.id.textViewLeftYAxis);
+            TextView tvRightYAxis = rootView.findViewById(R.id.textViewRightYAxis);
+
+
             //TODO: if no arguments came, set something insted of the chart
             //textView = (TextView) rootView.findViewById(R.id.section_label);
             chart =  rootView.findViewById(R.id.chart);
@@ -906,6 +910,10 @@ public class ArenaFragment extends Fragment {
             //iterate over all players
             switch (getArguments().getInt(ARG_SECTION_NUMBER)){
                 case 1:
+                    // Y Axiss Titles
+                    tvLeftYAxis.setText("%");
+                    tvRightYAxis.setText("%");
+
                     // Success%
                     winingStrikeRecord = 0f;
                     winingStrikeRecordIndex = 0;
@@ -925,6 +933,10 @@ public class ArenaFragment extends Fragment {
                     break;
                 case 2:
                    // Games
+                        // Y Axiss Titles
+                      tvLeftYAxis.setText("");
+                      tvRightYAxis.setText("");
+
                         // Loss
                         for (int i = 0; i < names.length ; i++) {
                             pointDataSets1.add(new PointDataSet(1f+i, globalAndMatchUpsCharts.get(this.matchUpIndex + 1).chartsCollection.get(1).chart.get(i).getyValue()));
@@ -983,6 +995,9 @@ public class ArenaFragment extends Fragment {
                     break;
                 case 3:
                     // Goals
+                        // Y Axiss Titles
+                        tvLeftYAxis.setText("Total");
+                        tvRightYAxis.setText("1/Game");
 
                         // Goals For
                         for (int i = 0; i < names.length ; i++) {
@@ -1042,6 +1057,10 @@ public class ArenaFragment extends Fragment {
                     break;
                 case 4:
                    // Wining Strike
+                    // Y Axiss Titles
+                    tvLeftYAxis.setText("");
+                    tvRightYAxis.setText("");
+
                     winingStrikeRecord = 0f;
                     winingStrikeRecordIndex = 0;
                     winingStrikeRecordHolderFullName = "";
