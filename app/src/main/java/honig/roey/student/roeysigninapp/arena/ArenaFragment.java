@@ -161,17 +161,7 @@ public class ArenaFragment extends Fragment {
 
         }
 
-        //TODO: just a test, not the actual purpose, demonstrates hoe to reload this fragment
-        //TODO: i've even made this TextView (in the fragment_arena) visibility as GONE
-        // TODO: please delete the TextView and remove this OnClickListener
-        TextView tvBuffer = view.findViewById(R.id.tvBuffer);
-        tvBuffer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Reload The Page
-                parentActivity.onListFragmentInteraction(globalDataSet.getKey());
-            }
-        });
+
 
         return view;
     }
@@ -741,6 +731,7 @@ public class ArenaFragment extends Fragment {
             //TODO: if no arguments came, set something insted of the chart
             //textView = (TextView) rootView.findViewById(R.id.section_label);
             chart =  rootView.findViewById(R.id.chart);
+
 
             addMatchResultFAB = rootView.findViewById(R.id.addMatchResult);
 
