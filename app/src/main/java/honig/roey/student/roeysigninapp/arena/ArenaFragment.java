@@ -1146,7 +1146,9 @@ public class ArenaFragment extends Fragment {
 
 
             // Sets the Legend enabled or disabled
-            chart.getLegend().setEnabled(false);
+            chart.getLegend().setEnabled(true);
+            chart.getLegend().setTextColor(Color.TRANSPARENT);
+            chart.getLegend().setFormSize(0f);
             // make the x-axis fit \ or not exactly all bars
             chart.setFitBars(true);
 
