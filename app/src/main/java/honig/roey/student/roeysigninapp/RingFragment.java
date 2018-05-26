@@ -49,11 +49,11 @@ public class RingFragment extends Fragment {
 
     private RecyclerView ringRecyclerView;
     private MyRingRecyclerViewAdapter mAdapter;
-    private ArrayList<String> mDataset;
-    private ArrayList<String> numOfPlayersPerArenaDataset;
-    private ArrayList<String> idOfTheUserArenas;
-    private ArrayList<String> superUserOfTheUserArenas;
-    private String uidOfSignedUser;
+    private ArrayList<String> mDataset = new ArrayList<String>(0);
+    private ArrayList<String> numOfPlayersPerArenaDataset = new ArrayList<String>(0);
+    private ArrayList<String> idOfTheUserArenas = new ArrayList<String>(0);
+    private ArrayList<String> superUserOfTheUserArenas = new ArrayList<String>(0);
+    private String uidOfSignedUser = "a"; // dammy value in case no arguments - no arenas
     private NavDrawer parentActivity;
     private int indexForCountingArenas = 0;
     private int viewVisablity;
@@ -93,6 +93,7 @@ public class RingFragment extends Fragment {
         } else {
             // No Arenas for current User - show the "No Arenea Yet" UI
             viewVisablity = View.VISIBLE;
+
         }
 
     }
@@ -116,7 +117,7 @@ public class RingFragment extends Fragment {
 
         ringRecyclerView = view.findViewById(R.id.ringsList);
         // Are There Areneas for the current user?
-        if (viewVisablity != View.VISIBLE) {
+
                     ringRecyclerView.setVisibility(View.VISIBLE);
                     // Set the adapter for recyclerView
                     Context context = ringRecyclerView.getContext();
@@ -128,10 +129,7 @@ public class RingFragment extends Fragment {
                     indexForCountingArenas = mDataset.size();
                     mAdapter = new MyRingRecyclerViewAdapter(mDataset, numOfPlayersPerArenaDataset, idOfTheUserArenas, superUserOfTheUserArenas,uidOfSignedUser,mListener);
                     ringRecyclerView.setAdapter(mAdapter);
-        } else {
-            // No Arenas for current User - no need to display the recyclerView
-            ringRecyclerView.setVisibility(View.GONE);
-        }
+
 
         return view;
 

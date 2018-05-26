@@ -756,7 +756,6 @@ public class NavDrawer extends AppCompatActivity
 
         if (item.equals("")) {
             // add new arena item was pressed
-            //TODO: connect what the FAB does
 
             RingFragment ringFragment = (RingFragment) getSupportFragmentManager().findFragmentById(R.id.appFragContainer);
             ringFragment.openDialogBox();

@@ -90,7 +90,7 @@ public class MyRingRecyclerViewAdapter extends RecyclerView.Adapter<MyRingRecycl
             holder.mSubContenView.setVisibility(View.VISIBLE);
             holder.mContentView.setText("");
             holder.mSubContenView.setText("");
-            holder.arenaID ="" ;
+            holder.arenaID ="b" ; // dammy value so to not trigger the Create new Arena Dialog
 
         }
 
