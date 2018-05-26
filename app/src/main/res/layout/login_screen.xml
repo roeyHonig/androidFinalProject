@@ -42,6 +42,7 @@
         android:layout_height="wrap_content"
         android:text="Not a Member Yet?, go ahead and signup"
         android:textColor="#000000"
+        android:textSize="15dp"
         android:gravity="center_horizontal"
         />
 
@@ -50,10 +51,12 @@
 
     <TextView
         android:id="@+id/textView2"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="60dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="10dp"
+        android:gravity="center_horizontal"
+        android:textSize="15dp"
         android:text="Or Sign in Using your Google Account" />
 
 
