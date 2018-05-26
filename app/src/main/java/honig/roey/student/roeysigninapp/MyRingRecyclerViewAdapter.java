@@ -114,6 +114,23 @@ public class MyRingRecyclerViewAdapter extends RecyclerView.Adapter<MyRingRecycl
             holder.mView.setPadding(10,0,0,10);
         }
 
+        if (position == 1) {
+            // delete upper border and right border
+            holder.mView.setPadding(10,0,0,10);
+        }
+
+        if (position == getItemCount() - 1) {
+            // last cell - bottom right cell
+            // delete bottom border and right border
+            holder.mView.setPadding(10,10,0,0);
+        }
+
+        if (position == getItemCount() - 2) {
+            // last cell - bottom left cell
+            // delete bottom border and left border
+            holder.mView.setPadding(0,10,10,0);
+        }
+
 
         holder.addArenaImageView.setOnClickListener(new View.OnClickListener() {
             @Override
