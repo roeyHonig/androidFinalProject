@@ -768,6 +768,7 @@ public class NavDrawer extends AppCompatActivity
                         switchToFragment(R.id.appFragContainer,loadingAnimationFragment); // present loading animation
                         // Scan DB for individual Matchups of this arena
                         handler.postDelayed(switchToSpecificArena,1000);
+                        break;
                     }
                 }
             }
