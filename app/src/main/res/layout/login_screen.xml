@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#f59191"
+    android:background="@color/colorAppBackground"
     android:id="@+id/login_screen"
     >
 
@@ -15,6 +15,7 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="Email: Example@Yahoo.com"
+        android:textColorHint="#90ca2929"
         android:inputType="textEmailAddress" />
 
     <EditText
@@ -23,39 +24,47 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="Password: abcdefg123"
+        android:textColorHint="#90ca2929"
         android:inputType="textPassword" />
 
     <Button
         android:id="@+id/btEmailPasswordSignIn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#17a6e9"
-        android:text="Sign In" />
+        android:background="#62ec17"
+
+        android:text="Login" />
+
+    <TextView
+        android:layout_marginTop="10dp"
+        android:id="@+id/btGoToSignupScreen"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Not a Member Yet?, go ahead and signup"
+        android:textColor="#000000"
+        android:gravity="center_horizontal"
+        />
+
 
 
 
     <TextView
         android:id="@+id/textView2"
+        android:layout_marginTop="20dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingLeft="10dp"
         android:text="Or Sign in Using your Google Account" />
 
 
     <com.google.android.gms.common.SignInButton
         android:id="@+id/btnGoogleSign"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp" />
 
-    <TextView
-        android:id="@+id/btGoToSignupScreen"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Not a Member Yet?, go ahead and signup"
-        android:background="#f59191"
-        android:gravity="center_horizontal"
-         />
+
 
 </LinearLayout>
