@@ -29,7 +29,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clickable="true"
-        app:srcCompat="@drawable/ic_add_circle_black_24dp" />
+        app:srcCompat="@drawable/ic_add_circle_black_24dp"
+        android:visibility="gone"
+        />
 
     <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -44,7 +46,7 @@
         tools:context=".RingFragment"
         tools:listitem="@layout/fragment_ring"
         app:spanCount="2"
-        android:background="#6a1fea08"
+        android:background="@color/colorAppBackground"
         />
 
 </LinearLayout>
