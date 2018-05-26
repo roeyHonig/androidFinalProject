@@ -76,6 +76,21 @@ public class MyRingRecyclerViewAdapter extends RecyclerView.Adapter<MyRingRecycl
             holder.arenaID =mThirdValues.get(position-1) ;
         }
 
+        holder.addArenaImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (null != mListener) {
+                    // Notify the active callbacks interface (the activity, if the
+                    // fragment is attached to one) that an item has been selected.
+                    // look at the NavDraer Activity - which holds the fragment, this adapter class belongs too -
+                    // you will see there, that there is a methood called "onListFragmentInteraction"
+                    // this is a method waiting to be excuted. it will excute now:
+                    mListener.onListFragmentInteraction(holder.arenaID);
+                    //mListener.onListFragmentInteraction(holder.mContentView.getText().toString());
+                }
+            }
+        });
+
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override

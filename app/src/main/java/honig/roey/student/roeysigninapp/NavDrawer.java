@@ -751,11 +751,14 @@ public class NavDrawer extends AppCompatActivity
     // Do When pressing an Item from the Arenas list
     public void onListFragmentInteraction(String item) {
 
-
+        //Toast.makeText(this,"hello", Toast.LENGTH_LONG).show();
 
         if (item.equals("")) {
             // add new arena item was pressed
             //TODO: connect what the FAB does
+
+            RingFragment ringFragment = (RingFragment) getSupportFragmentManager().findFragmentById(R.id.appFragContainer);
+            ringFragment.openDialogBox();
         } else {
             // an Arena was pressed
             for (RingGlobal arena: userDataBaseData
