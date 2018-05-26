@@ -7,5 +7,7 @@
     <color name="colorGreen">#55f524</color>
     <color name="colorVerticalLine">#d0060606</color>
     <color name="colorTransperent">#00060606</color>
+    <color name="colorAppBackground">#80d5ec</color>
+
 
 </resources>

@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/welcome_screen"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/colorAppBackground"
+    >
 
 
     <TextView
@@ -13,18 +15,20 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="64dp"
+        android:layout_marginTop="0dp"
+        android:fontFamily="@font/aclonica"
         android:shadowColor="#696968"
         android:shadowDx="10.0"
         android:shadowDy="10.0"
         android:shadowRadius="10.0"
         android:text="Trash Talk"
-        android:textColor="#26d2f4"
 
+        android:textColor="#ffffff"
         android:textSize="40dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline2"
+        app:layout_constraintTop_toBottomOf="@+id/bars"
+
         tools:text="Trash Talk" />
 
 
@@ -33,7 +37,9 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:scaleY="2"
+        android:id="@+id/bars"
+        android:scaleY="1"
+        android:scaleX=".5"
         android:rotation="270"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="128dp"
