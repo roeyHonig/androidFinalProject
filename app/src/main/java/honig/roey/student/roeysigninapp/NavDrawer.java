@@ -253,6 +253,7 @@ public class NavDrawer extends AppCompatActivity
                 ringFragmentArgsBundle.putStringArrayList("arg2", numberOfPlayersInEveryUserArenas);
                 ringFragmentArgsBundle.putStringArrayList("arg3", idOfTheUserArenas);
                 ringFragmentArgsBundle.putStringArrayList("arg4", superUserOfTheUserArenas);
+                ringFragmentArgsBundle.putInt(RingFragment.ARG_COLUMN_COUNT, 2);
 
                 ringFragment.setArguments(ringFragmentArgsBundle);
 

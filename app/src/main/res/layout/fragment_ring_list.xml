@@ -10,6 +10,7 @@
         android:layout_height="wrap_content"
         android:text="My Arenas"
         android:textSize="40dp"
+        android:gravity="center_horizontal"
         android:background="#71f10909"
         />
 
@@ -39,9 +40,10 @@
         android:layout_height="match_parent"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+        app:layoutManager="android.support.v7.widget.GridLayoutManager"
         tools:context=".RingFragment"
         tools:listitem="@layout/fragment_ring"
+        app:spanCount="2"
         android:background="#6a1fea08"
         />
 
