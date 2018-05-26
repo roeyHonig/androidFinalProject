@@ -35,6 +35,7 @@
             android:layout_height="wrap_content"
             android:text="Ring Name"
             android:textSize="20dp"
+            android:visibility="visible"
 
             />
 
@@ -42,9 +43,20 @@
             android:id="@+id/ringNumOfPlayers"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
+            android:visibility="visible"
             android:text="3 Players"
             android:textSize="10dp" />
+
+        <ImageButton
+            android:id="@+id/addArenaImageView"
+            android:background="#d27b7b"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@android:drawable/ic_input_add"
+            android:visibility="gone"
+            android:scaleX="2"
+            android:scaleY="2"
+            />
 
 
     </android.support.v7.widget.LinearLayoutCompat>

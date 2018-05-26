@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.airbnb.lottie.LottieAnimationView;
@@ -51,12 +52,29 @@ public class MyRingRecyclerViewAdapter extends RecyclerView.Adapter<MyRingRecycl
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         // set the content
-        holder.mContentView.setText(mValues.get(position));
-        holder.mSubContenView.setText(mSubValues.get(position)+" Players");
-        holder.arenaID =mThirdValues.get(position) ;
+
         // scale the animation
         //holder.animationView.setScaleX(2);
         //holder.animationView.setScaleY(2);
+
+        if (position == 0) {
+            holder.addArenaImageView.setVisibility(View.VISIBLE);
+            holder.mContentView.setVisibility(View.GONE);
+            holder.mSubContenView.setVisibility(View.GONE);
+
+            holder.mContentView.setText("");
+            holder.mSubContenView.setText("");
+            holder.arenaID ="" ;
+
+        } else {
+            holder.addArenaImageView.setVisibility(View.GONE);
+            holder.mContentView.setVisibility(View.VISIBLE);
+            holder.mSubContenView.setVisibility(View.VISIBLE);
+
+            holder.mContentView.setText(mValues.get(position-1));
+            holder.mSubContenView.setText(mSubValues.get(position-1)+" Players");
+            holder.arenaID =mThirdValues.get(position-1) ;
+        }
 
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
@@ -77,7 +95,7 @@ public class MyRingRecyclerViewAdapter extends RecyclerView.Adapter<MyRingRecycl
 
     @Override
     public int getItemCount() {
-        return mValues.size();
+        return mValues.size() + 1;
     }
 
 
@@ -90,6 +108,7 @@ public class MyRingRecyclerViewAdapter extends RecyclerView.Adapter<MyRingRecycl
         public final TextView mContentView;
         public  final TextView mSubContenView;
         public String arenaID;
+        public  final ImageView addArenaImageView;
         //public LottieAnimationView animationView;
         // Constractor - this takes the View which is the layout of a single Ring Item in the list
         // This View can have multiple TextView , buttons and what ever we want
@@ -100,6 +119,7 @@ public class MyRingRecyclerViewAdapter extends RecyclerView.Adapter<MyRingRecycl
             mSubContenView = (TextView) view.findViewById(R.id.ringNumOfPlayers);
             arenaID = "";
             //animationView = (LottieAnimationView)view.findViewById(R.id.animation_view);
+            addArenaImageView = view.findViewById(R.id.addArenaImageView);
 
         }
 
