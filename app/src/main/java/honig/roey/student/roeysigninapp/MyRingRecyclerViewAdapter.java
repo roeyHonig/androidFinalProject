@@ -1,6 +1,7 @@
 package honig.roey.student.roeysigninapp;
 
 import android.animation.Animator;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,15 +30,17 @@ public class MyRingRecyclerViewAdapter extends RecyclerView.Adapter<MyRingRecycl
     private final ArrayList<String> mSubValues;
     private final ArrayList<String> mThirdValues;
     private final ArrayList<String> mForthValues;
+    private final String currentUserUid;
     // Constractor for the adapter
     // when called to action, in our RingFragment, it will be passed (as an argument) the data which is the String[]
     // of rings names
     // also an instance of the OnListFragmentInteractionListener interface is the 2nd argument
-    public MyRingRecyclerViewAdapter(ArrayList<String> items, ArrayList<String> items2, ArrayList<String> items3 ,ArrayList<String> items4 ,OnListFragmentInteractionListener listener) {
+    public MyRingRecyclerViewAdapter(ArrayList<String> items, ArrayList<String> items2, ArrayList<String> items3 ,ArrayList<String> items4 ,String currentUserUid,OnListFragmentInteractionListener listener) {
         mValues = items;
         mSubValues = items2;
         mThirdValues = items3;
         mForthValues = items4;
+        this.currentUserUid = currentUserUid;
         mListener = listener;
     }
 
@@ -66,7 +69,7 @@ public class MyRingRecyclerViewAdapter extends RecyclerView.Adapter<MyRingRecycl
             holder.mSubContenView.setText("");
             holder.arenaID ="" ;
 
-        } else {
+        } else if (position < mValues.size() + 1) {
             holder.addArenaImageView.setVisibility(View.GONE);
             holder.mContentView.setVisibility(View.VISIBLE);
             holder.mSubContenView.setVisibility(View.VISIBLE);
@@ -74,6 +77,13 @@ public class MyRingRecyclerViewAdapter extends RecyclerView.Adapter<MyRingRecycl
             holder.mContentView.setText(mValues.get(position-1));
             holder.mSubContenView.setText(mSubValues.get(position-1)+" Players");
             holder.arenaID =mThirdValues.get(position-1) ;
+
+            if (currentUserUid.equals(mForthValues.get(position-1))) {
+                // superUser
+                holder.mContentView.setTextColor(Color.RED);
+                holder.mSubContenView.setTextColor(Color.RED);
+            }
+
         }
 
         holder.addArenaImageView.setOnClickListener(new View.OnClickListener() {

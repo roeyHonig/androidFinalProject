@@ -53,6 +53,7 @@ public class RingFragment extends Fragment {
     private ArrayList<String> numOfPlayersPerArenaDataset;
     private ArrayList<String> idOfTheUserArenas;
     private ArrayList<String> superUserOfTheUserArenas;
+    private String uidOfSignedUser;
     private NavDrawer parentActivity;
     private int indexForCountingArenas = 0;
     private int viewVisablity;
@@ -86,6 +87,7 @@ public class RingFragment extends Fragment {
             numOfPlayersPerArenaDataset = getArguments().getStringArrayList("arg2");
             idOfTheUserArenas = getArguments().getStringArrayList("arg3");
             superUserOfTheUserArenas = getArguments().getStringArrayList("arg4");
+            uidOfSignedUser = getArguments().getString("currentUserUID");
             viewVisablity = View.GONE;
 
         } else {
@@ -124,7 +126,7 @@ public class RingFragment extends Fragment {
                         ringRecyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
                     }
                     indexForCountingArenas = mDataset.size();
-                    mAdapter = new MyRingRecyclerViewAdapter(mDataset, numOfPlayersPerArenaDataset, idOfTheUserArenas, superUserOfTheUserArenas,mListener);
+                    mAdapter = new MyRingRecyclerViewAdapter(mDataset, numOfPlayersPerArenaDataset, idOfTheUserArenas, superUserOfTheUserArenas,uidOfSignedUser,mListener);
                     ringRecyclerView.setAdapter(mAdapter);
         } else {
             // No Arenas for current User - no need to display the recyclerView
