@@ -751,16 +751,32 @@ public class NavDrawer extends AppCompatActivity
     // Do When pressing an Item from the Arenas list
     public void onListFragmentInteraction(String item) {
 
-        for (RingGlobal arena: userDataBaseData
-             ) {
-            if (arena.getKey().equals(item)){
-                clickedArenaIndex = userDataBaseData.indexOf(arena);
+
+
+        if (item.equals("")) {
+            // add new arena item was pressed
+            //TODO: connect what the FAB does
+        } else {
+            // an Arena was pressed
+            for (RingGlobal arena: userDataBaseData
+                    ) {
+                if (arena.getKey().equals(item)){
+                    clickedArenaIndex = userDataBaseData.indexOf(arena);
+                    if (userDataBaseData.get(clickedArenaIndex).getNumPlayers() > 1) {
+                        // there is more then 1 player in the arena
+                        // go to the arena data
+                        switchToFragment(R.id.appFragContainer,loadingAnimationFragment); // present loading animation
+                        // Scan DB for individual Matchups of this arena
+                        handler.postDelayed(switchToSpecificArena,1000);
+                    }
+                }
             }
+
+
+
         }
 
-        switchToFragment(R.id.appFragContainer,loadingAnimationFragment); // present loading animation
-        // Scan DB for individual Matchups of this arena
-        handler.postDelayed(switchToSpecificArena,1000);
+
 
     }
 
