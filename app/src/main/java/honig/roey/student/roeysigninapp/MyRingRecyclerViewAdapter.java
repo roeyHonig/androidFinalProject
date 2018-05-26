@@ -84,7 +84,17 @@ public class MyRingRecyclerViewAdapter extends RecyclerView.Adapter<MyRingRecycl
                 holder.mSubContenView.setTextColor(Color.RED);
             }
 
+        } else {
+            holder.addArenaImageView.setVisibility(View.GONE);
+            holder.mContentView.setVisibility(View.VISIBLE);
+            holder.mSubContenView.setVisibility(View.VISIBLE);
+            holder.mContentView.setText("");
+            holder.mSubContenView.setText("");
+            holder.arenaID ="" ;
+
         }
+
+        
 
         holder.addArenaImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,7 +130,11 @@ public class MyRingRecyclerViewAdapter extends RecyclerView.Adapter<MyRingRecycl
 
     @Override
     public int getItemCount() {
-        return mValues.size() + 1;
+        int arenaPlusAddButton = mValues.size() + 1 ;
+        int addition = mValues.size() % 2 + 7;
+
+        // for better looking design alawys add to get an even number
+        return (arenaPlusAddButton + addition);
     }
 
 
