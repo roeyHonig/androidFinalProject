@@ -187,22 +187,28 @@ public class LoginFragment extends Fragment{
 
     private void signIntoTheApp(String eml, String pas) {
 
-        mAuth.signInWithEmailAndPassword(eml, pas)
-                .addOnCompleteListener(parentActivity, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            FirebaseUser user = mAuth.getCurrentUser();
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Toast.makeText(parentActivity, "Authentication failed: "+task.getException().getMessage(),
-                                    Toast.LENGTH_SHORT).show();
-                            arg1Value = 0; // reset
-                        }
+        if (eml.equals("") || pas.equals("")) {
+            return;
+        } else {
+            mAuth.signInWithEmailAndPassword(eml, pas)
+                    .addOnCompleteListener(parentActivity, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                // Sign in success, update UI with the signed-in user's information
+                                FirebaseUser user = mAuth.getCurrentUser();
+                            } else {
+                                // If sign in fails, display a message to the user.
+                                Toast.makeText(parentActivity, "Authentication failed: "+task.getException().getMessage(),
+                                        Toast.LENGTH_SHORT).show();
+                                arg1Value = 0; // reset
+                            }
 
-                    }
-                });
+                        }
+                    });
+        }
+
+
 
     }
 
