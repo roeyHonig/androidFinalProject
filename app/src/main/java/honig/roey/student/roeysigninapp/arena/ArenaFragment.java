@@ -554,7 +554,7 @@ public class ArenaFragment extends Fragment {
                                         entries1.add(new BarEntry(data.getxValue(), data.getyValue()));
                                     }
 
-                                    set1 = new BarDataSet(entries1, "Goals For");
+                                    set1 = new BarDataSet(entries1, "Goals For (Total)");
 
 
                                     // Goals Against
@@ -567,7 +567,7 @@ public class ArenaFragment extends Fragment {
                                         entries2.add(new BarEntry(data.getxValue(), data.getyValue()));
                                     }
 
-                                    set2 = new BarDataSet(entries2, "Goals Against");
+                                    set2 = new BarDataSet(entries2, "Goals Against (Total)");
 
 
 
@@ -581,7 +581,7 @@ public class ArenaFragment extends Fragment {
                                         entries3.add(new BarEntry(data.getxValue(), data.getyValue()));
                                     }
 
-                                    set3 = new BarDataSet(entries3, "Goals For Avarge");
+                                    set3 = new BarDataSet(entries3, "Goals For (1/Game)");
 
 
                                     // Goals Against Avarge
@@ -594,7 +594,7 @@ public class ArenaFragment extends Fragment {
                                         entries4.add(new BarEntry(data.getxValue(), data.getyValue()));
                                     }
 
-                                    set4 = new BarDataSet(entries4, "Goals Against Avarge");
+                                    set4 = new BarDataSet(entries4, "Goals Against (1/Game)");
 
 
                                     fragment.setSingleGroupedBarChart(chart,set1, set2, set3, set4, sectionNumber, matchUpIndex, PlaceholderFragment.formatter);
