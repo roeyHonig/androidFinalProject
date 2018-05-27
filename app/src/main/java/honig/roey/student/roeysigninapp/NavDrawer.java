@@ -117,8 +117,19 @@ public class NavDrawer extends AppCompatActivity
             readFromFireBaseRealTimeDataBaseMatchupsTable("IndividualArenas", userDataBaseData.get(clickedArenaIndex).getKey());
         }
     };
+    private String arenaIdWhichWasJustUpdated = ""; // represent an arenaId. when the user reports a score in one of rings it will be init
 
     // Getters
+
+
+    public String getArenaIdWhichWasJustUpdated() {
+        return arenaIdWhichWasJustUpdated;
+    }
+
+    public void setArenaIdWhichWasJustUpdated(String arenaIdWhichWasJustUpdated) {
+        this.arenaIdWhichWasJustUpdated = arenaIdWhichWasJustUpdated;
+    }
+
     public FirebaseAuth getmAuth() {
         return mAuth;
     }
@@ -593,7 +604,7 @@ public class NavDrawer extends AppCompatActivity
         myRef.child(mAuth.getCurrentUser().getUid()).child("uid").setValue(mAuth.getCurrentUser().getUid());
     }
 
-    private void autoStartWithArenaNavDrawer(NavigationView navigationView) {
+    public void autoStartWithArenaNavDrawer(NavigationView navigationView) {
         navigationView.setCheckedItem(R.id.nav_rings); // higlight the Rings Item in the Menu on StartUp
         navigationView.getMenu().performIdentifierAction(R.id.nav_rings, 0); // Perform the Action Associated with the Rings Menu Item
     }

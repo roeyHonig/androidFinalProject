@@ -136,6 +136,18 @@ public class RingFragment extends Fragment {
 
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (parentActivity.getArenaIdWhichWasJustUpdated().equals("")) {
+
+        } else {
+            // switch to the arena that was just updated
+            String tmp = parentActivity.getArenaIdWhichWasJustUpdated();
+            parentActivity.setArenaIdWhichWasJustUpdated("");
+            parentActivity.onListFragmentInteraction(tmp);
+        }
+    }
 
     @Override
     public void onAttach(Context context) {

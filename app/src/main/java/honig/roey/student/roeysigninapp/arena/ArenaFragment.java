@@ -44,6 +44,8 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -1489,74 +1491,124 @@ public class ArenaFragment extends Fragment {
                                 FirebaseDatabase database = FirebaseDatabase.getInstance();
                                 DatabaseReference myRef = database.getReference("IndividualArenas");
                                 myRef.child(globalArenaId).child(indvidualMatchUpId).child(uid1).setValue(newPlayer1Data);
-                                myRef.child(globalArenaId).child(indvidualMatchUpId).child(uid2).setValue(newPlayer2Data);
+                                myRef.child(globalArenaId).child(indvidualMatchUpId).child(uid2).setValue(newPlayer2Data).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        //TODO: write to the Global Arena DB
 
-                                //TODO: write to the Global Arena DB
-                                UserStat p1 = null;
-                                UserStat p2 = null;
-                                for (UserStat player: ringGlobal.getUserStats()) {
-                                    if (player.getUid().equals(matchUp.getPlayers().get(0).getUid())) {
-                                        p1 = player;
-                                    }else if (player.getUid().equals(matchUp.getPlayers().get(1).getUid())) {
-                                        p2 = player;
+                                        long p1FinalScore = 0;
+                                        long p2FinalScore = 0;
+
+                                        try {
+                                            long p1ReportedScore = Long.valueOf(p1Goals.getText().toString());
+                                            p1FinalScore = p1ReportedScore;
+                                        } catch (NumberFormatException e) {
+                                            Toast.makeText(parentActivity,"Score is Invalid",Toast.LENGTH_LONG).show();
+                                            myDialog.dismiss();
+                                        }
+
+                                        try {
+                                            long p2ReportedScore = Long.valueOf(p2Goals.getText().toString());
+                                            p2FinalScore = p2ReportedScore;
+                                        } catch (NumberFormatException e) {
+                                            Toast.makeText(parentActivity,"Score is Invalid",Toast.LENGTH_LONG).show();
+                                            myDialog.dismiss();
+                                        }
+
+
+
+                                        UserStat p1 = null;
+                                        UserStat p2 = null;
+                                        for (UserStat player: ringGlobal.getUserStats()) {
+                                            if (player.getUid().equals(matchUp.getPlayers().get(0).getUid())) {
+                                                p1 = player;
+                                            }else if (player.getUid().equals(matchUp.getPlayers().get(1).getUid())) {
+                                                p2 = player;
+                                            }
+                                        }
+
+
+                                        String uid1 = p1.getUid();
+                                        String fullName1 = p1.getFullName();
+                                        String profileImage1 = p1.getProfileImage();
+                                        long los1 = p1.getLos();
+                                        long drw1 = p1.getDrw();
+                                        long win1 = p1.getWin() +1;
+                                        long goalsFor1 = p1.getGoalsFor() + p1FinalScore;
+                                        long goalsAgainst1 = p1.getGoalsAgainst() + p2FinalScore;
+                                        long winingStrike1;
+
+                                        long currentWiningStrike1 = p1.getWinningStrike() % 1000;
+                                        long currentRecord1 = (p1.getWinningStrike() - currentWiningStrike1) / 1000;
+                                        long newWiningStrike1 = currentWiningStrike1 + 1;
+
+
+                                        if (newWiningStrike1 > currentRecord1) {
+                                            currentRecord1 = newWiningStrike1;
+                                            winingStrike1 = currentRecord1 * 1000 + newWiningStrike1;
+                                        } else {
+                                            winingStrike1 = currentRecord1 * 1000 + newWiningStrike1;
+                                        }
+
+
+
+
+                                        String uid2 = p2.getUid();
+                                        String fullName2 = p2.getFullName();
+                                        String profileImage2 = p2.getProfileImage();
+                                        long los2 = p2.getLos() + 1;
+                                        long drw2 = p2.getDrw();
+                                        long win2 = p2.getWin();
+                                        long goalsFor2 = p2.getGoalsFor() + p2FinalScore;
+                                        long goalsAgainst2 = p2.getGoalsAgainst() + p1FinalScore;
+                                        long winingStrike2;
+
+                                        long currentWiningStrike2 = p2.getWinningStrike() % 1000;
+                                        long currentRecord2 = (p2.getWinningStrike() - currentWiningStrike2) / 1000;
+
+                                        winingStrike2 = currentRecord2 * 1000;
+
+
+                                        UserStat newPlayer1Data = new UserStat(uid1,fullName1,profileImage1,los1, drw1, win1, goalsFor1, goalsAgainst1, winingStrike1);
+                                        UserStat newPlayer2Data = new UserStat(uid2,fullName2,profileImage2,los2, drw2, win2, goalsFor2, goalsAgainst2, winingStrike2);
+
+
+
+                                        FirebaseDatabase database = FirebaseDatabase.getInstance();
+                                        DatabaseReference myRef = database.getReference("Arenas");
+                                        myRef.child(globalArenaId).child(uid1).setValue(newPlayer1Data);
+                                        myRef.child(globalArenaId).child(uid2).setValue(newPlayer2Data).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+
+                                                myDialog.dismiss();
+                                                // reload the page
+                                                parentActivity.setArenaIdWhichWasJustUpdated(globalDataSet.getKey());
+                                                parentActivity.autoStartWithArenaNavDrawer(parentActivity.getNavigationView());
+                                                //parentActivity.onListFragmentInteraction(globalDataSet.getKey());
+
+                                            }
+                                        }).addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Toast.makeText(parentActivity,"Ooops, Something Went Wrong", Toast.LENGTH_LONG).show();
+                                                myDialog.dismiss();
+                                            }
+                                        });
+
                                     }
-                                }
-
-
-                                uid1 = p1.getUid();
-                                fullName1 = p1.getFullName();
-                                profileImage1 = p1.getProfileImage();
-                                los1 = p1.getLos();
-                                drw1 = p1.getDrw();
-                                win1 = p1.getWin() +1;
-                                goalsFor1 = p1.getGoalsFor() + p1FinalScore;
-                                goalsAgainst1 = p1.getGoalsAgainst() + p2FinalScore;
-
-
-                                currentWiningStrike1 = p1.getWinningStrike() % 1000;
-                                currentRecord1 = (p1.getWinningStrike() - currentWiningStrike1) / 1000;
-                                newWiningStrike1 = currentWiningStrike1 + 1;
-
-
-                                if (newWiningStrike1 > currentRecord1) {
-                                    currentRecord1 = newWiningStrike1;
-                                    winingStrike1 = currentRecord1 * 1000 + newWiningStrike1;
-                                } else {
-                                    winingStrike1 = currentRecord1 * 1000 + newWiningStrike1;
-                                }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        myDialog.dismiss();
+                                    }
+                                });
 
 
 
 
-                                uid2 = p2.getUid();
-                                fullName2 = p2.getFullName();
-                                profileImage2 = p2.getProfileImage();
-                                los2 = p2.getLos() + 1;
-                                drw2 = p2.getDrw();
-                                win2 = p2.getWin();
-                                goalsFor2 = p2.getGoalsFor() + p2FinalScore;
-                                goalsAgainst2 = p2.getGoalsAgainst() + p1FinalScore;
 
 
-                                currentWiningStrike2 = p2.getWinningStrike() % 1000;
-                                currentRecord2 = (p2.getWinningStrike() - currentWiningStrike2) / 1000;
-
-                                winingStrike2 = currentRecord2 * 1000;
-
-
-                                newPlayer1Data = new UserStat(uid1,fullName1,profileImage1,los1, drw1, win1, goalsFor1, goalsAgainst1, winingStrike1);
-                                newPlayer2Data = new UserStat(uid2,fullName2,profileImage2,los2, drw2, win2, goalsFor2, goalsAgainst2, winingStrike2);
-
-
-
-                                database = FirebaseDatabase.getInstance();
-                                myRef = database.getReference("Arenas");
-                                myRef.child(globalArenaId).child(uid1).setValue(newPlayer1Data);
-                                myRef.child(globalArenaId).child(uid2).setValue(newPlayer2Data);
-
-
-
-                                myDialog.dismiss();
 
                             } else if (p1FinalScore < p2FinalScore){
                                 // p2 wins
@@ -1678,12 +1730,25 @@ public class ArenaFragment extends Fragment {
                                 database = FirebaseDatabase.getInstance();
                                 myRef = database.getReference("Arenas");
                                 myRef.child(globalArenaId).child(uid1).setValue(newPlayer1Data);
-                                myRef.child(globalArenaId).child(uid2).setValue(newPlayer2Data);
+                                myRef.child(globalArenaId).child(uid2).setValue(newPlayer2Data).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        myDialog.dismiss();
+                                        // reload the page
+                                        parentActivity.onListFragmentInteraction(globalDataSet.getKey());
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Toast.makeText(parentActivity,"Ooops, Something Went Wrong", Toast.LENGTH_LONG).show();
+                                        myDialog.dismiss();
+                                    }
+                                });
 
 
 
 
-                                myDialog.dismiss();
+
 
 
                             } else {
@@ -1789,7 +1854,19 @@ public class ArenaFragment extends Fragment {
                                 database = FirebaseDatabase.getInstance();
                                 myRef = database.getReference("Arenas");
                                 myRef.child(globalArenaId).child(uid1).setValue(newPlayer1Data);
-                                myRef.child(globalArenaId).child(uid2).setValue(newPlayer2Data);
+                                myRef.child(globalArenaId).child(uid2).setValue(newPlayer2Data).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        myDialog.dismiss();
+                                        // reload the page
+                                        parentActivity.onListFragmentInteraction(globalDataSet.getKey());
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        myDialog.dismiss();
+                                    }
+                                });
 
 
 
@@ -1800,9 +1877,8 @@ public class ArenaFragment extends Fragment {
 
 
 
-                            myDialog.dismiss();
-                            // reload the page
-                            parentActivity.onListFragmentInteraction(globalDataSet.getKey());
+
+
 
                         }
                     });
