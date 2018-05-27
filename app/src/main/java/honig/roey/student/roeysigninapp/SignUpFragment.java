@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.util.Log;
@@ -68,7 +69,17 @@ public class SignUpFragment extends Fragment {
                 eml = etEmail.getText().toString();
                 pas = etPassword.getText().toString();
 
-                createNewUser(eml,pas);
+                if (fName.equals("") || lName.equals("") || eml.equals("") || pas.equals("")) {
+
+                } else if (!etConfirmPassword.equals(pas)){
+                    Snackbar.make(view, R.string.confirmPasswordError, Snackbar.LENGTH_LONG)
+                          .setAction("Action", null).show();
+
+                } else {
+                    createNewUser(eml,pas);
+                }
+
+
 
             }
         });
@@ -133,36 +144,7 @@ public class SignUpFragment extends Fragment {
 
     }
 
-    /*
 
-    private void signIntoTheApp(String eml, String pas) {
-
-        mAuth.signInWithEmailAndPassword(eml, pas)
-                .addOnCompleteListener(parentActivity, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            FirebaseUser user = mAuth.getCurrentUser();
-
-
-                            Intent intent = new Intent(getContext(), NavDrawer.class);
-                            // this extra is for letting the NavDrawer activity know it was redirected from a SignupActivity, meaning there is a user
-                            intent.putExtra("arg1",true);
-                            startActivity(intent);
-
-
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Toast.makeText(parentActivity, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                        }
-
-                    }
-                });
-
-    }
-    */
 
 
 }
