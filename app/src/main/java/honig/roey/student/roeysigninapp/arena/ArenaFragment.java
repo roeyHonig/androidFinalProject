@@ -1554,11 +1554,29 @@ public class ArenaFragment extends Fragment {
                                 database = FirebaseDatabase.getInstance();
                                 myRef = database.getReference("Arenas");
                                 myRef.child(globalArenaId).child(uid1).setValue(newPlayer1Data);
-                                myRef.child(globalArenaId).child(uid2).setValue(newPlayer2Data);
+                                myRef.child(globalArenaId).child(uid2).setValue(newPlayer2Data).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+
+                                        myDialog.dismiss();
+                                        // reload the page
+                                        parentActivity.setArenaIdWhichWasClicked(globalDataSet.getKey());
+                                        parentActivity.autoStartWithArenaNavDrawer(parentActivity.getNavigationView());
+
+
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Toast.makeText(parentActivity,"Ooops, Something Went Wrong..", Toast.LENGTH_LONG).show();
+                                        myDialog.dismiss();
+
+                                    }
+                                });
 
 
 
-                                myDialog.dismiss();
+
 
                             } else if (p1FinalScore < p2FinalScore){
                                 // p2 wins
@@ -1680,12 +1698,30 @@ public class ArenaFragment extends Fragment {
                                 database = FirebaseDatabase.getInstance();
                                 myRef = database.getReference("Arenas");
                                 myRef.child(globalArenaId).child(uid1).setValue(newPlayer1Data);
-                                myRef.child(globalArenaId).child(uid2).setValue(newPlayer2Data);
+                                myRef.child(globalArenaId).child(uid2).setValue(newPlayer2Data).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+
+                                        myDialog.dismiss();
+                                        // reload the page
+                                        parentActivity.setArenaIdWhichWasClicked(globalDataSet.getKey());
+                                        parentActivity.autoStartWithArenaNavDrawer(parentActivity.getNavigationView());
+
+
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Toast.makeText(parentActivity,"Ooops, Something Went Wrong..", Toast.LENGTH_LONG).show();
+                                        myDialog.dismiss();
+
+                                    }
+                                });
 
 
 
 
-                                myDialog.dismiss();
+
 
 
                             } else {
