@@ -1338,6 +1338,7 @@ public class ArenaFragment extends Fragment {
             // Sets the Legend enabled or disabled
             chart.getLegend().setEnabled(true);
             chart.getLegend().setWordWrapEnabled(true);
+            chart.getLegend().setTextSize(15f);
             // make the x-axis fit \ or not exactly all bars
             chart.setFitBars(true);
 
