@@ -1216,7 +1216,7 @@ public class ArenaFragment extends Fragment {
                 ll.setLineColor(Color.RED);
                 ll.setLineWidth(0.1f);
                 ll.setTextColor(Color.BLACK);
-                ll.setTextSize(1f);
+                ll.setTextSize(10f);
                 if (limit > 1){
                     yAxisLeft.addLimitLine(ll);
                     yAxisRight.addLimitLine(ll);
