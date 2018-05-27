@@ -1230,7 +1230,8 @@ public class ArenaFragment extends Fragment {
 
             }
 
-
+            // set the text size of the values, floating abouve the bars
+            chart.getBarData().setValueTextSize(15);
 
 
             chart.setVisibleXRangeMaximum(names.length+1f);
@@ -1361,6 +1362,8 @@ public class ArenaFragment extends Fragment {
                 xAxis.addLimitLine(ll);
             }
 
+            // set the text size of the values, floating abouve the bars
+            chart.getBarData().setValueTextSize(10);
 
             chart.setVisibleXRangeMaximum(names.length+1f);
             chart.setVisibleXRangeMinimum(1.5f); // If this is e.g. set to 10, it is not possible to zoom in further than 10 values on the x-axis.
