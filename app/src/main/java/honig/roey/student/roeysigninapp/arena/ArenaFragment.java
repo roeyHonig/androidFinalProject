@@ -44,6 +44,8 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -1789,7 +1791,25 @@ public class ArenaFragment extends Fragment {
                                 database = FirebaseDatabase.getInstance();
                                 myRef = database.getReference("Arenas");
                                 myRef.child(globalArenaId).child(uid1).setValue(newPlayer1Data);
-                                myRef.child(globalArenaId).child(uid2).setValue(newPlayer2Data);
+                                myRef.child(globalArenaId).child(uid2).setValue(newPlayer2Data).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+
+                                        myDialog.dismiss();
+                                        // reload the page
+                                        parentActivity.setArenaIdWhichWasClicked(globalDataSet.getKey());
+                                        parentActivity.autoStartWithArenaNavDrawer(parentActivity.getNavigationView());
+
+
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Toast.makeText(parentActivity,"Ooops, Something Went Wrong..", Toast.LENGTH_LONG).show();
+                                        myDialog.dismiss();
+
+                                    }
+                                });
 
 
 
@@ -1800,9 +1820,7 @@ public class ArenaFragment extends Fragment {
 
 
 
-                            myDialog.dismiss();
-                            // reload the page
-                            parentActivity.onListFragmentInteraction(globalDataSet.getKey());
+
 
                         }
                     });

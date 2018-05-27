@@ -138,6 +138,18 @@ public class RingFragment extends Fragment {
 
 
     @Override
+    public void onResume() {
+        super.onResume();
+        if (parentActivity.getArenaIdWhichWasClicked().equals("")) {
+
+        } else {
+            String tmp = parentActivity.getArenaIdWhichWasClicked();
+            parentActivity.setArenaIdWhichWasClicked("");
+            parentActivity.onListFragmentInteraction(tmp);
+        }
+    }
+
+    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         parentActivity = (NavDrawer) getActivity();
