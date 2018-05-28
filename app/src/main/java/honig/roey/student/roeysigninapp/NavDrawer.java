@@ -119,7 +119,7 @@ public class NavDrawer extends AppCompatActivity
     };
     private String arenaIdWhichWasClicked = ""; // this value will be init when the user reports a final match score in one of his rings
     private RingGlobal tutorialArena;
-    private ArrayList<MatchUp> tutorialArenaIndividualMatchUps;
+    private ArrayList<MatchUp> tutorialArenaIndividualMatchUps = new ArrayList<>();
 
 
     // Getters
@@ -255,6 +255,8 @@ public class NavDrawer extends AppCompatActivity
                 ArrayList<String> numberOfPlayersInEveryUserArenas = new ArrayList<String>();
                 ArrayList<String> idOfTheUserArenas = new ArrayList<String>();
                 ArrayList<String> superUserOfTheUserArenas = new ArrayList<String>();
+
+                userDataBaseData.add(0,tutorialArena);
 
                 for (RingGlobal arena: userDataBaseData
                      ) {
@@ -935,7 +937,32 @@ public class NavDrawer extends AppCompatActivity
                         // doesn't matter for now. could be any long type number
                         tableOfRingsPerUser.onDataListenerSuccess(dataSnapshot,0);
                     } else {
-                        // No Arenas - update UI accordinglly
+                        // No Arenas - update UI accordinglly - add just the Tutorial Example
+
+                        Bundle ringFragmentArgsBundle = new Bundle();
+                        ArrayList<String> namesOfTheUserArenas = new ArrayList<String>();
+                        ArrayList<String> numberOfPlayersInEveryUserArenas = new ArrayList<String>();
+                        ArrayList<String> idOfTheUserArenas = new ArrayList<String>();
+                        ArrayList<String> superUserOfTheUserArenas = new ArrayList<String>();
+
+                        userDataBaseData.add(tutorialArena);
+
+                        for (RingGlobal arena: userDataBaseData
+                                ) {
+                            namesOfTheUserArenas.add(arena.getName());
+                            numberOfPlayersInEveryUserArenas.add(String.valueOf(arena.getNumPlayers()));
+                            idOfTheUserArenas.add(arena.getKey());
+                            superUserOfTheUserArenas.add(arena.getSuperUser());
+                        }
+                        ringFragmentArgsBundle.putStringArrayList("arg1", namesOfTheUserArenas);
+                        ringFragmentArgsBundle.putStringArrayList("arg2", numberOfPlayersInEveryUserArenas);
+                        ringFragmentArgsBundle.putStringArrayList("arg3", idOfTheUserArenas);
+                        ringFragmentArgsBundle.putStringArrayList("arg4", superUserOfTheUserArenas);
+                        ringFragmentArgsBundle.putInt(RingFragment.ARG_COLUMN_COUNT, 2);
+                        ringFragmentArgsBundle.putString("currentUserUID", mAuth.getCurrentUser().getUid());
+
+                        ringFragment.setArguments(ringFragmentArgsBundle);
+
                         ringFragment.setArguments(null);
                         if (active /*Is Activty active*/) {
                             switchToFragment(R.id.appFragContainer, ringFragment);
