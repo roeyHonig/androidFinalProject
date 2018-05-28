@@ -827,7 +827,7 @@ public class NavDrawer extends AppCompatActivity
     // Do When pressing an Item from the Arenas list
     public void onListFragmentInteraction(String item) {
 
-        //Toast.makeText(this,"hello", Toast.LENGTH_LONG).show();
+        //Toast.makeText(this,item, Toast.LENGTH_LONG).show();
 
         if (item.equals("")) {
             // add new arena item was pressed

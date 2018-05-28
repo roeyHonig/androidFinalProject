@@ -210,7 +210,7 @@ public class ArenaFragment extends Fragment {
 
         }
 
-
+        //Toast.makeText(parentActivity,globalDataSet.getKey(),Toast.LENGTH_LONG).show();
 
         return view;
     }
@@ -321,7 +321,12 @@ public class ArenaFragment extends Fragment {
                                     if (matchUpIndex >= 0){
                                         String p1Name = individualMatchUpsDataSet.get(matchUpIndex).getPlayers().get(0).getFullName();
                                         String p2Name = individualMatchUpsDataSet.get(matchUpIndex).getPlayers().get(1).getFullName();
-                                        PlaceholderFragment.openDialogBox(p1Name,p2Name, globalDataSet, individualMatchUpsDataSet.get(matchUpIndex));
+                                        if (globalDataSet.getKey().equals("-LDXFee4x0SpnmdXI7xa")) {
+                                            // Tutorial Arena
+                                            PlaceholderFragment.openTutorialDialogBox(p1Name,p2Name, globalDataSet, individualMatchUpsDataSet.get(matchUpIndex));
+                                        } else {
+                                            PlaceholderFragment.openDialogBox(p1Name,p2Name, globalDataSet, individualMatchUpsDataSet.get(matchUpIndex));
+                                        }
                                     }
 
                                 }
@@ -802,7 +807,13 @@ public class ArenaFragment extends Fragment {
                     if (matchUpIndex >= 0){
                         String p1Name = individualMatchUpsDataSet.get(matchUpIndex).getPlayers().get(0).getFullName();
                         String p2Name = individualMatchUpsDataSet.get(matchUpIndex).getPlayers().get(1).getFullName();
-                        openDialogBox(p1Name,p2Name, globalDataSet, individualMatchUpsDataSet.get(matchUpIndex));
+                        if (globalDataSet.getKey().equals("-LDXFee4x0SpnmdXI7xa")) {
+                            // Tutorial Arena
+                            openTutorialDialogBox(p1Name,p2Name, globalDataSet, individualMatchUpsDataSet.get(matchUpIndex));
+                        } else {
+                            openDialogBox(p1Name,p2Name, globalDataSet, individualMatchUpsDataSet.get(matchUpIndex));
+                        }
+
                     }
 
                 }
@@ -1862,6 +1873,37 @@ public class ArenaFragment extends Fragment {
                     });
                 }
             });
+            myDialog.show();
+        }
+
+        public static void openTutorialDialogBox(String p1Name, String p2Name, RingGlobal ringGlobal, MatchUp matchUp) {
+            String globalArenaId = ringGlobal.getKey();
+            String indvidualMatchUpId = matchUp.getKey();
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(parentActivity);
+            View dialogView = parentActivity.getLayoutInflater().inflate(R.layout.match_score_dialog_tutorial,null);
+            final TextView p1NmaeTextView = dialogView.findViewById(R.id.p1Name);
+            final TextView p2NmaeTextView = dialogView.findViewById(R.id.p2Name);
+            EditText p1Goals = dialogView.findViewById(R.id.p1Goals);
+            EditText p2Goals = dialogView.findViewById(R.id.p2Goals);
+
+            p1NmaeTextView.setText(p1Name);
+            p2NmaeTextView.setText(p2Name);
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+
+                }
+            })
+                    .setNegativeButton("Abourt", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+
+                        }
+                    });
+
+            builder.setView(dialogView);
+            AlertDialog myDialog = builder.create();
+
             myDialog.show();
         }
 
