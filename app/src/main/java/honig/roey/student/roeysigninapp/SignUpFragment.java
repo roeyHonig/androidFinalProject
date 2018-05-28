@@ -35,7 +35,7 @@ public class SignUpFragment extends Fragment {
     private String eml;
     private String pas;
     private FirebaseAuth mAuth;
-
+    private String ConfPass;
 
 
     public SignUpFragment() {
@@ -68,10 +68,11 @@ public class SignUpFragment extends Fragment {
                 lName = etLastName.getText().toString();
                 eml = etEmail.getText().toString();
                 pas = etPassword.getText().toString();
+                ConfPass = etConfirmPassword.getText().toString();
 
                 if (fName.equals("") || lName.equals("") || eml.equals("") || pas.equals("")) {
 
-                } else if (!etConfirmPassword.equals(pas)){
+                } else if (!ConfPass.equals(pas)){
                     Snackbar.make(view, R.string.confirmPasswordError, Snackbar.LENGTH_LONG)
                           .setAction("Action", null).show();
 

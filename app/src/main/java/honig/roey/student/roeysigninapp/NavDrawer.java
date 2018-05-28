@@ -517,14 +517,9 @@ public class NavDrawer extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nav_drawer);
 
-        // setup the Tutorail Arena Example Data
-        ArrayList<UserStat> tutorialGlobalArenaUsers = new ArrayList<>();
-        tutorialGlobalArenaUsers.add(new UserStat("0MtddcfO5oRQy4BkzUw5a3hsuyP2", "Ace Ventura", "https://lh5.googleusercontent.com/-2MwuEAFsU0Y/AAAAAAAAAAI/AAAAAAAAAAc/E3_hhhhgpUw/s96-c/photo.jpg", 1L, 0L, 5L, 16L, 10L, 4004L));
-        tutorialGlobalArenaUsers.add(new UserStat("JileexqbDdeo340uUrvF5zMSrev2", "Lois Lane", "https://lh6.googleusercontent.com/-T7nznGE5hpw/AAAAAAAAAAI/AAAAAAAAAAc/3W8C-rc_Bzo/s96-c/photo.jpg", 4L, 1L, 4L, 15L, 13L, 3000L));
-        tutorialGlobalArenaUsers.add(new UserStat("d18ohRXf26ZL9rTKKQ32DHF43oy1", "Austin Powers", "https://lh6.googleusercontent.com/-K0v_vMni0GU/AAAAAAAAAAI/AAAAAAAAAAc/PxJt1Fx8iKA/s96-c/photo.jpg", 3L, 0L, 2L, 5L, 8L, 1001L));
-        tutorialGlobalArenaUsers.add(new UserStat("eF0FxX3jVcW2l421angIAhnH78J2", "Bruce Wayne", "https://lh4.googleusercontent.com/-qxy33kbohfw/AAAAAAAAAAI/AAAAAAAAAAc/isGqxZb7Al0/s96-c/photo.jpg", 7L, 1L, 4L, 16L, 21L, 2002L));
-        tutorialArena = new RingGlobal("-LDXFee4x0SpnmdXI7xa", "Tutorial", true, "d18ohRXf26ZL9rTKKQ32DHF43oy1", tutorialGlobalArenaUsers);
 
+
+        /*
         // setup the tutorail Arena Example Matchups
         tutorialArenaIndividualMatchUps.clear();
 
@@ -563,7 +558,7 @@ public class NavDrawer extends AppCompatActivity
         tutorialArenaMatchupUsers.add(new UserStat("0MtddcfO5oRQy4BkzUw5a3hsuyP2", "Ace Ventura", "https://lh5.googleusercontent.com/-2MwuEAFsU0Y/AAAAAAAAAAI/AAAAAAAAAAc/E3_hhhhgpUw/s96-c/photo.jpg", 1L, 0L, 3L, 11L, 7L, 3003L));
         tutorialArenaMatchupUsers.add(new UserStat("eF0FxX3jVcW2l421angIAhnH78J2", "Bruce Wayne", "https://lh4.googleusercontent.com/-qxy33kbohfw/AAAAAAAAAAI/AAAAAAAAAAc/isGqxZb7Al0/s96-c/photo.jpg", 3L, 1L, 1L, 7L, 11L, 1000L));
         tutorialArenaIndividualMatchUps.add(new MatchUp(key,tutorialArenaMatchupUsers));
-
+        */
 
         mAuth = FirebaseAuth.getInstance();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -597,6 +592,8 @@ public class NavDrawer extends AppCompatActivity
         if (isRedirectedFromLoginActivity == 1 || isRedirectedFromLoginActivity == 2){
             uid = mAuth.getCurrentUser().getUid();
             fullNameoFTheCurrentSignedInUser = mAuth.getCurrentUser().getDisplayName();
+
+
 
         }
 
@@ -682,9 +679,23 @@ public class NavDrawer extends AppCompatActivity
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        // setup the Tutorail Arena Example Data
+        ArrayList<UserStat> tutorialGlobalArenaUsers = new ArrayList<>();
+        tutorialGlobalArenaUsers.add(new UserStat("0MtddcfO5oRQy4BkzUw5a3hsuyP2", "Ace Ventura", "https://lh5.googleusercontent.com/-2MwuEAFsU0Y/AAAAAAAAAAI/AAAAAAAAAAc/E3_hhhhgpUw/s96-c/photo.jpg", 1L, 0L, 5L, 16L, 10L, 4004L));
+        tutorialGlobalArenaUsers.add(new UserStat("JileexqbDdeo340uUrvF5zMSrev2", "Lois Lane", "https://lh6.googleusercontent.com/-T7nznGE5hpw/AAAAAAAAAAI/AAAAAAAAAAc/3W8C-rc_Bzo/s96-c/photo.jpg", 4L, 1L, 4L, 15L, 13L, 3000L));
+        tutorialGlobalArenaUsers.add(new UserStat("d18ohRXf26ZL9rTKKQ32DHF43oy1", "Austin Powers", "https://lh6.googleusercontent.com/-K0v_vMni0GU/AAAAAAAAAAI/AAAAAAAAAAc/PxJt1Fx8iKA/s96-c/photo.jpg", 3L, 0L, 2L, 5L, 8L, 1001L));
+        tutorialGlobalArenaUsers.add(new UserStat("eF0FxX3jVcW2l421angIAhnH78J2", "Bruce Wayne", "https://lh4.googleusercontent.com/-qxy33kbohfw/AAAAAAAAAAI/AAAAAAAAAAc/isGqxZb7Al0/s96-c/photo.jpg", 7L, 1L, 4L, 16L, 21L, 2002L));
+        tutorialArena = new RingGlobal("-LDXFee4x0SpnmdXI7xa", "Tutorial", true, "d18ohRXf26ZL9rTKKQ32DHF43oy1", tutorialGlobalArenaUsers);
+
+    }
+
+    @Override
     protected void onPause() {
         super.onPause();
         handler.removeCallbacks(switchToRings);
+        mAuth.removeAuthStateListener(mAuthListener);
     }
 
     @Override
@@ -939,13 +950,25 @@ public class NavDrawer extends AppCompatActivity
                     } else {
                         // No Arenas - update UI accordinglly - add just the Tutorial Example
 
+
+
+                        // setup the Tutorail Arena Example Data
+                        ArrayList<UserStat> tutorialGlobalArenaUsers = new ArrayList<>();
+                        tutorialGlobalArenaUsers.add(new UserStat("0MtddcfO5oRQy4BkzUw5a3hsuyP2", "Ace Ventura", "https://lh5.googleusercontent.com/-2MwuEAFsU0Y/AAAAAAAAAAI/AAAAAAAAAAc/E3_hhhhgpUw/s96-c/photo.jpg", 1L, 0L, 5L, 16L, 10L, 4004L));
+                        tutorialGlobalArenaUsers.add(new UserStat("JileexqbDdeo340uUrvF5zMSrev2", "Lois Lane", "https://lh6.googleusercontent.com/-T7nznGE5hpw/AAAAAAAAAAI/AAAAAAAAAAc/3W8C-rc_Bzo/s96-c/photo.jpg", 4L, 1L, 4L, 15L, 13L, 3000L));
+                        tutorialGlobalArenaUsers.add(new UserStat("d18ohRXf26ZL9rTKKQ32DHF43oy1", "Austin Powers", "https://lh6.googleusercontent.com/-K0v_vMni0GU/AAAAAAAAAAI/AAAAAAAAAAc/PxJt1Fx8iKA/s96-c/photo.jpg", 3L, 0L, 2L, 5L, 8L, 1001L));
+                        tutorialGlobalArenaUsers.add(new UserStat("eF0FxX3jVcW2l421angIAhnH78J2", "Bruce Wayne", "https://lh4.googleusercontent.com/-qxy33kbohfw/AAAAAAAAAAI/AAAAAAAAAAc/isGqxZb7Al0/s96-c/photo.jpg", 7L, 1L, 4L, 16L, 21L, 2002L));
+                        tutorialArena = new RingGlobal("-LDXFee4x0SpnmdXI7xa", "Tutorial", true, "d18ohRXf26ZL9rTKKQ32DHF43oy1", tutorialGlobalArenaUsers);
+
+
+
                         Bundle ringFragmentArgsBundle = new Bundle();
                         ArrayList<String> namesOfTheUserArenas = new ArrayList<String>();
                         ArrayList<String> numberOfPlayersInEveryUserArenas = new ArrayList<String>();
                         ArrayList<String> idOfTheUserArenas = new ArrayList<String>();
                         ArrayList<String> superUserOfTheUserArenas = new ArrayList<String>();
 
-                        userDataBaseData.add(tutorialArena);
+                        userDataBaseData.add(0, tutorialArena);
 
                         for (RingGlobal arena: userDataBaseData
                                 ) {
@@ -963,7 +986,7 @@ public class NavDrawer extends AppCompatActivity
 
                         ringFragment.setArguments(ringFragmentArgsBundle);
 
-                        ringFragment.setArguments(null);
+
                         if (active /*Is Activty active*/) {
                             switchToFragment(R.id.appFragContainer, ringFragment);
                         }
