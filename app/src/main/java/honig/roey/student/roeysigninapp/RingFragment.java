@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
 import android.support.v7.app.AlertDialog;
@@ -130,6 +131,9 @@ public class RingFragment extends Fragment {
                     mAdapter = new MyRingRecyclerViewAdapter(mDataset, numOfPlayersPerArenaDataset, idOfTheUserArenas, superUserOfTheUserArenas,uidOfSignedUser,mListener);
                     ringRecyclerView.setAdapter(mAdapter);
 
+
+
+        
 
         return view;
 
