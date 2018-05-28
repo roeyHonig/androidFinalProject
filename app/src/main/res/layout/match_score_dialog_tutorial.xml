@@ -107,9 +107,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:textColor="#ea0a0a"
+        android:textColor="#0a19ea"
         android:textSize="15dp"
-        android:text="This is just a Tutorial, so you can't enter a score"
+        android:text="This is just a Tutorial, so any score you enter won't be reflected"
         />
 
 </LinearLayout>
