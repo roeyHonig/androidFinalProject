@@ -5,7 +5,7 @@
 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#6a1fea08"
+    android:background="@color/colorAppBackground"
     android:orientation="vertical">
 
 
@@ -13,7 +13,7 @@
     <TableLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="#03dff7"
+
         android:stretchColumns="*"
 
         >
@@ -93,14 +93,99 @@
 
     </TableLayout>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/btInvite"
-        android:layout_width="match_parent"
+
+
+
+    <TableLayout
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:clickable="true"
-        android:visibility="visible"
-        android:background="#6a1fea08"
-        app:srcCompat="@drawable/ic_add_circle_black_24dp" />
+
+        android:stretchColumns="*"
+
+        >
+
+
+
+        <TableRow
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="0dp"
+
+            >
+
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+
+                >
+
+
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/btInvite"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:visibility="visible"
+
+                    app:srcCompat="@drawable/ic_add_circle_black_24dp" />
+
+
+                <com.mklimek.circleinitialsview.CircleInitialsView
+
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    custom:circleInitialsView_backgroundColor="#771175"
+                    custom:circleInitialsView_text="1"
+                    custom:circleInitialsView_textColor="#48c192"
+                    custom:circleInitialsView_textSize="30dp"
+                    android:visibility="invisible"/>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                >
+
+                <Button
+
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:text="Requests"
+                    android:visibility="invisible"
+                    />
+
+                <com.mklimek.circleinitialsview.CircleInitialsView
+
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    custom:circleInitialsView_backgroundColor="#771175"
+                    custom:circleInitialsView_text="1"
+                    custom:circleInitialsView_textColor="#48c192"
+                    custom:circleInitialsView_textSize="30dp"
+                    android:visibility="invisible"/>
+
+
+            </LinearLayout>
+
+
+
+
+
+
+
+
+        </TableRow>
+
+
+    </TableLayout>
+
 
 
     <TextView
@@ -131,7 +216,7 @@
         app:layoutManager="android.support.v7.widget.LinearLayoutManager"
         tools:context=".requests.RequestFragment"
         tools:listitem="@layout/fragment_request"
-        android:background="#6a1fea08"
+
         android:visibility="visible"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
@@ -144,7 +229,7 @@
         app:layoutManager="android.support.v7.widget.LinearLayoutManager"
         tools:context=".requests.RequestFragment"
         tools:listitem="@layout/fragment_request"
-        android:background="#6a1fea08"
+
         android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
