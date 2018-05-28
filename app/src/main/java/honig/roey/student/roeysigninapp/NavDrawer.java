@@ -57,6 +57,10 @@ public class NavDrawer extends AppCompatActivity
         ArenaFragment.OnListFragmentInteractionListener
 {
 
+    //TODO: Facebok Login, coll fragment transition animation, first time instructions snackbar, Logs, Chats, Push Notifications, Time (Games) History, confirmation email
+    //TODO: circle view near sheare item indicating requests
+
+
     private boolean active = false; // Important To ask when doing things like changing the UI
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
@@ -1121,7 +1125,7 @@ public class NavDrawer extends AppCompatActivity
                     changeRequestStatustTo(request,"Canceled");
                     removeRequest(request);
                 } else {
-                    Toast.makeText(NavDrawer.this,"no change",Toast.LENGTH_LONG).show();
+                    Toast.makeText(NavDrawer.this,"Unchanged",Toast.LENGTH_LONG).show();
                 }
             }
         })

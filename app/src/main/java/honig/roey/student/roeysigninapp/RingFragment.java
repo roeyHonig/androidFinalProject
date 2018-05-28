@@ -133,7 +133,7 @@ public class RingFragment extends Fragment {
 
 
 
-        
+
 
         return view;
 

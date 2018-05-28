@@ -290,7 +290,7 @@ public class RequestFragment extends Fragment {
             String currentUser = parentActivity.getmAuth().getCurrentUser().getUid();
             if (num == 0){
                 // this user never invited anyone, so there can't be any duplicate request
-                Toast.makeText(getActivity(),"All is really OK",Toast.LENGTH_LONG).show();
+                //Toast.makeText(getActivity(),"All is really OK",Toast.LENGTH_LONG).show();
                 parentActivity.pushAndSetNewChildAtRequestsTable(newRequest);
                 myDialog.dismiss();
                 parentActivity.autoStartWithAnItemFromNavDrawer(parentActivity.getNavigationView(),R.id.nav_requests);
@@ -340,7 +340,7 @@ public class RequestFragment extends Fragment {
             if (itearteOverAllRequests == num){
                 // we've iterated over all the user requests
                 if (isValidRequest){
-                    Toast.makeText(getActivity(),"All is OK",Toast.LENGTH_LONG).show();
+                    //Toast.makeText(getActivity(),"All is OK",Toast.LENGTH_LONG).show();
                     parentActivity.pushAndSetNewChildAtRequestsTable(newRequest);
                     myDialog.dismiss();
                     //parentActivity.autoStartWithAnItemFromNavDrawer(parentActivity.getNavigationView(),R.id.nav_requests);
