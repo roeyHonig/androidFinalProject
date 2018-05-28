@@ -524,35 +524,43 @@ public class NavDrawer extends AppCompatActivity
         tutorialArena = new RingGlobal("-LDXFee4x0SpnmdXI7xa", "Tutorial", true, "d18ohRXf26ZL9rTKKQ32DHF43oy1", tutorialGlobalArenaUsers);
 
         // setup the tutorail Arena Example Matchups
+        tutorialArenaIndividualMatchUps.clear();
+
         String key = "-LDXGeari7PfaLmFvwrP";
         ArrayList<UserStat> tutorialArenaMatchupUsers = new ArrayList<>();
         tutorialArenaMatchupUsers.add(new UserStat("d18ohRXf26ZL9rTKKQ32DHF43oy1", "Austin Powers", "https://lh6.googleusercontent.com/-K0v_vMni0GU/AAAAAAAAAAI/AAAAAAAAAAc/PxJt1Fx8iKA/s96-c/photo.jpg", 1L, 0L, 2L, 4L, 2L, 1001L));
         tutorialArenaMatchupUsers.add(new UserStat("eF0FxX3jVcW2l421angIAhnH78J2", "Bruce Wayne", "https://lh4.googleusercontent.com/-qxy33kbohfw/AAAAAAAAAAI/AAAAAAAAAAc/isGqxZb7Al0/s96-c/photo.jpg", 2L, 0L, 1L, 2L, 4L, 1000L));
+        tutorialArenaIndividualMatchUps.add(new MatchUp(key,tutorialArenaMatchupUsers));
 
         key = "-LDXGlzjEQvCxBtHLi9H" ;
         tutorialArenaMatchupUsers = new ArrayList<>();
         tutorialArenaMatchupUsers.add(new UserStat("JileexqbDdeo340uUrvF5zMSrev2", "Lois Lane", "https://lh6.googleusercontent.com/-T7nznGE5hpw/AAAAAAAAAAI/AAAAAAAAAAc/3W8C-rc_Bzo/s96-c/photo.jpg", 0L, 0L, 2L, 6L, 1L, 2002L));
         tutorialArenaMatchupUsers.add(new UserStat("d18ohRXf26ZL9rTKKQ32DHF43oy1", "Austin Powers", "https://lh6.googleusercontent.com/-K0v_vMni0GU/AAAAAAAAAAI/AAAAAAAAAAc/PxJt1Fx8iKA/s96-c/photo.jpg", 2L, 0L, 0L, 1L, 6L, 0L));
+        tutorialArenaIndividualMatchUps.add(new MatchUp(key,tutorialArenaMatchupUsers));
 
         key = "-LDXGlzmClJ9m_Yz2BNx";
         tutorialArenaMatchupUsers = new ArrayList<>();
         tutorialArenaMatchupUsers.add(new UserStat("JileexqbDdeo340uUrvF5zMSrev2", "Lois Lane", "https://lh6.googleusercontent.com/-T7nznGE5hpw/AAAAAAAAAAI/AAAAAAAAAAc/3W8C-rc_Bzo/s96-c/photo.jpg", 2L, 1L, 2L, 6L, 7L, 1000L));
         tutorialArenaMatchupUsers.add(new UserStat("eF0FxX3jVcW2l421angIAhnH78J2", "Bruce Wayne", "https://lh4.googleusercontent.com/-qxy33kbohfw/AAAAAAAAAAI/AAAAAAAAAAc/isGqxZb7Al0/s96-c/photo.jpg", 2L, 1L, 2L, 7L, 6L, 2002L));
+        tutorialArenaIndividualMatchUps.add(new MatchUp(key,tutorialArenaMatchupUsers));
 
         key = "-LDXHK3y13XjPMD-Omvd" ;
         tutorialArenaMatchupUsers = new ArrayList<>();
         tutorialArenaMatchupUsers.add(new UserStat("0MtddcfO5oRQy4BkzUw5a3hsuyP2", "Ace Ventura", "https://lh5.googleusercontent.com/-2MwuEAFsU0Y/AAAAAAAAAAI/AAAAAAAAAAc/E3_hhhhgpUw/s96-c/photo.jpg", 0L, 0L, 2L, 5L, 3L, 2002L));
         tutorialArenaMatchupUsers.add(new UserStat("JileexqbDdeo340uUrvF5zMSrev2", "Lois Lane", "https://lh6.googleusercontent.com/-T7nznGE5hpw/AAAAAAAAAAI/AAAAAAAAAAc/3W8C-rc_Bzo/s96-c/photo.jpg", 2L, 0L, 0L, 3L, 5L, 0L));
+        tutorialArenaIndividualMatchUps.add(new MatchUp(key,tutorialArenaMatchupUsers));
 
         key = "-LDXHK4-uCeoCle6jH6B";
         tutorialArenaMatchupUsers = new ArrayList<>();
         tutorialArenaMatchupUsers.add(new UserStat("0MtddcfO5oRQy4BkzUw5a3hsuyP2", "Ace Ventura", "https://lh5.googleusercontent.com/-2MwuEAFsU0Y/AAAAAAAAAAI/AAAAAAAAAAc/E3_hhhhgpUw/s96-c/photo.jpg", 0L, 0L, 0L, 0L, 0L, 0L));
         tutorialArenaMatchupUsers.add(new UserStat("d18ohRXf26ZL9rTKKQ32DHF43oy1", "Austin Powers", "https://lh6.googleusercontent.com/-K0v_vMni0GU/AAAAAAAAAAI/AAAAAAAAAAc/PxJt1Fx8iKA/s96-c/photo.jpg", 0L, 0L, 0L, 0L, 0L, 0L));
+        tutorialArenaIndividualMatchUps.add(new MatchUp(key,tutorialArenaMatchupUsers));
 
         key = "-LDXHK41OZ1cPMs2BpC8";
         tutorialArenaMatchupUsers = new ArrayList<>();
         tutorialArenaMatchupUsers.add(new UserStat("0MtddcfO5oRQy4BkzUw5a3hsuyP2", "Ace Ventura", "https://lh5.googleusercontent.com/-2MwuEAFsU0Y/AAAAAAAAAAI/AAAAAAAAAAc/E3_hhhhgpUw/s96-c/photo.jpg", 1L, 0L, 3L, 11L, 7L, 3003L));
         tutorialArenaMatchupUsers.add(new UserStat("eF0FxX3jVcW2l421angIAhnH78J2", "Bruce Wayne", "https://lh4.googleusercontent.com/-qxy33kbohfw/AAAAAAAAAAI/AAAAAAAAAAc/isGqxZb7Al0/s96-c/photo.jpg", 3L, 1L, 1L, 7L, 11L, 1000L));
+        tutorialArenaIndividualMatchUps.add(new MatchUp(key,tutorialArenaMatchupUsers));
 
 
         mAuth = FirebaseAuth.getInstance();
