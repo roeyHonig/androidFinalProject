@@ -59,8 +59,7 @@ public class NavDrawer extends AppCompatActivity
 
     //TODO: Facebok Login, coll fragment transition animation, first time instructions snackbar, Logs, Chats, Push Notifications, Time (Games) History, confirmation email
     //TODO: circle view near sheare item indicating requests, change languge in Google SignIn Btn
-
-
+    
     private boolean active = false; // Important To ask when doing things like changing the UI
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
